@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import Home from './Conponents/Home';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -16,8 +17,10 @@ function App() {
 
   return (
       <div>
-        <h1>{message}</h1>
+        <h1>{message}</h1> 
+        {/* <Home/> */}
       </div>
+    
   );
 }
 
