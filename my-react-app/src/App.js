@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import Home from './Conponents/Home';
+import Home from './pages/Home';
+import NotFound from './pages/NotFound';
+import {BrowserRouter as Router,Route,Routes,Navigate} from "react-router-dom"
 
 function App() {
   const [message, setMessage] = useState('');
@@ -16,10 +18,13 @@ function App() {
   }, []);
 
   return (
-      <div>
-        <h1>{message}</h1> 
-        {/* <Home/> */}
-      </div>
+    <>
+    <Routes>
+      <Route path="/" element={<Navigate to="/home" />} />
+      <Route path="home" element={<Home />} />
+      <Route path="*" element={<NotFound/>} />
+    </Routes>
+  </>
     
   );
 }
