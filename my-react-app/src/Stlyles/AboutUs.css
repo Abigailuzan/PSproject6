@@ -1,0 +1,153 @@
+/* Reset default browser styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Set body styles to match the rest of the site */
+body {
+  font-family: 'Arial', sans-serif; /* Consistent font across the site */
+  color: white; /* Neutral text color */
+  background-color: #1f1f1f; /* Light background color for overall page */
+  line-height: 1.6; /* Improved readability */
+  margin: 0;
+  padding: 0;
+}
+
+
+.background_text {
+  padding: 20px;
+  margin: 0 auto;
+  max-width: 1200px;
+  background-color: #1f1f1f; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px; 
+  position: relative;
+}
+
+/* Main heading */
+h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #05a079; /* Primary accent color */
+}
+
+/* Subheadings */
+h2 {
+  font-size: 2rem;
+  margin: 20px 0;
+  color:#05a079;;
+  border-bottom: 2px solid #05a079; /* Consistent use of accent color */
+  padding-bottom: 10px;
+}
+
+/* Article styling */
+article {
+  font-size: 1rem;
+  line-height: 1.8;
+  margin-bottom: 30px;
+  color:whgite; /* Softer text color for paragraphs */
+}
+
+/* Styling for the first letter of each paragraph */
+p::first-letter {
+  color: #05a079;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* Link styles */
+a {
+  color: blue;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: white; /* Hover effect for links */
+}
+
+/* Grid container for video and price table */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+  gap: 20px;
+  margin-top: 30px;
+}
+
+/* Grid item styling */
+.grid-item {
+  background-color:#1f1f1f;;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Video styling */
+video {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* Table styles */
+#prices {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+#prices th, #prices td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+  color:#555;
+}
+
+#prices th {
+  background-color: #05a079;
+  color: rgb(255, 255, 255);
+}
+
+#prices tr:nth-child(even) {
+  background-color: #91f3db;
+}
+#prices tr:nth-child(odd) {
+  background-color: white;
+}
+
+#prices tr:hover {
+  background-color: #ddd;
+}
+
+/* Media queries for responsiveness */
+@media screen and (max-width: 768px) {
+  h1 {
+    font-size: 2.5rem;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+  }
+
+  article {
+    font-size: 0.9rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  article {
+    font-size: 0.8rem;
+  }
+}

@@ -2,6 +2,7 @@ import React from 'react';
 import '../Stlyles/Navbar.css';
 import SearchIcon from '@mui/icons-material/Search';
 import { Button } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   return (
@@ -13,7 +14,9 @@ const Navbar = () => {
           <SearchIcon />
         </button>
       </div>
+      <Link to="/sign-in">
       <Button variant="contained" color="success">Sign In</Button>
+      </Link>
     </nav>
   );
 };

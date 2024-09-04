@@ -3,11 +3,12 @@ import React from 'react';
 import Navbar from '../Conponents/Navbar';
 import MovieCard from '../Conponents/MovieCard';
 import '../Stlyles/Home.css';
+import Footer from '../Conponents/Footer';
 
 const movies = [
-  { title: 'Bruh', type: 'TV', image: 'bruh.jpg' },
-  { title: 'Bruh', type: 'TV', image: 'bruh.jpg' },
-  { title: 'Bruh', type: 'TV', image: 'bruh.jpg' },
+  { title: 'Bruh',  image: 'bruh.jpg' },
+  { title: 'Bruh',  image: 'bruh.jpg' },
+  { title: 'Bruh',  image: 'bruh.jpg' },
   { title: 'Bruh', image: 'bruh.jpg' },
   { title: 'Bruh',  image: 'bruh.jpg' },
   { title: 'Bruh',  image: 'bruh.jpg' },
@@ -25,6 +26,7 @@ function Home () {
           <MovieCard key={index} {...movie} />
         ))}
       </div>
+      <Footer/>
     </div>
   );
 };
