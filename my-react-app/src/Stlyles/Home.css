@@ -1,0 +1,15 @@
+.home-container {
+    background-color: #1f1f1f;
+    min-height: 100vh;
+    color: #fff;
+    
+  }
+  
+  .home-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+    padding: 20px;
+    margin: 10px;
+  }
+  

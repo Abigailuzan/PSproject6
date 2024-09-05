@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import Home from './Pages/Home';
+import SignIn from './Pages/SignIn'
+import CreateAccount from './Pages/CreateAccount';
+import ContactUs from './Pages/ContactUs';
+import AboutUs from './Pages/AboutUs'
+import NotFound from './Pages/NotFound';
+import {Route,Routes,Navigate} from "react-router-dom"
 
 function App() {
   const [message, setMessage] = useState('');
@@ -15,9 +22,18 @@ function App() {
   }, []);
 
   return (
-      <div>
-        <h1>{message}</h1>
-      </div>
+    <>
+    <Routes>
+      <Route path="/" element={<Navigate to="/home" />} />
+      <Route path="home" element={<Home />} />
+      <Route path="sign-in"element={<SignIn />} />
+      <Route path="create-account"element={<CreateAccount />} />
+      <Route path="contact-us"element={<ContactUs />} />
+      <Route path="about-us"element={<AboutUs />} />
+      <Route path="*" element={<NotFound/>} />
+    </Routes>
+  </>
+    
   );
 }
 
