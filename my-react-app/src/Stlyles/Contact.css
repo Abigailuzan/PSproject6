@@ -1,78 +1,82 @@
-.contact-form-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #1f1f1f;;
-    color: #fff;
-    padding: 40px;
-    min-height: 100vh;
-
-  }
-  
-  .contact-form-info {
-    flex: 1;
-    margin-right: 20px;
-  }
-  
-  .contact-form-info h2 {
-    color: limegreen;
-  }
-  
-  .contact-form {
-    flex: 1;
-    background-color: #333;
-    padding: 20px;
-    border-radius: 8px;
-  }
-  
-  .contact-form form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .contact-form input,
-  .contact-form textarea {
-    margin-bottom: 15px;
-    padding: 10px;
-    border-radius: 4px;
-    border: none;
-    outline: none;
-    background-color: #222;
-    color: #fff;
-  }
-  
-  .contact-form input::placeholder,
-  .contact-form textarea::placeholder {
-    color: #bbb;
-  }
-  
-  .submit-button {
-    padding: 10px;
-    background-color: limegreen;
-    color: #000;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-  }
-  
-  .submit-button:hover {
-    background-color: #32cd32;
-  }
-
-.footer-image-container {
-  width: 100%; 
+/* הוספת עיצוב ל- app-container */
+.app-container {
   display: flex;
-  justify-content: center; 
-  background-color: #1f1f1f;
-  padding: 20px 0; 
-  position: relative; 
-  bottom: 0; 
+  flex-direction: column;
+  min-height: 100vh; /* גובה מלא של חלון הדפדפן */
 }
 
-.footer-image {
-  max-width: 100%;
-  height: auto; 
-  border-radius: 8px; 
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+.contact-form-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #1f1f1f;
+  color: #fff;
+  min-height: calc(100vh - 200px); /* גובה המסך פחות גובה ה-footer */
+  padding: 40px; /* הוספת padding כדי לשפר את הפריסה */
+}
+
+.contact-form-info {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.contact-form-info h2 {
+  color: limegreen;
+}
+
+.contact-form {
+  flex: 1;
+  background-color: #333;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.contact-form form {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-form input,
+.contact-form textarea {
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 4px;
+  border: none;
+  outline: none;
+  background-color: #222;
+  color: #fff;
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: #bbb;
+}
+
+.submit-button {
+  padding: 10px;
+  background-color: limegreen;
+  color: #000;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.submit-button:hover {
+  background-color: #32cd32;
+}
+
+.footer-image-container {
+  width: 100%;
+  height: 200px; /* קובע גובה קבוע לפוטר */
+  /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);*/
+  background-image: linear-gradient(
+          rgba(0, 0, 0, 0.3),
+          rgba(255, 255, 255, 0.3)
+  ),
+  url('/C:/Users/user/Downloads/e758e819-53e3-4c78-b384-ac78b3457d2c.webp');
+  background-repeat: repeat-x;
+ background-size: 400px auto;
+  background-position: center;
+  flex-shrink: 0;
 }
