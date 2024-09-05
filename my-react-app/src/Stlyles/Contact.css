@@ -66,10 +66,9 @@
   background-color: #32cd32;
 }
 
-.footer-image-container {
+/* .footer-image-container {
   width: 100%;
-  height: 200px; /* קובע גובה קבוע לפוטר */
-  /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);*/
+  height: 200px; 
   background-image: linear-gradient(
           rgba(0, 0, 0, 0.3),
           rgba(255, 255, 255, 0.3)
@@ -79,4 +78,4 @@
  background-size: 400px auto;
   background-position: center;
   flex-shrink: 0;
-}
+} */

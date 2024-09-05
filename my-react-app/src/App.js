@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import Home from '../src/pages/Home';
-import SignIn from '../src/pages/SignIn';
-import CreateAccount from '../src/pages/CreateAccount';
-import ContactUs from '../src/pages/ContactUs';
-import AboutUs from '../src/pages/AboutUs';
-import NotFound from '../src/pages/NotFound';
+import Home from './Pages/Home';
+import SignIn from './Pages/SignIn';
+import CreateAccount from './Pages/CreateAccount';
+import ContactUs from './Pages/ContactUs';
+import AboutUs from './Pages/AboutUs';
+import NotFound from './Pages/NotFound';
+import UserInfo from './Pages/UserInfo'
 import {Route,Routes,Navigate} from "react-router-dom";
 
 function App() {
