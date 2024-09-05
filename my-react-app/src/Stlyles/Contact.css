@@ -59,4 +59,20 @@
   .submit-button:hover {
     background-color: #32cd32;
   }
-  
+
+.footer-image-container {
+  width: 100%; 
+  display: flex;
+  justify-content: center; 
+  background-color: #1f1f1f;
+  padding: 20px 0; 
+  position: relative; 
+  bottom: 0; 
+}
+
+.footer-image {
+  max-width: 100%;
+  height: auto; 
+  border-radius: 8px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}

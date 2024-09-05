@@ -12,23 +12,5 @@
     background-color: #00ff00;
   }
   
-  .search-bar {
-    display: flex;
-    align-items: center;
-  }
-  
-  .search-input {
-    padding: 5px;
-    border: none;
-    outline: none;
-    background-color: #333;
-    color: #fff;
-  }
-  
-  .search-button {
-    background-color: #00ff00;
-    border: none;
-    padding: 5px;
-    cursor: pointer;
-  }
+ 
   
