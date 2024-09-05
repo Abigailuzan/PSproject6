@@ -1,10 +1,11 @@
 
 import React from 'react';
-import Navbar from '../Conponents/Navbar';
+import NavbarLeft from '../Conponents/NavbarLeft';
 import MovieCard from '../Conponents/MovieCard';
 import '../Stlyles/Home.css';
 import SearchIcon from '@mui/icons-material/Search';
 import Footer from '../Conponents/Footer';
+import InOutButton from '../Conponents/InOutButton'
 
 const movies = [
   { title: 'Bruh',  image: 'bruh.jpg' },
@@ -21,7 +22,11 @@ const movies = [
 function Home () {
   return (
     <div className="home-container">
-      <Navbar />
+      <nav className="nav">
+        <NavbarLeft />
+        <InOutButton/>
+      </nav>
+      <h1 className="home-h1">Welcome </h1>
       <div className="search-bar">
         <input className="search-input" placeholder="Search..." />
         <button className="search-button">

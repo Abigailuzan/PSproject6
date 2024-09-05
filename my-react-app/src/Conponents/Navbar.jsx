@@ -1,18 +1,15 @@
-import React from 'react';
-import '../Stlyles/Navbar.css';
-import { Button } from '@mui/material';
-import { Link } from 'react-router-dom';
-
-const Navbar = () => {
+import React from 'react'
+import NavbarLeft from './NavbarLeft'
+import NavbarRight from './NavbarRight'
+function Navbar() {
   return (
+    <div>
     <nav className="nav">
-      <div className="logo">movieWatch</div>
-      
-      <Link to="/sign-in">
-      <Button variant="contained" color="success">Sign In</Button>
-      </Link>
-    </nav>
-  );
-};
+   <NavbarLeft/>
+   <NavbarRight/>
+   </nav>
+</div>
+  )
+}
 
-export default Navbar;
+export default Navbar

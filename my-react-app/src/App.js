@@ -6,6 +6,8 @@ import CreateAccount from './Pages/CreateAccount';
 import ContactUs from './Pages/ContactUs';
 import AboutUs from './Pages/AboutUs'
 import NotFound from './Pages/NotFound';
+import UserInfo
+ from './Pages/UserInfo';
 import {Route,Routes,Navigate} from "react-router-dom"
 
 function App() {
@@ -30,6 +32,7 @@ function App() {
       <Route path="create-account"element={<CreateAccount />} />
       <Route path="contact-us"element={<ContactUs />} />
       <Route path="about-us"element={<AboutUs />} />
+      <Route path="user-info"element={<UserInfo />} />
       <Route path="*" element={<NotFound/>} />
     </Routes>
   </>

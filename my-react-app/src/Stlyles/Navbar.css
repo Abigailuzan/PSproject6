@@ -1,16 +1,74 @@
 .nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background-color: #1f1f1f;
-  }
-  
-  .logo {
-    color: #000000;
-    font-size: 24px;
-    background-color: #00ff00;
-  }
-  
- 
-  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #1f1f1f;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center; 
+  gap: 20px; 
+}
+
+.logo {
+  color: #000000;
+  font-size: 24px;
+  background-color: #00ff00;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+
+.user-info {
+  display: flex;
+  align-items: center; 
+  gap: 10px; 
+  color: #ffffff; 
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px; 
+}
+
+
+.home-link,
+.sign-in-link {
+  text-decoration: none;
+}
+
+
+.home-icon {
+  color: rgba(0, 255, 0, 0.5);
+  font-size: 2000px;
+  cursor: pointer;
+  transition: color 0.3s ease; 
+}
+
+.home-icon:hover {
+  color:rgba(0, 255, 0, 0.9);
+}
+
+/* Styling for the custom Sign In button */
+.sign-in-button {
+  font-size: 16px;
+  font-weight: bold;
+  background-color: rgba(0, 255, 0, 0.5);
+  color: #ffffff;
+  text-transform: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+
+.sign-in-button:hover {
+  background-color: rgba(0, 255, 0, 0.9);
+}
