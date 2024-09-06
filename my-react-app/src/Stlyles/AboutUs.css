@@ -27,7 +27,7 @@ body {
 }
 
 /* Main heading */
-h1 {
+.h1-about-us{
   font-size: 3rem;
   font-weight: 700;
   text-align: center;
@@ -36,7 +36,7 @@ h1 {
 }
 
 /* Subheadings */
-h2 {
+.h2-about-us {
   font-size: 2rem;
   margin: 20px 0;
   color:#05a079;;

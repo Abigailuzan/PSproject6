@@ -65,6 +65,12 @@
 .submit-button:hover {
   background-color: #32cd32;
 }
+.h1-contant{
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color:  #00ff00; 
+}
 
 /* .footer-image-container {
   width: 100%;

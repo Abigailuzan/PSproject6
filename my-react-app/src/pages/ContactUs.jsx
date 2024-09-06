@@ -10,12 +10,12 @@ function ContactUs() {
         <div className="app-container">
             <div className="contact-form-container">
                 <div className="contact-form-info">
-                    <h5>WE'RE HERE TO HELP</h5>
-                    <h2>Contact us</h2>
-                    <p>
+                    <h3>WE'RE HERE TO HELP</h3>
+                    <h1 className="h1-contant">Contact us</h1>
+                    <h4>
                         Please submit your inquiry using the form below and we will get in touch with you
                         shortly.
-                    </p>
+                    </h4>
                 </div>
                 <ContactForm/>
             </div>

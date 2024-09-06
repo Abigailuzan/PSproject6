@@ -1,8 +1,11 @@
 import React from 'react'
-
+import Navbar from '../Conponents/Navbar'
 function UserInfo() {
   return (
-    <div>UserInfo</div>
+    <div>
+       <Navbar/>
+      <h1>UserInfo</h1>
+    </div>
   )
 }
 

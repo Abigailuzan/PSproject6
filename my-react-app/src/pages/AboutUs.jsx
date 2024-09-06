@@ -10,7 +10,7 @@ function AboutUs () {
     <div>
       <Navbar/>
       <div className="background_text">
-        <h1>ABOUT US</h1>
+        <h1 className="h1-about-us">ABOUT US</h1>
         <a href="#family_video">Watch what happens in my life</a>
          <Article/>
         <div className="grid-container">

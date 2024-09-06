@@ -8,6 +8,7 @@ import AboutUs from './Pages/AboutUs';
 import NotFound from './Pages/NotFound';
 import UserInfo from './Pages/UserInfo'
 import {Route,Routes,Navigate} from "react-router-dom";
+import Movie from './Pages/Movie';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -32,6 +33,7 @@ function App() {
       <Route path="contact-us"element={<ContactUs />} />
       <Route path="about-us"element={<AboutUs />} />
       <Route path="user-info"element={<UserInfo />} />
+      <Route path="Movie/:title"element={<Movie />}/> 
       <Route path="*" element={<NotFound/>} />
     </Routes>
   </>

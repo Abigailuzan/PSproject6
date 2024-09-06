@@ -5,7 +5,7 @@ function Article() {
     <article>
     {/* Section about the company's story */}
     <section>
-      <h2>OUR STORY</h2>
+      <h2 className="h2-about-us">OUR STORY</h2>
       <p>
         It all started when Ariel searched for a movie to download. It took him <strong>hours</strong> to figure
         out which movie to watch. There has to be a simpler way to find great movies. Ariel decided to make our
@@ -15,7 +15,7 @@ function Article() {
 
     {/* Section about the company's vision */}
     <section>
-      <h2>OUR VISION</h2>
+      <h2 className="h2-about-us">OUR VISION</h2>
       <p>
         Spending time with friends and family is important. What could be better than enjoying their company and
         watching a movie together? Laughing, relaxing, and having a good time together relieves stress and

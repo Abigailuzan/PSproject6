@@ -2,12 +2,17 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 import '../Stlyles/Navbar.css';
-function InOutButton() {
+// import LogoutIcon from '@mui/icons-material/Logout';
+// import LoginIcon from '@mui/icons-material/Login';
+
+function InOutButton({name,logOut}) {
   return (
     <div>
-    <Link to="/sign-in">
-    <botton className="sign-in-button">Sign In</botton>
-    </Link>
+    {name? 
+    <button className="sign-in-button" onClick={()=>{logOut()}}>Log out</button>:
+    <Link to="/sign-in">  
+    <button className="sign-in-button">Sign In</button>
+    </Link>}
     </div>
   )
 }

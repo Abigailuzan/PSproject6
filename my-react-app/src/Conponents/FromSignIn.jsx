@@ -1,14 +1,14 @@
 import React,{useState } from 'react';
 import Password from './Password'
 import { useNavigate } from 'react-router-dom';
-//import useLocalStorage from '../UseHook/useLocalStorage'
+import useLocalStorage from '../UseHooks/useLocalStorage'
 //import {fetchData} from '../APIServer'
 function FromSignIn() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error,setError]=useState(null);
   const navigate = useNavigate();
-  //const storge = useLocalStorage();
+  const storge = useLocalStorage();
   const handleSubmit = (event) => {
     event.preventDefault();
     // fetchData(`users?username=${username}`)
@@ -27,6 +27,7 @@ function FromSignIn() {
     //     }
     // }
     // ).catch((error)=>{setError(error)})
+    storge.set({username:username,admin:false});
     navigate("/home");
     
   }

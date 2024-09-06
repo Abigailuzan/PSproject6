@@ -3,18 +3,18 @@ import '../Stlyles/Navbar.css';
 import { Link } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
-const Navbar = () => {
+const NavbarLeft = ({name}) => {
   return (
         <div className="nav-left">
         <div className="logo">movieWatch</div> 
-        <Link to="/user-info" className="user-info">
+        {name && <Link to="/user-info" className="user-info">
           <div className="user-info">
             <AccountCircleIcon fontSize="large" className="user-icon" />
-            <h3 className="username">userName</h3>
+            <h3 className="username">{name}</h3>
           </div>
-        </Link>
+        </Link>}
       </div>  
   );
 };
 
-export default Navbar;
+export default NavbarLeft;

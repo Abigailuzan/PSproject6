@@ -42,14 +42,14 @@
 }
 
 
-.home-icon {
+.icon {
   color: rgba(0, 255, 0, 0.5);
   font-size: 2000px;
   cursor: pointer;
   transition: color 0.3s ease; 
 }
 
-.home-icon:hover {
+.icon:hover {
   color:rgba(0, 255, 0, 0.9);
 }
 
@@ -71,4 +71,7 @@
 
 .sign-in-button:hover {
   background-color: rgba(0, 255, 0, 0.9);
+}
+.admin-tool{
+  align-items: left; 
 }
