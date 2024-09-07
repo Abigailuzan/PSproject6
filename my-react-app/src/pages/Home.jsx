@@ -44,7 +44,7 @@ function Home () {
         <NavbarLeft name={username} />
         <h1>Welcome  {username ? username : ' '} </h1>
         <div className="nav-actions">
-        <AdminToolBar/>
+       {storage.addmin &&<AdminToolBar/>}
        <InOutButton name={username}   setUsername={setUsername}  logOut={handleClickLogout}/>
        </div>
       </nav> 
