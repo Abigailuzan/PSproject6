@@ -44,7 +44,7 @@ const MovieCard = ({ title, type, season, episode, image ,storage}) => {
           <MoreVertIcon className="more-options-icon" />
         </button>
       </Tooltip> */}
-      <div>
+      {storage.admin&&<div>
       <Tooltip title="Delete" arrow>
           <DeleteIcon onClick={handleDelete } className="icon" />
        </Tooltip>
@@ -53,7 +53,7 @@ const MovieCard = ({ title, type, season, episode, image ,storage}) => {
        <EditIcon className="icon" />
     </Link>
     </Tooltip>
-    </div>
+    </div>}
     <div onClick={handleClick}>
       <img className="movie-image" src={image} alt={title} />
       <div className="card-details">

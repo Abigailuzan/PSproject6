@@ -1,18 +1,33 @@
 
-html, body {
-  height: 100%;
-  margin: 0;
-}
 
 .video-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0;
+
 }
 
 iframe {
-  padding:20px;
-  justify-content: center;
+ margin-left: 350px;
+   justify-content: center;
   align-items: center;
+}
+.description-container {
+  margin-top: 20px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.movie-description {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: #fff;
+  text-align: justify;
 }

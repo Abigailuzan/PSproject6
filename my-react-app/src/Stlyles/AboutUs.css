@@ -53,7 +53,7 @@ article {
 }
 
 /* Styling for the first letter of each paragraph */
-p::first-letter {
+.p-about::first-letter {
   color: #05a079;
   font-size: 2rem;
   font-weight: bold;
