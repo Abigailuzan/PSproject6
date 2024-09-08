@@ -72,16 +72,16 @@
   color:  #00ff00; 
 }
 
-/* .footer-image-container {
+.footer-image-container {
   width: 100%;
-  height: 200px; 
+  height:200px;
   background-image: linear-gradient(
           rgba(0, 0, 0, 0.3),
           rgba(255, 255, 255, 0.3)
   ),
-  url('/C:/Users/user/Downloads/e758e819-53e3-4c78-b384-ac78b3457d2c.webp');
+  url('../../public/Pictures/e758e819-53e3-4c78-b384-ac78b3457d2c.webp');
   background-repeat: repeat-x;
  background-size: 400px auto;
   background-position: center;
   flex-shrink: 0;
-} */
+}
