@@ -10,42 +10,42 @@ import InOutButton from '../Conponents/InOutButton'
 import AdminToolBar from '../Conponents/AdminToolBar'
 
 const movies = [
-  { title: 'Bruh',  image: 'bruh.jpg' },
-  { title: 'Bruh',  image: 'bruh.jpg' },
-  { title: 'Bruh',  image: 'bruh.jpg' },
-  { title: 'Bruh', image: 'bruh.jpg' },
-  { title: 'Bruh',  image: 'bruh.jpg' },
-  { title: 'Bruh',  image: 'bruh.jpg' },
-  { title: 'Bruh',  image: 'bruh.jpg' },
-  { title: 'Bruh',  image: 'bruh.jpg' },
-  { title: 'Bruh',  image: 'bruh.jpg' },
-  { title: 'Bruh',  image: 'bruh.jpg' },
-  { title: 'Bruh',  image: 'bruh.jpg' },
-  { title: 'Bruh',  image: 'bruh.jpg' },
+  { id:1,title: 'Bruh',  image: 'bruh.jpg' },
+  { id:1,title: 'Bruh',  image: 'bruh.jpg' },
+  { id:1,title: 'Bruh',  image: 'bruh.jpg' },
+  {id:1, title: 'Bruh', image: 'bruh.jpg' },
+  {id:1, title: 'Bruh',  image: 'bruh.jpg' },
+  { id:1,title: 'Bruh',  image: 'bruh.jpg' },
+  { id:1,title: 'Bruh',  image: 'bruh.jpg' },
+  {id:1, title: 'Bruh',  image: 'bruh.jpg' },
+  {id:1, title: 'Bruh',  image: 'bruh.jpg' },
+  { id:1,title: 'Bruh',  image: 'bruh.jpg' },
+  { id:1,title: 'Bruh',  image: 'bruh.jpg' },
+  { id:1,title: 'Bruh',  image: 'bruh.jpg' },
 ];
 function Home () {
   const storage = useLocalStorage();
-  const [username, setUsername] = useState(null);
+  const [userName, setUserName] = useState(null);
   let admin=false;
   useEffect(() => {
     if(storage.value!=null){
-     setUsername(storage.value.username);
+     setUserName(storage.value.userName);
      admin=storage.value.admin;
     }
    }, [storage.value]);
    function handleClickLogout ()  {
     storage.remove();
-    setUsername(null); 
+    setUserName(null); 
   };
   return (
     <div className="home-container">
      <div>
       <nav className="nav">
-        <NavbarLeft name={username} />
-        <h1>Welcome  {username ? username : ' '} </h1>
+        <NavbarLeft name={userName} />
+        <h1>Welcome  {userName ? userName : ' '} </h1>
         <div className="nav-actions">
-       {storage.addmin &&<AdminToolBar/>}
-       <InOutButton name={username}   setUsername={setUsername}  logOut={handleClickLogout}/>
+       {storage?.value.email.includes('@staff') &&<AdminToolBar/>}
+       <InOutButton name={userName}   setUsername={setUserName}  logOut={handleClickLogout}/>
        </div>
       </nav> 
       <div className="search-bar">

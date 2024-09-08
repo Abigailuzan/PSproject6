@@ -9,12 +9,12 @@ function AdminToolBar() {
   return (
     <div>
        <Tooltip title="Add movie" arrow>
-        <Link to="/add-item" className="home-link">
+        <Link to="/add-movie" className="home-link">
           <AddIcon fontSize="large" className="icon" />
         </Link>
       </Tooltip>
       <Tooltip title="Add admin" arrow>
-         <Link to="/home" className="home-link">
+         <Link to="/add-admin" className="home-link">
           <PersonAddIcon fontSize="large" className="icon" />
         </Link>    
        </Tooltip>
