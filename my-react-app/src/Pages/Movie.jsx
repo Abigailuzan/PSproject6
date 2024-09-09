@@ -7,7 +7,7 @@ import useLocalStorage from '../UseHooks/useLocalStorage'
 import '../Stlyles/Movie.css'
 function Movie() {
   const storage = useLocalStorage();
-  const { title } = useParams();
+  const { id ,title } = useParams();
   const movies = [
     { title: 'Bruh',  image: 'bruh.jpg' },
     { title: 'Bruh',  image: 'bruh.jpg' },
@@ -22,7 +22,7 @@ function Movie() {
     <div>
       <Navbar/>
       <h1>{title} </h1>
-      < MovieInfo/>
+      < MovieInfo id={id} title={title} />
       <h2>Recommended</h2>
       <div className="home-content">
         {movies.map((movie, index) => (

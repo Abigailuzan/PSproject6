@@ -2,7 +2,7 @@
 .app-container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* גובה מלא של חלון הדפדפן */
+  /* min-height: 100vh; גובה מלא של חלון הדפדפן */
 }
 
 .contact-form-container {
@@ -11,7 +11,7 @@
   justify-content: center;
   background-color: #1f1f1f;
   color: #fff;
-  min-height: calc(100vh - 200px); /* גובה המסך פחות גובה ה-footer */
+  min-height: calc(100vh - 290px);/* גובה המסך פחות גובה ה-footer */
   padding: 40px; /* הוספת padding כדי לשפר את הפריסה */
 }
 
@@ -70,6 +70,7 @@
   font-weight: 700;
   margin-bottom: 20px;
   color:  #00ff00; 
+  text-align: left;
 }
 
 .footer-image-container {

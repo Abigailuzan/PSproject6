@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import useLocalStorage from '../UseHooks/useLocalStorage'
 //import {fetchData} from '../APIServer'
 function FromSignIn() {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error,setError]=useState(null);
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ function FromSignIn() {
     //     }
     // }
     // ).catch((error)=>{setError(error)})
-    storge.set({username:username,admin:false});
+    storge.set({id: 1 ,email:email, userName:'ben'});
     navigate("/home");
     
   }
@@ -35,11 +35,11 @@ function FromSignIn() {
     <div className="form-container">
       <form onSubmit={handleSubmit}>
         <input 
-          type="text" 
-          name="username"
-          placeholder="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          type="email" 
+          name="email"
+          placeholder="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           required
           className="input-box"
         />
