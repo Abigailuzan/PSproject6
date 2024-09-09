@@ -7,7 +7,7 @@ function Navbar() {
     const [username, setUsername] = useState(null);
     useEffect(() => {
       if(storage.value!=null){
-       setUsername(storage.value.username);
+       setUsername(storage.value.userName);
       }
      }, [storage.value]);
      function handleClickLogout ()  {

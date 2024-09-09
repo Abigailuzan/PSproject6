@@ -1,9 +1,10 @@
 import React from 'react'
-import NewAccountForm from '../Conponents/NewAccountFrom'
+import NeweAccount from '../Conponents/NewAccount'
 function CreateAccount() {
   return (
-    <div><h1> Create a movieWatch Account</h1>
-    <NewAccountForm/>
+    <div>
+      <h1> Create a movieWatch Account</h1>
+    <NeweAccount/>
     </div>
   )
 }

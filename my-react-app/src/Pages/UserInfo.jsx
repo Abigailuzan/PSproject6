@@ -4,7 +4,7 @@ function UserInfo() {
   return (
     <div>
        <Navbar/>
-      <h1>UserInfo</h1>
+      <h1>User Information</h1>
     </div>
   )
 }
