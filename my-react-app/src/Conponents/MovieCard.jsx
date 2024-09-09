@@ -10,7 +10,6 @@ import MenuItem from '@mui/material/MenuItem';
 const MovieCard = ({ id,title, type, season, episode, image ,storage}) => {
   // const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
-  console.log(storage.admin);
   // const handleClick = (event) => {
   //   setAnchorEl(event.currentTarget);
   // };

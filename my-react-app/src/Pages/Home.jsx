@@ -26,11 +26,9 @@ const movies = [
 function Home () {
   const storage = useLocalStorage();
   const [userName, setUserName] = useState(null);
-  let admin=false;
   useEffect(() => {
     if(storage.value!=null){
      setUserName(storage.value.userName);
-     admin=storage.value.admin;
     }
    }, [storage.value]);
    function handleClickLogout ()  {
@@ -44,7 +42,7 @@ function Home () {
         <NavbarLeft name={userName} />
         <h1>Welcome  {userName ? userName : ' '} </h1>
         <div className="nav-actions">
-       {storage?.value.email.includes('@staff') &&<AdminToolBar/>}
+        {storage.value && storage.value.email && storage.value.email.includes('@staff') && <AdminToolBar />} 
        <InOutButton name={userName}   setUsername={setUserName}  logOut={handleClickLogout}/>
        </div>
       </nav> 
