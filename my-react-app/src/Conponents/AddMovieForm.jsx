@@ -14,11 +14,12 @@ function AddMovieForm({ onSubmit }) {
     e.preventDefault();
 
     const movieData = {
-      title,
-      description,
+      title:title,
+      description:description,
       release_year: releaseYear,
-      length,
-      rating,
+      length:length,
+      rating:rating,
+      last_update : new Date(),
       movie_image: movieImageUrl,
       movie_video: movieVideoUrl,
     };

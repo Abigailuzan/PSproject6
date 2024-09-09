@@ -1,9 +1,19 @@
 import React from 'react'
 import Navbar from '../Conponents/Navbar'
 import AddMovieForm from '../Conponents/AddMovieForm'
+import axios from "axios";
 function AddMovie() {
   function onSubmit(movie){
-    console.log(movie);
+      axios.post('http://localhost:5000/movies',movie)
+          .then(response => {
+              console.log('movie added')
+              const addedMovie = response.data;
+              console.log(addedMovie)
+              alert('movie added successfully');
+          })
+          .catch(error => {
+              console.error('There was an error fetching the message!', error);
+          });
   }
   return (
     <div>
