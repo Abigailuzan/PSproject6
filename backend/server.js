@@ -103,9 +103,6 @@ router.get('/movies', async (req, res) => {
     const movies = await getAllMovies();
     res.json(movies);
 });
-
-
-
 router.post('/movies', async (req, res) => {
     const newMovie = await insertMovie(req.body);
     res.status(201).json(newMovie);
