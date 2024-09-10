@@ -14,7 +14,7 @@ async function getCustomerByID(id) {
     return rows[0];
 }
 async function getAllCustomers() {
-    const [rows] = await pool.query(`SELECT * FROM customer WHERE active=1`);//רק לקוחות אקטיביים
+    const [rows] = await pool.query(`SELECT * FROM customer`);
     return rows;
 }
 async function insertCustomer(customer) {
@@ -51,15 +51,15 @@ async function getAllMovies() {
 }
 async function insertMovie(movie) {
     const [result] = await pool.query(
-        `INSERT INTO movie (title, description, release_year, language_id, rental_rate, length, rating, last_update, movie_image, movie_video) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [movie.title, movie.description, movie.releaseYear, movie.languageId, movie.rentalRate, movie.length, movie.rating, movie.lastUpdate, movie.movie_image, movie.movie_video]
+        `INSERT INTO movie (title, description, release_year,length, rating, last_update, movie_image, movie_video) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        [movie.title, movie.description, movie.release_year,  movie.length, movie.rating, movie.last_update, movie.movie_image, movie.movie_video]
     );
     return getMovieByID(result.insertId);
 }
 async function updateMovie(id, movie) {
     const [result] = await pool.query(
-        `UPDATE movie SET title = ?, description = ?, release_year = ?, language_id = ?, rental_rate = ?, length = ?, rating = ?, last_update = ?, movie_image = ?, movie_video = ? WHERE film_id = ?`,
-        [movie.title, movie.description, movie.releaseYear, movie.languageId, movie.rentalRate, movie.length, movie.rating, movie.lastUpdate, movie.movie_image, movie.movie_video, id]
+        `UPDATE movie SET title = ?, description = ?, release_year = ?, length = ?, rating = ?, last_update = ?, movie_image = ?, movie_video = ? WHERE film_id = ?`,
+        [movie.title, movie.description, movie.release_year,  movie.length, movie.rating, movie.last_update, movie.movie_image, movie.movie_video, id]
     );
     return getMovieByID(id);
 }
@@ -69,26 +69,17 @@ async function deleteMovie(id) {
 }
 async function getMoviesByTitle(title) {
     const [rows] = await pool.query(`SELECT * FROM movie WHERE title LIKE ?`, [`%${title}%`]);
-    return rows;
+    return rows[0];
 }
-async function updateMovieByTitle(title, updatedMovie) {
-    const [result] = await pool.query(
-        `UPDATE movie SET description = ?, release_year = ?, language_id = ?, rental_rate = ?, length = ?, rating = ?, last_update = ?, movie_image = ?, movie_video = ? WHERE title = ?`,
-        [
-            updatedMovie.description,
-            updatedMovie.releaseYear,
-            updatedMovie.languageId,
-            updatedMovie.rentalRate,
-            updatedMovie.length,
-            updatedMovie.rating,
-            updatedMovie.lastUpdate,
-            updatedMovie.movie_image,
-            updatedMovie.movie_video,
-            title
-        ]
-    );
-    return result.affectedRows > 0;
+async function updateMovieByTitle(title, updated_Movie) {
+    const movie = await getMoviesByTitle(title);
+    if (movie) {
+        return updateMovie(movie.film_id, updated_Movie);
+    } else {
+        throw new Error('Movie not found');
+    }
 }
+
 
 // CRUD operations for the "actor" table
 async function getActorByID(id) {

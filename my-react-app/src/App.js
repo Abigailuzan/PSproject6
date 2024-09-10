@@ -14,18 +14,6 @@ import AddAdmin from './Pages/AddAdmin';
 import AddMovie from './Pages/AddMovie';
 
 function App() {
-  const [message, setMessage] = useState('');
-
-  useEffect(() => {
-    axios.get('http://localhost:5000/api/hello')
-        .then(response => {
-          setMessage(response.data.message);
-        })
-        .catch(error => {
-          console.error('There was an error fetching the message!', error);
-        });
-  }, []);
-
   return (
     <>
     <Routes>
