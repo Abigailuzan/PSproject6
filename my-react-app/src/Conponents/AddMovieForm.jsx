@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../Stlyles/AddMovieForm.css'; 
+import '../Stlyles/MovieForm.css'; 
 
 function AddMovieForm({ onSubmit }) {
   const [title, setTitle] = useState('');
@@ -72,7 +72,7 @@ function AddMovieForm({ onSubmit }) {
             onChange={(e) => setRating(e.target.value)}
             required
           >
-            <option value="">Select rating</option>
+            <option value="" disabled hidden>Select rating</option>
             <option value="G">G</option>
             <option value="PG">PG</option>
             <option value="PG-13">PG-13</option>

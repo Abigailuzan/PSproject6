@@ -1,10 +1,11 @@
 import FromSignIn from '../Conponents/FromSignIn';
-import { Link } from 'react-router-dom';
+import NavbarLeft from '../Conponents/NavbarLeft'
 function SignIn() {
   return (  
+
     <div>
+      <NavbarLeft/>
         <h1>Sign in</h1>
-        <Link to="/create-account"> Create account</Link>
         <FromSignIn />
     </div>
   );

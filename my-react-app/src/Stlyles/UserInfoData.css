@@ -1,0 +1,27 @@
+.user-info-container {
+    background-color: #1f1f1f; /* Dark background */
+    color: white; /* White text color */
+    padding: 20px;
+    max-width: 500px; /* Adjust width as necessary */
+    margin: 40px auto; /* Center align the container */
+    border-radius: 8px;
+}
+
+.user-info-container div {
+    margin-bottom: 10px; /* Space between each label and value */
+}
+
+.user-info-container label {
+    font-weight: bold; /* Make labels bold */
+    display: block; /* Block makes it take the full width */
+}
+
+.user-info-container p {
+    background-color: #333; /* Slightly lighter background for contrast */
+    padding: 10px;
+    border-radius: 4px;
+    
+}
+label{
+    color: white;
+}

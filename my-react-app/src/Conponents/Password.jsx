@@ -1,5 +1,5 @@
 import React,{ useState }  from 'react'
-//import { FaEye, FaEyeSlash } from "react-icons/fa";
+import '../Stlyles/Password.css'
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 function Password({setPassword,password}) {
@@ -13,7 +13,6 @@ function Password({setPassword,password}) {
         <input 
             type={showPassword ? "text" : "password"}
             name="password" 
-            placeholder="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
