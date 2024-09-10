@@ -7,7 +7,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Tooltip from '@mui/material/Tooltip';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-const MovieCard = ({ id,title, type, season, episode, image ,storage}) => {
+const MovieCard = ({ film_id,title, type, season, episode, movie_image ,storage}) => {
   // const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
   // const handleClick = (event) => {
@@ -21,7 +21,7 @@ const MovieCard = ({ id,title, type, season, episode, image ,storage}) => {
 
   const handleClick=()=>{
     if (storage.value){
-      navigate( `/movie/${id}/${ title}`);
+      navigate( `/movie/${film_id}/${title}`);
     }
     else{
       navigate( '/sign-in');
@@ -32,7 +32,7 @@ const MovieCard = ({ id,title, type, season, episode, image ,storage}) => {
   return (
     <div className="movie-card">
     <div onClick={handleClick}>
-      <img className="movie-image" src={image} alt={title} />
+      <img className="movie-image" src={movie_image} alt={title} />
       <div className="card-details">
         <h3 className="card-title">{title}</h3>
         {/* <p className="card-info">{type} {season && `S${season}`} {episode && `E${episode}`}</p> */}

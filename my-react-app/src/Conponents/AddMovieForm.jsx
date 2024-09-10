@@ -19,7 +19,7 @@ function AddMovieForm({ onSubmit }) {
       release_year: releaseYear,
       length:length,
       rating:rating,
-      last_update : new Date(),
+      last_update :  new Date().toISOString().split('T')[0],
       movie_image: movieImageUrl,
       movie_video: movieVideoUrl,
     };
