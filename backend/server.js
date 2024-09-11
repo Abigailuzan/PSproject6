@@ -401,6 +401,7 @@ app.get('/cities', async (req, res) => {
         res.status(500).json({ error: 'Error fetching cities' });
     }
 });
+
 app.post('/cities', async (req, res) => {
     try {
         const newCity = await insertCity(req.body);
