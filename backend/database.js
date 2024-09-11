@@ -176,8 +176,8 @@ async function getAllMovieTexts() {
 }
 async function insertMovieText(movieText) {
     const [result] = await pool.query(
-        `INSERT INTO movieText (film_id, title, description) VALUES (?, ?, ?)`,
-        [movieText.filmId, movieText.title, movieText.description]
+        `INSERT INTO movieText ( title, description) VALUES (?, ?)`,
+        [ movieText.title, movieText.description]
     );
     return getMovieTextByID(result.insertId);
 }
@@ -205,14 +205,14 @@ async function getAllCities() {
 async function insertCity(city) {
     const [result] = await pool.query(
         `INSERT INTO city (city, country_id, last_update) VALUES (?, ?, ?)`,
-        [city.name, city.countryId, city.lastUpdate]
+        [city.city, city.country_id, city.last_update]
     );
     return getCityByID(result.insertId);
 }
 async function updateCity(id, city) {
     const [result] = await pool.query(
         `UPDATE city SET city = ?, country_id = ?, last_update = ? WHERE city_id = ?`,
-        [city.name, city.countryId, city.lastUpdate, id]
+        [city.city, city.country_id, city.last_update, id]
     );
     return getCityByID(id);
 }
@@ -233,14 +233,14 @@ async function getAllCountries() {
 async function insertCountry(country) {
     const [result] = await pool.query(
         `INSERT INTO country (country, last_update) VALUES (?, ?)`,
-        [country.name, country.lastUpdate]
+        [country.country, country.last_update]
     );
     return getCountryByID(result.insertId);
 }
 async function updateCountry(id, country) {
     const [result] = await pool.query(
         `UPDATE country SET country = ?, last_update = ? WHERE country_id = ?`,
-        [country.name, country.lastUpdate, id]
+        [country.country, country.last_update, id]
     );
     return getCountryByID(id);
 }
@@ -261,14 +261,14 @@ async function getAllLanguages() {
 async function insertLanguage(language) {
     const [result] = await pool.query(
         `INSERT INTO language (name, last_update) VALUES (?, ?)`,
-        [language.name, language.lastUpdate]
+        [language.name, language.last_update]
     );
     return getLanguageByID(result.insertId);
 }
 async function updateLanguage(id, language) {
     const [result] = await pool.query(
         `UPDATE language SET name = ?, last_update = ? WHERE language_id = ?`,
-        [language.name, language.lastUpdate, id]
+        [language.name, language.last_update, id]
     );
     return getLanguageByID(id);
 }
@@ -279,7 +279,7 @@ async function deleteLanguage(id) {
 
 // CRUD operations for the "admin" table
 async function getAdminByID(id) {
-    const [rows] = await pool.query(`SELECT * FROM admin WHERE staff_id = ?`, [id]);
+    const [rows] = await pool.query(`SELECT * FROM admin WHERE admin_id = ?`, [id]);
     return rows[0];
 }
 async function getAllAdmins() {
@@ -287,21 +287,29 @@ async function getAllAdmins() {
     return rows;
 }
 async function insertAdmin(admin) {
-    const [result] = await pool.query(
-        `INSERT INTO admin (first_name, last_name, email, store_id, active, username, password, last_update) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-        [admin.firstName, admin.lastName, admin.email, admin.storeId, admin.active, admin.username, admin.password, admin.lastUpdate]
-    );
-    return getAdminByID(result.insertId);
+    if (!admin.email.includes('staff'))
+        throw new Error( "admins must includes staff in mail");
+    else {
+        const [result] = await pool.query(
+            `INSERT INTO admin (first_name, last_name, email, active, username, password, last_update) VALUES ( ?, ?, ?, ?, ?, ?, ?)`,
+            [admin.first_name, admin.last_name, admin.email, admin.active, admin.username, admin.password, admin.last_update]
+        );
+        return getAdminByID(result.insertId);
+    }
 }
 async function updateAdmin(id, admin) {
-    const [result] = await pool.query(
-        `UPDATE admin SET first_name = ?, last_name = ?, email = ?, store_id = ?, active = ?, username = ?, password = ?, last_update = ? WHERE staff_id = ?`,
-        [admin.firstName, admin.lastName, admin.email, admin.storeId, admin.active, admin.username, admin.password, admin.lastUpdate, id]
-    );
-    return getAdminByID(id);
+    if (!admin.email.includes('staff'))
+        throw "admins must includes staff in mail";
+    else{
+        const [result] = await pool.query(
+            `UPDATE admin SET first_name = ?, last_name = ?, email = ?, active = ?, username = ?, password = ?, last_update = ? WHERE admin_id = ?`,
+            [admin.first_name, admin.last_name, admin.email,  admin.active, admin.username,admin.password, admin.last_update, id]
+        );
+        return getAdminByID(id);
+    }
 }
 async function deleteAdmin(id) {
-    const [result] = await pool.query(`DELETE FROM admin WHERE staff_id = ?`, [id]);
+    const [result] = await pool.query(`DELETE FROM admin WHERE admin_id = ?`, [id]);
     return result.affectedRows > 0;
 }
 
@@ -317,14 +325,14 @@ async function getAllCategories() {
 async function insertCategory(category) {
     const [result] = await pool.query(
         `INSERT INTO category (name, last_update) VALUES (?, ?)`,
-        [category.name, category.lastUpdate]
+        [category.name, category.last_update]
     );
     return getCategoryByID(result.insertId);
 }
 async function updateCategory(id, category) {
     const [result] = await pool.query(
         `UPDATE category SET name = ?, last_update = ? WHERE category_id = ?`,
-        [category.name, category.lastUpdate, id]
+        [category.name, category.last_update, id]
     );
     return getCategoryByID(id);
 }
@@ -335,57 +343,110 @@ async function deleteCategory(id) {
 
 // CRUD operations for the "movie-actor" table
 async function getMovieActorByIDs(actorId, filmId) {
-    const [rows] = await pool.query(`SELECT * FROM movie_actor WHERE actor_id = ? AND film_id = ?`, [actorId, filmId]);
+    const [rows] = await pool.query(`SELECT * FROM movieactor WHERE actor_id = ? AND film_id = ?`, [actorId, filmId]);
     return rows[0];
 }
 async function getAllMovieActors() {
-    const [rows] = await pool.query(`SELECT * FROM movie_actor`);
+    const [rows] = await pool.query(`SELECT * FROM movieactor`);
     return rows;
 }
 async function insertMovieActor(movieActor) {
-    const [result] = await pool.query(
-        `INSERT INTO movie_actor (actor_id, film_id, last_update) VALUES (?, ?, ?)`,
-        [movieActor.actorId, movieActor.filmId, movieActor.lastUpdate]
-    );
-    return getMovieActorByIDs(movieActor.actorId, movieActor.filmId);
+    const movieExists = await getMovieByID(movieActor.film_id);
+    const actorExists = await getActorByID(movieActor.actor_id);
+
+    if (!movieExists || !actorExists) {
+        throw new Error('movie or actor does not exist');
+    }
+
+    const movieActorRelationExists = await getMovieActorByIDs(movieActor.actor_id, movieActor.film_id);
+    if (movieActorRelationExists) {
+        throw new Error('movie actor relation already exists');
+    } else {
+        const [result] = await pool.query(
+            `INSERT INTO movieactor (actor_id, film_id, last_update) VALUES (?, ?, ?)`,
+            [movieActor.actor_id, movieActor.film_id, movieActor.last_update]
+        );
+        return getMovieActorByIDs(movieActor.actor_id, movieActor.film_id);
+    }
+
 }
 async function updateMovieActor(actorId, filmId, movieActor) {
-    const [result] = await pool.query(
-        `UPDATE movie_actor SET last_update = ? WHERE actor_id = ? AND film_id = ?`,
-        [movieActor.lastUpdate, actorId, filmId]
-    );
-    return getMovieActorByIDs(actorId, filmId);
+    const movieExists = await getMovieByID(filmId);
+    const actorExists = await getActorByID(actorId);
+
+    if (!movieExists || !actorExists) {
+        throw new Error('movie or actor does not exist');
+    }
+
+    const movieActorRelationExists = await getMovieActorByIDs(actorId, filmId);
+    if (!movieActorRelationExists) {
+        throw new Error('movie actor relation does not exists');}
+
+    else{
+        const [result] = await pool.query(
+            `UPDATE movieactor SET actor_id = ?,film_id = ?,last_update = ? WHERE actor_id = ? AND film_id = ?`,
+            [movieActor.actor_id,movieActor.film_id,movieActor.last_update, actorId, filmId]
+        );
+        return getMovieActorByIDs(actorId, filmId);
+    }
 }
 async function deleteMovieActor(actorId, filmId) {
-    const [result] = await pool.query(`DELETE FROM movie_actor WHERE actor_id = ? AND film_id = ?`, [actorId, filmId]);
+    const [result] = await pool.query(`DELETE FROM movieactor WHERE actor_id = ? AND film_id = ?`, [actorId, filmId]);
     return result.affectedRows > 0;
 }
 
 // CRUD operations for the "movie-category" table
 async function getMovieCategoryByIDs(filmId, categoryId) {
-    const [rows] = await pool.query(`SELECT * FROM movie_category WHERE film_id = ? AND category_id = ?`, [filmId, categoryId]);
+    const [rows] = await pool.query(`SELECT * FROM moviecategory WHERE film_id = ? AND category_id = ?`, [filmId, categoryId]);
     return rows[0];
 }
 async function getAllMovieCategories() {
-    const [rows] = await pool.query(`SELECT * FROM movie_category`);
+    const [rows] = await pool.query(`SELECT * FROM moviecategory`);
     return rows;
 }
 async function insertMovieCategory(movieCategory) {
-    const [result] = await pool.query(
-        `INSERT INTO movie_category (film_id, category_id, last_update) VALUES (?, ?, ?)`,
-        [movieCategory.filmId, movieCategory.categoryId, movieCategory.lastUpdate]
-    );
-    return getMovieCategoryByIDs(movieCategory.filmId, movieCategory.categoryId);
+    const movie = await getCategoryByID(movieCategory.category_id);
+    const category = await getMovieByID(movieCategory.film_id);
+
+    if (!movie || !category) {
+        throw new Error('movie or category does not exist');
+    }
+
+    const movieCategoryRelation = await getMovieCategoryByIDs(movieCategory.film_id,movieCategory.category_id);
+    if (movieCategoryRelation ) {
+        throw new Error('movie category relation already exists');
+    }
+    else{
+        const [result] = await pool.query(
+            `INSERT INTO moviecategory (film_id, category_id, last_update) VALUES (?, ?, ?)`,
+            [movieCategory.film_id,movieCategory.category_id, movieCategory.last_update]
+        );
+        return getMovieCategoryByIDs(movieCategory.film_id,movieCategory.category_id);
+    }
 }
 async function updateMovieCategory(filmId, categoryId, movieCategory) {
-    const [result] = await pool.query(
-        `UPDATE movie_category SET last_update = ? WHERE film_id = ? AND category_id = ?`,
-        [movieCategory.lastUpdate, filmId, categoryId]
-    );
-    return getMovieCategoryByIDs(filmId, categoryId);
+
+    const movie = await getCategoryByID(categoryId);
+    const category = await getMovieByID(filmId);
+
+    if (!movie || !category) {
+        throw new Error('movie or category does not exist');
+    }
+
+    const movieCategoryRelation = await getMovieCategoryByIDs(filmId,categoryId);
+    if (!movieCategoryRelation ) {
+        throw new Error('movie category relation does not exists');
+    }
+    else{
+        const [result] = await pool.query(
+            `UPDATE moviecategory SET film_id = ?,category_id = ?,last_update = ? WHERE film_id = ? AND category_id = ?`,
+            [movieCategory.film_id,movieCategory.category_id, movieCategory.last_update,filmId,categoryId]
+        );
+        return getMovieCategoryByIDs(movieCategory.film_id, movieCategory.category_id);
+    }
 }
 async function deleteMovieCategory(filmId, categoryId) {
-    const [result] = await pool.query(`DELETE FROM movie_category WHERE film_id = ? AND category_id = ?`, [filmId, categoryId]);
+    const [result] = await pool.query(`DELETE FROM moviecategory WHERE film_id = ? AND category_id = ?`, [filmId, categoryId]);
     return result.affectedRows > 0;
 }
 
