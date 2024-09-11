@@ -157,106 +157,229 @@ app.put('/movies/title/:title', async (req, res) => {
 
 // CRUD routes for Actor
 app.get('/actors/:id', async (req, res) => {
-    const actor = await getActorByID(req.params.id);
-    actor ? res.json(actor) : res.status(404).json({ error: 'Actor not found' });
+    try {
+        const actor = await getActorByID(req.params.id);
+        if (actor) {
+            res.status(200).json(actor);
+        } else {
+            res.status(404).json({ error: 'actor not found' });  // אם לא נמצא הלקוח
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Error fetching actor' });
+    }
 });
-
 app.get('/actors', async (req, res) => {
-    const actors = await getAllActors();
-    res.json(actors);
+    try {
+        const actors = await getAllActors();
+        res.status(200).json(actors);
+    } catch (error) {
+        res.status(500).json({ error: 'Error fetching actors' });
+    }
 });
-
 app.post('/actors', async (req, res) => {
     const newActor = await insertActor(req.body);
     res.status(201).json(newActor);
+    try {
+        const newActor = await insertActor(req.body);
+        res.status(201).json(newActor);
+    } catch (error) {
+        res.status(500).json({ error: 'Error creating Actor' });
+    }
 });
-
 app.put('/actors/:id', async (req, res) => {
-    const updatedActor = await updateActor(req.params.id, req.body);
-    res.json(updatedActor);
+    try {
+        const updatedActor = await updateActor(req.params.id, req.body);
+        if (updatedActor) {
+            res.status(200).json(updatedActor);
+        } else {
+            res.status(404).json({ error: 'Actor not found' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error updating Actor' });
+    }
 });
-
 app.delete('/actors/:id', async (req, res) => {
-    const success = await deleteActor(req.params.id);
-    success ? res.status(204).end() : res.status(404).json({ error: 'Actor not found' });
+    try {
+        const success = await deleteActor(req.params.id);
+        if (success) {
+            res.status(204).end();
+        } else {
+            res.status(404).json({ error: 'actor not found' });
+        }
+    }
+    catch (error) {
+        res.status(500).json({ error: 'Error deleting actor' });
+    }
 });
 
 // CRUD routes for Payment
 app.get('/payments/:id', async (req, res) => {
-    const payment = await getPaymentByID(req.params.id);
-    payment ? res.json(payment) : res.status(404).json({ error: 'Payment not found' });
+    try {
+        const payment = await getPaymentByID(req.params.id);
+        if (payment) {
+            res.status(200).json(payment);
+        } else {
+            res.status(404).json({ error: 'payment not found' });  // אם לא נמצא הלקוח
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Error fetching payment' });
+    }
 });
-
 app.get('/payments', async (req, res) => {
-    const payments = await getAllPayments();
-    res.json(payments);
+    try {
+        const payments = await getAllPayments();
+        res.status(200).json(payments);
+    } catch (error) {
+        res.status(500).json({ error: 'Error fetching payments' });
+    }
 });
-
 app.post('/payments', async (req, res) => {
-    const newPayment = await insertPayment(req.body);
-    res.status(201).json(newPayment);
+    try {
+        const newPayment = await insertPayment(req.body);
+        res.status(201).json(newPayment);
+    } catch (error) {
+        res.status(500).json({ error: 'Error creating payment' });
+    }
 });
-
 app.put('/payments/:id', async (req, res) => {
-    const updatedPayment = await updatePayment(req.params.id, req.body);
-    res.json(updatedPayment);
+    try {
+        const updatedPayment = await updatePayment(req.params.id, req.body);
+        if (updatedPayment) {
+            res.status(200).json(updatedPayment);
+        } else {
+            res.status(404).json({ error: 'payment not found' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error updating payment' });
+    }
 });
-
 app.delete('/payments/:id', async (req, res) => {
-    const success = await deletePayment(req.params.id);
-    success ? res.status(204).end() : res.status(404).json({ error: 'Payment not found' });
+    try {
+        const success = await deletePayment(req.params.id);
+        if (success) {
+            res.status(204).end();
+        } else {
+            res.status(404).json({ error: 'payment not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Error deleting payment' });
+    }
 });
 
 // CRUD routes for Rental
 app.get('/rentals/:id', async (req, res) => {
-    const rental = await getRentalByID(req.params.id);
-    rental ? res.json(rental) : res.status(404).json({ error: 'Rental not found' });
+    try {
+        const rental = await getRentalByID(req.params.id);
+        if (rental) {
+            res.status(200).json(rental);
+        } else {
+            res.status(404).json({ error: 'rental not found' });  // אם לא נמצא הלקוח
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Error fetching rental' });
+    }
 });
-
 app.get('/rentals', async (req, res) => {
-    const rentals = await getAllRentals();
-    res.json(rentals);
+    try {
+        const rentals = await getAllRentals();
+        res.status(200).json(rentals);
+    } catch (error) {
+        res.status(500).json({ error: 'Error fetching rentals' });
+    }
 });
-
 app.post('/rentals', async (req, res) => {
-    const newRental = await insertRental(req.body);
-    res.status(201).json(newRental);
+    try {
+        const newRental = await insertRental(req.body);
+        res.status(201).json(newRental);
+    } catch (error) {
+        res.status(500).json({ error: 'Error creating rental' });
+    }
 });
-
 app.put('/rentals/:id', async (req, res) => {
-    const updatedRental = await updateRental(req.params.id, req.body);
-    res.json(updatedRental);
+    try {
+        const updatedRental = await updateRental(req.params.id, req.body);
+        if (updatedRental) {
+            res.status(200).json(updatedRental);
+        } else {
+            res.status(404).json({ error: 'rental not found' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error updating rental' });
+    }
 });
-
 app.delete('/rentals/:id', async (req, res) => {
-    const success = await deleteRental(req.params.id);
-    success ? res.status(204).end() : res.status(404).json({ error: 'Rental not found' });
+    try {
+        const success = await deleteRental(req.params.id);
+        if (success) {
+            res.status(204).end();
+        } else {
+            res.status(404).json({ error: 'rental not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Error deleting rental' });
+    }
 });
 
 // CRUD routes for Movie Text
-app.get('/movie-texts/:id', async (req, res) => {
+app.get('/movieTexts/:id', async (req, res) => {
     const movieText = await getMovieTextByID(req.params.id);
     movieText ? res.json(movieText) : res.status(404).json({ error: 'Movie text not found' });
-});
 
-app.get('/movie-texts', async (req, res) => {
-    const movieTexts = await getAllMovieTexts();
-    res.json(movieTexts);
+    try {
+        const movieText = await getMovieTextByID(req.params.id);
+        if (movieText) {
+            res.status(200).json(movieText);
+        } else {
+            res.status(404).json({ error: 'movie with this text was not found' });  // אם לא נמצא
+            // הלקוח
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Error fetching movies-text' });
+    }
 });
-
-app.post('/movie-texts', async (req, res) => {
-    const newMovieText = await insertMovieText(req.body);
-    res.status(201).json(newMovieText);
+app.get('/movieTexts', async (req, res) => {
+    try {
+        const movieTexts = await getAllMovieTexts();
+        res.status(200).json(movieTexts);
+    } catch (error) {
+        res.status(500).json({ error: 'Error fetching movie-text' });
+    }
 });
-
-app.put('/movie-texts/:id', async (req, res) => {
-    const updatedMovieText = await updateMovieText(req.params.id, req.body);
-    res.json(updatedMovieText);
+app.post('/movieTexts', async (req, res) => {
+    try {
+        const newMovieText = await insertMovieText(req.body);
+        res.status(201).json(newMovieText);
+    } catch (error) {
+        res.status(500).json({ error: 'Error creating new movie text' });
+    }
 });
-
-app.delete('/movie-texts/:id', async (req, res) => {
-    const success = await deleteMovieText(req.params.id);
-    success ? res.status(204).end() : res.status(404).json({ error: 'Movie text not found' });
+app.put('/movieTexts/:id', async (req, res) => {
+    try {
+        const updatedMovieText = await updateMovieText(req.params.id, req.body);
+        if (updatedMovieText) {
+            res.status(200).json(updatedMovieText);
+        } else {
+            res.status(404).json({ error: 'movie with this text was not found' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error updating movie text' });
+    }
+});
+app.delete('/movieTexts/:id', async (req, res) => {
+    try {
+        const success = await deleteMovieText(req.params.id);
+        if (success) {
+            res.status(204).end();
+        } else {
+            res.status(404).json({ error: 'movie with that text was not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Error deleting movie text' });
+    }
 });
 
 // CRUD routes for City

@@ -93,14 +93,14 @@ async function getAllActors() {
 async function insertActor(actor) {
     const [result] = await pool.query(
         `INSERT INTO actor (first_name, last_name) VALUES (?, ?)`,
-        [actor.firstName, actor.lastName]
+        [actor.first_name, actor.last_name]
     );
     return getActorByID(result.insertId);
 }
 async function updateActor(id, actor) {
     const [result] = await pool.query(
         `UPDATE actor SET first_name = ?, last_name = ? WHERE actor_id = ?`,
-        [actor.firstName, actor.lastName, id]
+        [actor.first_name, actor.last_name, id]
     );
     return getActorByID(id);
 }
@@ -121,14 +121,14 @@ async function getAllPayments() {
 async function insertPayment(payment) {
     const [result] = await pool.query(
         `INSERT INTO payment (customer_id, rental_id, amount, payment_date, last_update) VALUES (?, ?, ?, ?, ?)`,
-        [payment.customerId, payment.rentalId, payment.amount, payment.paymentDate, payment.lastUpdate]
+        [payment.customer_id, payment.rental_id, payment.amount, payment.payment_date, payment.last_update]
     );
     return getPaymentByID(result.insertId);
 }
 async function updatePayment(id, payment) {
     const [result] = await pool.query(
         `UPDATE payment SET customer_id = ?, rental_id = ?, amount = ?, payment_date = ?, last_update = ? WHERE payment_id = ?`,
-        [payment.customerId, payment.rentalId, payment.amount, payment.paymentDate, payment.lastUpdate, id]
+        [payment.customer_id, payment.rental_id, payment.amount, payment.payment_date, payment.last_update,id]
     );
     return getPaymentByID(id);
 }
@@ -149,14 +149,14 @@ async function getAllRentals() {
 async function insertRental(rental) {
     const [result] = await pool.query(
         `INSERT INTO rental (rental_date, inventory_id, customer_id, return_date, last_update) VALUES (?, ?, ?, ?, ?)`,
-        [rental.rentalDate, rental.inventoryId, rental.customerId, rental.returnDate, rental.lastUpdate]
+        [rental.rental_date, rental.inventory_id, rental.customer_id, rental.return_date, rental.last_update]
     );
     return getRentalByID(result.insertId);
 }
 async function updateRental(id, rental) {
     const [result] = await pool.query(
         `UPDATE rental SET rental_date = ?, inventory_id = ?, customer_id = ?, return_date = ?, last_update = ? WHERE rental_id = ?`,
-        [rental.rentalDate, rental.inventoryId, rental.customerId, rental.returnDate, rental.lastUpdate, id]
+        [rental.rental_date, rental.inventory_id, rental.customer_id, rental.return_date, rental.last_update, id]
     );
     return getRentalByID(id);
 }
@@ -167,29 +167,29 @@ async function deleteRental(id) {
 
 // CRUD operations for the "movie_text" table
 async function getMovieTextByID(id) {
-    const [rows] = await pool.query(`SELECT * FROM movie_text WHERE film_id = ?`, [id]);
+    const [rows] = await pool.query(`SELECT * FROM movieText WHERE film_id = ?`, [id]);
     return rows[0];
 }
 async function getAllMovieTexts() {
-    const [rows] = await pool.query(`SELECT * FROM movie_text`);
+    const [rows] = await pool.query(`SELECT * FROM movieText`);
     return rows;
 }
 async function insertMovieText(movieText) {
     const [result] = await pool.query(
-        `INSERT INTO movie_text (film_id, title, description) VALUES (?, ?, ?)`,
+        `INSERT INTO movieText (film_id, title, description) VALUES (?, ?, ?)`,
         [movieText.filmId, movieText.title, movieText.description]
     );
     return getMovieTextByID(result.insertId);
 }
 async function updateMovieText(id, movieText) {
     const [result] = await pool.query(
-        `UPDATE movie_text SET title = ?, description = ? WHERE film_id = ?`,
+        `UPDATE movieText SET title = ?, description = ? WHERE film_id = ?`,
         [movieText.title, movieText.description, id]
     );
     return getMovieTextByID(id);
 }
 async function deleteMovieText(id) {
-    const [result] = await pool.query(`DELETE FROM movie_text WHERE film_id = ?`, [id]);
+    const [result] = await pool.query(`DELETE FROM movieText WHERE film_id = ?`, [id]);
     return result.affectedRows > 0;
 }
 
