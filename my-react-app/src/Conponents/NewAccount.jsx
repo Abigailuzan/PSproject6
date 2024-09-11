@@ -1,38 +1,37 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Password from './Password';
+import '../Stlyles/Form.css'; 
 
 function NeweAccount({ onSubmit }) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [password1, setPassword1] = useState('');
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+ async function  handleSubmit  (event) {
     event.preventDefault();
     if (password !== password1) {
       setError("Passwords are not the same.");
       return;
     }
-    if (error !== "Username exists, try a different one.") {
+    if (error !== "Email exists, try a different one.") {
       const userData = {
         first_name: firstName,
         last_name: lastName,
         email: email,
-        username: username,
-        password: password, // Be careful with handling plain text passwords!
+        password: password,
       };
-      onSubmit(userData); // Assuming onSubmit performs further actions like an API call
-      navigate("/home"); // Navigate on successful submission
+      await  onSubmit(userData); 
+      navigate("/home");
     }
   };
 
   return (
-    <div className="form-container">
+    <div className="form-container-new">
       <form onSubmit={handleSubmit} className="user-form">
         <div className="form-group">
           <label>First Name</label>
@@ -61,16 +60,9 @@ function NeweAccount({ onSubmit }) {
             required
           />
         </div>
-        <div className="form-group">
-          <label>Username</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
+        <label>Password</label>
         <Password label="Password" setPassword={setPassword} password={password} />
+        <label>Confirm Password</label>
         <Password label="Confirm Password" setPassword={setPassword1} password={password1} />
         {error && <p className='error-message'>{error}</p>}
         <br />

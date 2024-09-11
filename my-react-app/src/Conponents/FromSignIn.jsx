@@ -2,7 +2,9 @@ import React,{useState } from 'react';
 import Password from './Password'
 import { useNavigate } from 'react-router-dom';
 import useLocalStorage from '../UseHooks/useLocalStorage'
-//import {fetchData} from '../APIServer'
+import { Link } from 'react-router-dom';
+import '../Stlyles/Form.css'; 
+
 function FromSignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -32,18 +34,20 @@ function FromSignIn() {
     
   }
   return (
-    <div className="form-container">
-      <form onSubmit={handleSubmit}>
-        <input 
-          type="email" 
-          name="email"
-          placeholder="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          className="input-box"
-        />
+    <div className="form-container-new">
+      <form onSubmit={handleSubmit}  className="user-form"> 
+         <Link to="/create-account" className="link"> Create account</Link>
+          <div className="form-group">
+          <label>Email</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
         <br />
+        <label>Password</label>
         <Password setPassword={setPassword} password={password} />
          {error && <p className='error-message'>{error}</p>}
         <br />
