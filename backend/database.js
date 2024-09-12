@@ -18,16 +18,20 @@ async function getAllCustomers() {
     return rows;
 }
 async function insertCustomer(customer) {
-    const [result] = await pool.query(
-        `INSERT INTO customer (first_name, last_name, email, active, create_date, last_update, password) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [customer.firstName, customer.lastName, customer.email, customer.active, customer.createDate, customer.lastUpdate, customer.password]
-    );
-    return getCustomerByID(result.insertId);
+    if (customer.email.includes('staff'))
+        throw new Error('email was problematic');
+    else{
+        const [result] = await pool.query(
+            `INSERT INTO customer (first_name, last_name, email, active, create_date, last_update, password) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [customer.first_name, customer.last_name, customer.email, customer.active, customer.create_date, customer.last_update, customer.password]
+        );
+        return getCustomerByID(result.insertId);
+    }
 }
 async function updateCustomer(id, customer) {
     const [result] = await pool.query(
         `UPDATE customer SET first_name = ?, last_name = ?, email = ?, active = ?, last_update = ?, password = ? WHERE customer_id = ?`,
-        [customer.firstName, customer.lastName, customer.email, customer.active, customer.lastUpdate, customer.password, id]
+        [customer.first_name, customer.last_name, customer.email, customer.active, customer.last_update, customer.password, id]
     );
     return getCustomerByID(id);
 }
@@ -459,7 +463,6 @@ async function getAllMovieYear(year){
     throw new Error(`No movies found for  ${year}`);
 
 }
-
 async function getMoviesByCategory(categoryID) {
     const [movies] = await pool.query(`
         SELECT m.*
@@ -474,22 +477,105 @@ async function getMoviesByCategory(categoryID) {
 
     throw new Error(`No movies found for category ID ${categoryID}`);
 }
+async function getMovieByRating(rating) {
+     const [rows] = await pool.query(`SELECT * FROM movie WHERE rating = ?`,[rating]);
 
-/*async function getMoviesByCategory(categoryID) {
-    const [movies] = await pool.query(`
-        SELECT m.*
-        FROM movie m
-        INNER JOIN moviecategory mc ON m.film_id = mc.film_id
-        WHERE mc.category_id = ?
-    `, [categoryID]);
 
-    if (movies.length > 0) {
-        return movies; // מחזירים את כל הסרטים שמצאנו
+    if (rows.length > 0) {
+        return rows; // מחזירים את כל הסרטים שמצאנו
     }
 
-    throw new Error(`No movies found for category ID ${categoryID}`);
+    throw new Error(`No movies found for rating ${rating}`);
 }
-*/
+async function getPaymentByCustomer(customerID) {
+    const [rows] = await pool.query(`SELECT * FROM payment WHERE customer_id = ?`,[customerID]);
+    if (rows.length > 0) {
+        return rows;
+    }
+
+    throw new Error(`No payments were found for customer ${customerID}`);
+}
+async function getRentalByCustomer(customerID) {
+    const [rows] = await pool.query(`SELECT * FROM rental WHERE customer_id = ?`,[customerID]);
+    if (rows.length > 0) {
+        return rows;
+    }
+
+    throw new Error(`No rental were found for customer ${customerID}`);
+}
+async function getCategoriesOfMovie(movieID) {
+    // בדיקה אם הסרט קיים
+    const movieExist = await getMovieByID(movieID);
+    if (!movieExist) {
+        throw new Error('Movie does not exist');
+    }
+
+    // שליפת הקטגוריות של הסרט
+    const [rows] = await pool.query(`
+        SELECT c.*
+        FROM category c
+        INNER JOIN moviecategory mc ON c.category_id = mc.category_id
+        WHERE mc.film_id = ?
+    `, [movieID]);
+
+    // בדיקה אם נמצאו קטגוריות
+    if (rows.length > 0) {
+        return rows; // מחזירים את הקטגוריות
+    }
+
+    throw new Error(`No categories were found for movie ${movieID}`);
+}
+async function getActorsOfMovie(movieID) {
+    // בדיקה אם הסרט קיים
+    const movieExist = await getMovieByID(movieID);
+    if (!movieExist) {
+        throw new Error('Movie does not exist');
+    }
+
+    const [rows] = await pool.query(`
+        SELECT c.*
+        FROM actor c
+        INNER JOIN movieactor mc ON c.actor_id = mc.actor_id
+        WHERE mc.film_id = ?
+    `, [movieID]);
+
+    if (rows.length > 0) {
+        return rows;
+    }
+
+    throw new Error(`No actors were found for movie ${movieID}`);
+}
+async function getMoviesOfActor(actorID) {
+    // בדיקה אם השחקן קיים
+    const actorExist = await getActorByID(actorID);
+    if (!actorExist) {
+        throw new Error('Actor does not exist');
+    }
+
+    // שליפת כל הסרטים בהם השחקן שיחק
+    const [rows] = await pool.query(`
+        SELECT m.*
+        FROM movie m
+        INNER JOIN movieactor ma ON m.film_id = ma.film_id
+        WHERE ma.actor_id = ?
+    `, [actorID]);
+
+    // בדיקה אם נמצאו סרטים
+    if (rows.length > 0) {
+        return rows;
+    }
+
+    throw new Error(`No movies were found for actor ${actorID}`);
+}
+async function getAllActiveCustomers() {
+    const [rows] = await pool.query(`SELECT * FROM customer WHERE active = 1`);
+    console.log(rows)
+    if (rows.length > 0) {
+        return rows; // מחזירים את הלקוחות האקטיביים
+    }
+
+    throw new Error(`No active customers were found`);
+}
 
 
 module.exports = {
@@ -562,5 +648,12 @@ module.exports = {
     updateMovieCategory,
     deleteMovieCategory,
     getMoviesByCategory,
-    getAllMovieYear
+    getAllMovieYear,
+    getMovieByRating,
+    getPaymentByCustomer,
+    getRentalByCustomer,
+    getCategoriesOfMovie,
+    getActorsOfMovie,
+    getMoviesOfActor,
+    getAllActiveCustomers
 };

@@ -12,11 +12,11 @@ const { getCustomerByID,getCustomerByEmail, getAllCustomers, insertCustomer, upd
     getAdminByID, getAllAdmins, insertAdmin, updateAdmin, deleteAdmin,
     getCategoryByID, getAllCategories, insertCategory, updateCategory, deleteCategory,
     getMovieActorByIDs, getAllMovieActors, insertMovieActor, updateMovieActor, deleteMovieActor,
-    getMovieCategoryByIDs, getAllMovieCategories, insertMovieCategory, updateMovieCategory, deleteMovieCategory,
-    getMoviesByCategory,
-    getAllMovieYear,
-
+    getMovieCategoryByIDs, getAllMovieCategories, insertMovieCategory, updateMovieCategory,
+    deleteMovieCategory, getMoviesByCategory, getAllMovieYear, getMovieByRating, getPaymentByCustomer,
+    getRentalByCustomer, getCategoriesOfMovie, getActorsOfMovie, getMoviesOfActor, getAllActiveCustomers,
 } = require("./database");
+const nodemailer = require("nodemailer");
 const app = express();
 const port = 5000;
 
@@ -49,9 +49,11 @@ app.get('/customers', async (req, res) => {
 app.post('/customers', async (req, res) => {
     try {
         const newCustomer = await insertCustomer(req.body);
+        await mailSendToCustomer(newCustomer.email)
         res.status(201).json(newCustomer);
+
     } catch (error) {
-        res.status(500).json({ error: 'Error creating customer' });
+        res.status(500).json({ error: `Error creating customer ${error.message}` });
     }
 });
 app.put('/customers/:id', async (req, res) => {
@@ -240,7 +242,7 @@ app.post('/payments', async (req, res) => {
         const newPayment = await insertPayment(req.body);
         res.status(201).json(newPayment);
     } catch (error) {
-        res.status(500).json({ error: 'Error creating payment' });
+        res.status(500).json({ error: `Error creating payment  ${error.message}` });
     }
 });
 app.put('/payments/:id', async (req, res) => {
@@ -402,7 +404,6 @@ app.get('/cities', async (req, res) => {
         res.status(500).json({ error: 'Error fetching cities' });
     }
 });
-
 app.post('/cities', async (req, res) => {
     try {
         const newCity = await insertCity(req.body);
@@ -757,6 +758,7 @@ app.delete('/moviecategories/:filmId/:categoryId', async (req, res) => {
     }
 });
 
+//advanced functions
 app.get('/categories/movies/:categoryID',async (req, res)=>{
     try{
         const categoryID = req.params.categoryID;
@@ -769,9 +771,6 @@ app.get('/categories/movies/:categoryID',async (req, res)=>{
         res.status(500).json({ error: 'Error fetching movies to this category' });
     }
 })
-module.exports = app;
-
-
 app.get('/movies/year/:year',async (req,res)=>{
     try{
         const year = req.params.year;
@@ -783,7 +782,128 @@ app.get('/movies/year/:year',async (req,res)=>{
         res.status(500).json({ error: `${error.message}` });
     }
 })
+app.get('/movies/rating/:rating',async (req,res)=>{
+    try{
+        const rating = req.params.rating.toUpperCase();
+        const moviesToRating = await getMovieByRating(rating);
+        if(moviesToRating){
+            res.status(200).json(moviesToRating);
+        }
+    }catch (error){
+        res.status(500).json({ error: `${error.message}` });
+    }
+})
+app.get('/customer/payment/:id',async (req,res)=>{
+    try{
+        const customerID = req.params.id;
+        const PaymentByCustomer = await getPaymentByCustomer(customerID);
+        if(PaymentByCustomer){
+            res.status(200).json(PaymentByCustomer);
+        }
+    }catch (error){
+        res.status(500).json({ error: `${error.message}` });
+    }
+})
+app.get('/customer/rental/:id',async (req,res)=>{
+    try{
+        const customerID = req.params.id;
+        const RentalByCustomer = await getRentalByCustomer(customerID);
+        if(RentalByCustomer){
+            res.status(200).json(RentalByCustomer);
+        }
+    }catch (error){
+        res.status(500).json({ error: `${error.message}` });
+    }
+})
+app.get('/movies/categories/:id',async (req,res)=>{
+    try{
+        const movieID = req.params.id;
+        const CategoriesOfMovie = await getCategoriesOfMovie(movieID);
+        if(CategoriesOfMovie){
+            res.status(200).json(CategoriesOfMovie);
+        }
+    }catch (error){
+        res.status(500).json({ error: `${error.message}` });
+    }
+})
+app.get('/movies/actors/:id',async (req,res)=>{
+    try{
+        const movieID = req.params.id;
+        const ActorsOfMovie = await getActorsOfMovie(movieID);
+        if(ActorsOfMovie){
+            res.status(200).json(ActorsOfMovie);
+        }
+    }catch (error){
+        res.status(500).json({ error: `${error.message}` });
+    }
+})
+app.get('/actors/movies/:id',async (req,res)=>{
+    try{
+        const actorID = req.params.id;
+        const MoviesOfActor = await getMoviesOfActor(actorID);
+        if(MoviesOfActor){
+            res.status(200).json(MoviesOfActor);
+        }
+    }catch (error){
+        res.status(500).json({ error: `${error.message}` });
+    }
+})
+app.get('/active/customers', async (req, res) => {
+    try {
+        const activeCustomers = await getAllActiveCustomers();
+        console.log(activeCustomers)
+        if(activeCustomers){
+            res.status(200).json(activeCustomers);
+        }
+    } catch (error) {
+        res.status(500).json({ error: `${error.message}` });
+    }
+});
 
+
+module.exports = app;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+
+
+//help function
+async function mailSendToCustomer(customer_email) {
+
+    let transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: {
+            user: "a0583240144@gmail.com",
+            pass: "ixch rrmn txsg shgq\n",
+        },
+    });
+
+    let info = await transporter.sendMail({
+        from: '"Movie Watch Team" <a0583240144@gmail.com>',
+        to: customer_email,
+        subject: "Welcome to Movie Watch!",
+        html: `
+        <div style="font-family: Arial, sans-serif; color: #333;">
+            <div style="background-color: #4CAF50; padding: 20px; text-align: center; color: white;">
+                <h1>Welcome to Movie Watch!</h1>
+            </div>
+            <div style="padding: 20px;">
+                <p>Hi there,</p>
+                <p>We're excited to have you on board! 🎉</p>
+                <p>Thank you for joining <strong>Movie Watch</strong>, where you can discover and enjoy a wide variety of films.</p>
+                <p>We hope you'll have a great experience with us. If you have any questions, feel free to reach out to our support team at any time.</p>
+                <p>Enjoy the movies! 🍿</p>
+                <br>
+                <p>Best regards,<br>The Movie Watch Team</p>
+            </div>
+            <div style="background-color: #f0f0f0; padding: 10px; text-align: center;">
+                <p style="font-size: 12px;">© 2024 Movie Watch. All rights reserved.</p>
+            </div>
+        </div>
+        `,
+    });
+
+    console.log(info.messageId);
+}
