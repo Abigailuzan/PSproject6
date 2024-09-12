@@ -13,7 +13,8 @@ const { getCustomerByID,getCustomerByEmail, getAllCustomers, insertCustomer, upd
     getCategoryByID, getAllCategories, insertCategory, updateCategory, deleteCategory,
     getMovieActorByIDs, getAllMovieActors, insertMovieActor, updateMovieActor, deleteMovieActor,
     getMovieCategoryByIDs, getAllMovieCategories, insertMovieCategory, updateMovieCategory, deleteMovieCategory,
-
+    getMoviesByCategory,
+    getAllMovieYear,
 
 } = require("./database");
 const app = express();
@@ -109,7 +110,7 @@ app.post('/movies', async (req, res) => {
         const newMovie = await insertMovie(req.body);
         res.status(201).json(newMovie);
     } catch (error) {
-        res.status(500).json({ error: 'Error creating customer' });
+        res.status(500).json({ error: `Error creating customer  ${error.message}` });
     }
 });
 app.put('/movies/:id', async (req, res) => {
@@ -756,8 +757,32 @@ app.delete('/moviecategories/:filmId/:categoryId', async (req, res) => {
     }
 });
 
+app.get('/categories/movies/:categoryID',async (req, res)=>{
+    try{
+        const categoryID = req.params.categoryID;
+        const moviesByCategory = await getMoviesByCategory(categoryID);
+        if(moviesByCategory){
+            res.status(200).json(moviesByCategory);
+        }
+    }catch (error)
+    {
+        res.status(500).json({ error: 'Error fetching movies to this category' });
+    }
+})
 module.exports = app;
 
+
+app.get('/movies/year/:year',async (req,res)=>{
+    try{
+        const year = req.params.year;
+        const moviesToYear = await getAllMovieYear(year);
+        if(moviesToYear){
+            res.status(200).json(moviesToYear);
+        }
+    }catch (error){
+        res.status(500).json({ error: `${error.message}` });
+    }
+})
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

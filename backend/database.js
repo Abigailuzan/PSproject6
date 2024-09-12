@@ -450,6 +450,48 @@ async function deleteMovieCategory(filmId, categoryId) {
     return result.affectedRows > 0;
 }
 
+
+//more interesting function
+async function getAllMovieYear(year){
+    const [rows] = await pool.query(`SELECT * FROM movie WHERE release_year = ?`,[year]);
+    if (rows.length>0)
+        return rows;
+    throw new Error(`No movies found for  ${year}`);
+
+}
+
+async function getMoviesByCategory(categoryID) {
+    const [movies] = await pool.query(`
+        SELECT m.*
+        FROM movie m
+        INNER JOIN moviecategory mc ON m.film_id = mc.film_id
+        WHERE mc.category_id = ?
+    `, [categoryID]);
+
+    if (movies.length > 0) {
+        return movies; // מחזירים את כל הסרטים שמצאנו
+    }
+
+    throw new Error(`No movies found for category ID ${categoryID}`);
+}
+
+/*async function getMoviesByCategory(categoryID) {
+    const [movies] = await pool.query(`
+        SELECT m.*
+        FROM movie m
+        INNER JOIN moviecategory mc ON m.film_id = mc.film_id
+        WHERE mc.category_id = ?
+    `, [categoryID]);
+
+    if (movies.length > 0) {
+        return movies; // מחזירים את כל הסרטים שמצאנו
+    }
+
+    throw new Error(`No movies found for category ID ${categoryID}`);
+}
+*/
+
+
 module.exports = {
     getCustomerByID,
     getAllCustomers,
@@ -518,5 +560,7 @@ module.exports = {
     getAllMovieCategories,
     insertMovieCategory,
     updateMovieCategory,
-    deleteMovieCategory
+    deleteMovieCategory,
+    getMoviesByCategory,
+    getAllMovieYear
 };
