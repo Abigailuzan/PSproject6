@@ -49,10 +49,15 @@ async function getMovieByID(id) {
     const [rows] = await pool.query(`SELECT * FROM movie WHERE film_id = ?`, [id]);
     return rows[0];
 }
-async function getAllMovies() {
-    const [rows] = await pool.query(`SELECT * FROM movie`);
+async function getAllMovies(limit,offset) {
+    const [rows] = await pool.query(`SELECT * FROM movie LIMIT ? OFFSET ?`,[limit,offset]);
     return rows;
 }
+async function getTotalMovies() {
+    const [[{ total }]] = await pool.query(`SELECT COUNT(*) as total FROM movie`);
+    return total;
+}
+
 async function insertMovie(movie) {
     const [result] = await pool.query(
         `INSERT INTO movie (title, description, release_year,length, rating, last_update, movie_image, movie_video) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -587,6 +592,7 @@ module.exports = {
     getCustomerByEmail,
     getMovieByID,
     getAllMovies,
+    getTotalMovies,
     insertMovie,
     updateMovie,
     deleteMovie,

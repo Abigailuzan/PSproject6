@@ -15,6 +15,7 @@ const { getCustomerByID,getCustomerByEmail, getAllCustomers, insertCustomer, upd
     getMovieCategoryByIDs, getAllMovieCategories, insertMovieCategory, updateMovieCategory,
     deleteMovieCategory, getMoviesByCategory, getAllMovieYear, getMovieByRating, getPaymentByCustomer,
     getRentalByCustomer, getCategoriesOfMovie, getActorsOfMovie, getMoviesOfActor, getAllActiveCustomers,
+    getTotalMovies,
 } = require("./database");
 const nodemailer = require("nodemailer");
 const app = express();
@@ -100,13 +101,21 @@ app.get('/movies/:id', async (req, res) => {
     movie ? res.json(movie) : res.status(404).json({ error: 'Movie not found' });
 });
 app.get('/movies', async (req, res) => {
+    const limit = parseInt(req.query.limit, 10) || 20;
+    const offset = parseInt(req.query.offset, 10) || 0;
     try {
-        const movies = await getAllMovies();
-        res.status(200).json(movies);
+        const movies = await getAllMovies(limit, offset);
+        console.log("Movies:", movies); // הדפסת רשימת הסרטים
+        const total = await getTotalMovies();
+        console.log("Total movies:", total); // הדפסת סה"כ הסרטים
+        res.status(200).json({ movies, total });
     } catch (error) {
+        console.error('Error fetching movies:', error); // הדפסת השגיאה
         res.status(500).json({ error: 'Error fetching movies' });
     }
 });
+
+
 app.post('/movies', async (req, res) => {
     try {
         const newMovie = await insertMovie(req.body);

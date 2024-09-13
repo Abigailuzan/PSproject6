@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Password from './Password';
 import '../Stlyles/Form.css'; 
 
-function NeweAccount({ onSubmit }) {
+function NewAccount({ onSubmit }) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -20,15 +20,18 @@ function NeweAccount({ onSubmit }) {
     }
     if (error !== "Email exists, try a different one.") {
       const userData = {
-        first_name: firstName,
-        last_name: lastName,
-        email: email,
-        password: password,
+          first_name: firstName,
+          last_name: lastName,
+          email: email,
+          active:1,
+          create_date: new Date().toISOString().split('T')[0],
+          last_update :  new Date().toISOString().split('T')[0],
+          password: password,
       };
       await  onSubmit(userData); 
       navigate("/home");
     }
-  };
+  }
 
   return (
     <div className="form-container-new">
@@ -72,4 +75,4 @@ function NeweAccount({ onSubmit }) {
   );
 }
 
-export default NeweAccount;
+export default NewAccount;

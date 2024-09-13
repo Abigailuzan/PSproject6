@@ -12,7 +12,7 @@ function AddMovie() {
               alert('movie added successfully');
           })
           .catch(error => {
-              console.error('There was an error fetching the message!', error);
+              console.error('There was an error fetching the movie!', error);
           });
   }
   return (

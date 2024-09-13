@@ -3,7 +3,7 @@ import Navbar from '../Conponents/Navbar'
 import AddAdminForm from '../Conponents/AddAdminForm'
 function AddAdmin() {
   function onSubmit(admin){
-   console.log(admin);
+
 }
   return (
     <div> 
