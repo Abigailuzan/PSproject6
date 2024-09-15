@@ -12,6 +12,7 @@ import Movie from './Pages/Movie';
 import EditMovie from './Pages/EditMovie';
 import AddAdmin from './Pages/AddAdmin';
 import AddMovie from './Pages/AddMovie';
+import InfoEdit from "./Pages/InfoEdit";
 
 function App() {
   return (
@@ -23,8 +24,11 @@ function App() {
       <Route path="create-account" element={<CreateAccount />} />
       <Route path="contact-us" element={<ContactUs />} />
       <Route path="about-us" element={<AboutUs />} />
-      <Route path="user-info" element={<UserInfo />} />
-      <Route path="movie/:id/:title"  >
+      <Route path="user-info" >
+            <Route index element={<UserInfo />}/>
+          <Route path="edit" element={<InfoEdit/>} />
+      </Route>
+        <Route path="movie/:id/:title"  >
               <Route index element={<Movie />}/>
               <Route path="edit" element={<EditMovie/>} />
        </Route>

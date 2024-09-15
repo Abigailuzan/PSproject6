@@ -2,18 +2,27 @@ import React from 'react'
 import NewAccount from '../Conponents/NewAccount'
 import NavbarLeft from '../Conponents/NavbarLeft'
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
+import useLocalStorage from "../UseHooks/useLocalStorage";
 
 function CreateAccount() {
-    function onSubmit(customer){
-        axios.post('http://localhost:5000/customers',customer)
+    const navigate = useNavigate();
+    const storage = useLocalStorage();
+    async function onSubmit(customer,setError){
+        await axios.post('http://localhost:5000/customers',customer)
             .then(response => {
                 console.log('customer added')
-                const addedMovie = response.data;
-                console.log(addedMovie)
-                //alert('customer added successfully');
+                const addedCustomer = response.data;
+                storage.set({id: addedCustomer.customer_id ,email:addedCustomer.email,userName:addedCustomer.first_name,userLastName:addedCustomer.last_name});
+                navigate("/home");
             })
             .catch(error => {
-                console.error('There was an error fetching the message!', error);
+                if (error.response) {
+                    setError(error.response.data.error);
+                } else {
+                    setError('There was an error creating your account. Please try again.');
+                }
+                console.error('Error:', error);
             });
     }
   return (

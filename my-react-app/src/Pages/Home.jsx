@@ -8,8 +8,8 @@ import useLocalStorage from '../UseHooks/useLocalStorage'
 import InOutButton from '../Conponents/InOutButton'
 import AdminToolBar from '../Conponents/AdminToolBar'
 import axios from "axios";
-
-
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 function Home() {
     const [movies, setMovies] = useState([]);
     const [currentPage, setCurrentPage] = useState(1); // עמוד נוכחי
@@ -62,7 +62,7 @@ function Home() {
                     <NavbarLeft name={userName}/>
                     <h1>Welcome {userName ? userName : ' '}</h1>
                     <div className="nav-actions">
-                        {storage.value && storage.value.email && storage.value.email.includes('@staff') &&
+                        {storage.value && storage.value.email && storage.value.email.includes('staff') &&
                             <AdminToolBar/>}
                         <InOutButton name={userName} setUsername={setUserName}
                                      logOut={handleClickLogout}/>
@@ -87,12 +87,12 @@ function Home() {
 
             <div className="pagination">
                 <button onClick={handlePreviousPage} disabled={currentPage === 1}>
-                    Previous
+                    <ArrowBackIosNewIcon fontSize='small'/>
                 </button>
                 <span>Page {currentPage}</span>
                 <button onClick={handleNextPage}
                         disabled={currentPage * moviesPerPage >= totalMovies}>
-                    Next
+                    <ArrowForwardIosIcon fontSize='small'/>
                 </button>
             </div>
             <Footer/>

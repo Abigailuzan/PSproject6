@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Password from './Password';
 import '../Stlyles/Form.css'; 
 
@@ -10,7 +9,7 @@ function NewAccount({ onSubmit }) {
   const [password, setPassword] = useState('');
   const [password1, setPassword1] = useState('');
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
+
 
  async function  handleSubmit  (event) {
     event.preventDefault();
@@ -18,7 +17,6 @@ function NewAccount({ onSubmit }) {
       setError("Passwords are not the same.");
       return;
     }
-    if (error !== "Email exists, try a different one.") {
       const userData = {
           first_name: firstName,
           last_name: lastName,
@@ -28,9 +26,7 @@ function NewAccount({ onSubmit }) {
           last_update :  new Date().toISOString().split('T')[0],
           password: password,
       };
-      await  onSubmit(userData); 
-      navigate("/home");
-    }
+      await onSubmit(userData,setError);
   }
 
   return (
@@ -66,7 +62,7 @@ function NewAccount({ onSubmit }) {
         <label>Password</label>
         <Password label="Password" setPassword={setPassword} password={password} />
         <label>Confirm Password</label>
-        <Password label="Confirm Password" setPassword={setPassword1} password={password1} />
+        <Password label="Confirm Password" setPassword={setPassword1} password={password1}  />
         {error && <p className='error-message'>{error}</p>}
         <br />
         <button type="submit" className="submit-button">Register</button>

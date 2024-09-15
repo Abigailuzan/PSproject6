@@ -2,8 +2,10 @@ import React ,{useState,useEffect}from 'react'
 import NavbarLeft from './NavbarLeft'
 import NavbarRight from './NavbarRight'
 import useLocalStorage from '../UseHooks/useLocalStorage'
+import { useNavigate } from 'react-router-dom';
 function Navbar() {
     const storage = useLocalStorage();
+    const navigate = useNavigate();
     const [username, setUsername] = useState(null);
     useEffect(() => {
       if(storage.value!=null){
@@ -12,7 +14,8 @@ function Navbar() {
      }, [storage.value]);
      function handleClickLogout ()  {
         storage.remove();
-        setUsername(null); 
+        setUsername(null);
+        navigate('/Home')
       };
   return (
     <div>

@@ -16,6 +16,7 @@ const { getCustomerByID,getCustomerByEmail, getAllCustomers, insertCustomer, upd
     deleteMovieCategory, getMoviesByCategory, getAllMovieYear, getMovieByRating, getPaymentByCustomer,
     getRentalByCustomer, getCategoriesOfMovie, getActorsOfMovie, getMoviesOfActor, getAllActiveCustomers,
     getTotalMovies,
+    getAdminByMail,
 } = require("./database");
 const nodemailer = require("nodemailer");
 const app = express();
@@ -49,9 +50,21 @@ app.get('/customers', async (req, res) => {
 });
 app.post('/customers', async (req, res) => {
     try {
-        const newCustomer = await insertCustomer(req.body);
-        await mailSendToCustomer(newCustomer.email)
-        res.status(201).json(newCustomer);
+        if(await getCustomerByEmail(req.body.email)){
+            res.status(400).json({ error: 'Account with this email already exists' });
+        }
+        if (!req.body.password || !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(req.body.password)) {
+            res.status(400).json({ error: 'Password must contain at least one uppercase letter,' +
+                    ' one lowercase letter, one number, one special character, and be at least 8' +
+                    ' characters long.' });
+        }
+        if (req.body.email.includes('staff'))
+            res.status(400).json({ error: 'Email is problematic' });
+        else{
+            const newCustomer = await insertCustomer(req.body);
+            await mailSendToCustomer(newCustomer.email)
+            res.status(201).json(newCustomer);
+        }
 
     } catch (error) {
         res.status(500).json({ error: `Error creating customer ${error.message}` });
@@ -59,14 +72,21 @@ app.post('/customers', async (req, res) => {
 });
 app.put('/customers/:id', async (req, res) => {
     try {
+        /*const customer = await getCustomerByEmail(req.body.email);
+        if(customer && (req.params.id !== customer.customer_id)){
+            res.status(400).json({ error: 'Account with this email already exists' });
+        }
+        else */ if (req.body.email.includes('staff'))
+            res.status(400).json({ error: 'Email is problematic' });
         const updatedCustomer = await updateCustomer(req.params.id, req.body);
         if (updatedCustomer) {
+            console.log(updatedCustomer)
             res.status(200).json(updatedCustomer);
         } else {
             res.status(404).json({ error: 'Customer not found' });
         }
     } catch (error) {
-        console.error(error);
+        console.error('Error updating customer:', error.message);
         res.status(500).json({ error: 'Error updating customer' });
     }
 });
@@ -88,7 +108,7 @@ app.get('/customers/email/:email', async (req, res) => {
         if (customer) {
             res.status(200).json(customer);
         } else {
-            res.status(404).json({ error: 'Customer not found' });
+            res.status(404).json({ error: 'account does not exist' });
         }
     } catch (error) {
         res.status(500).json({ error: 'Error fetching customer by email' });
@@ -114,8 +134,6 @@ app.get('/movies', async (req, res) => {
         res.status(500).json({ error: 'Error fetching movies' });
     }
 });
-
-
 app.post('/movies', async (req, res) => {
     try {
         const newMovie = await insertMovie(req.body);
@@ -574,6 +592,19 @@ app.get('/admins/:id', async (req, res) => {
         res.status(500).json({ error: 'Error fetching admin' });
     }
 });
+app.get('/admins/email/:email', async (req, res) => {
+    try {
+        const admin = await getAdminByMail(req.params.email);
+        if (admin) {
+            res.status(200).json(admin);
+        } else {
+            res.status(404).json({ error: 'admin was not found' });  // אם לא נמצא
+            // הלקוח
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Error fetching admin' });
+    }
+});
 app.get('/admins', async (req, res) => {
     try {
         const admins = await getAllAdmins();
@@ -584,14 +615,42 @@ app.get('/admins', async (req, res) => {
 });
 app.post('/admins', async (req, res) => {
     try {
+        if (await getAdminByMail(req.body.email)) {
+            console.log('Admin with this email already exists');
+            return res.status(400).json({ error: 'Admin with this email already exists' });
+        }
+
+        // Password validation
+        if (!req.body.password || !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(req.body.password)) {
+            console.log('Password must contain at least one uppercase letter, ' +
+                'one lowercase letter, one number, one special character, and be at least 8 characters long.');
+            return res.status(400).json({
+                error: 'Password must contain at least one uppercase letter, one lowercase letter, one number, one special character, and be at least 8 characters long.'
+            });
+        }
+
+        if (!req.body.email.includes('staff')) {
+            console.log('Email is problematic!');
+            return res.status(400).json({ error: 'Email is problematic!' });
+        }
+
+        // Insert new admin into database
         const newAdmin = await insertAdmin(req.body);
-        res.status(201).json(newAdmin);
+        if (newAdmin) {
+            res.status(201).json(newAdmin);
+        } else {
+            res.status(401).json({ error: 'Failed to add the new admin' });
+        }
     } catch (error) {
-        res.status(500).json({ error: `Error creating new Admin  ${error.message}` });
+        res.status(500).json({ error: `Error creating new Admin: ${error.message}` });
     }
 });
+
+
 app.put('/admins/:id', async (req, res) => {
     try {
+        if (!req.body.email.includes('staff'))
+            res.status(400).json({ error: 'Email is problematic' });
         const updatedAdmin = await updateAdmin(req.params.id, req.body);
         if (updatedAdmin) {
             res.status(200).json(updatedAdmin);
@@ -605,11 +664,17 @@ app.put('/admins/:id', async (req, res) => {
 });
 app.delete('/admins/:id', async (req, res) => {
     try {
-        const success = await deleteAdmin(req.params.id);
-        if (success) {
-            res.status(204).end();
-        } else {
-            res.status(404).json({ error: 'admin that text was not found' });
+        const admins = await getAllAdmins();
+        if (admins.length === 1) {
+            res.status(400).json({ error:'request to delete this account because of a safety' + ' issues'})
+        }
+        else{
+            const success = await deleteAdmin(req.params.id);
+            if (success) {
+                res.status(204).end();
+            } else {
+                res.status(404).json({ error: 'admin that text was not found' });
+            }
         }
     } catch (error) {
         res.status(500).json({ error: 'Error deleting admin' });

@@ -10,31 +10,50 @@ const pool = mysql.createPool({
 
 // CRUD operations for the "customer" table
 async function getCustomerByID(id) {
-    const [rows] = await pool.query(`SELECT * FROM customer WHERE customer_id = ?`, [id]);
+    const [rows] = await pool.query(
+        `SELECT customer_id, first_name, last_name, email, active, 
+        DATE_FORMAT(create_date, '%Y-%m-%d %H:%i:%s') AS create_date, 
+        DATE_FORMAT(last_update, '%Y-%m-%d %H:%i:%s') AS last_update, 
+        password 
+        FROM customer 
+        WHERE customer_id = ?`,
+        [id]
+    );
+
+    //console.log('database values:', rows[0]);
     return rows[0];
 }
+
 async function getAllCustomers() {
     const [rows] = await pool.query(`SELECT * FROM customer`);
     return rows;
 }
 async function insertCustomer(customer) {
-    if (customer.email.includes('staff'))
-        throw new Error('email was problematic');
-    else{
         const [result] = await pool.query(
             `INSERT INTO customer (first_name, last_name, email, active, create_date, last_update, password) VALUES (?, ?, ?, ?, ?, ?, ?)`,
             [customer.first_name, customer.last_name, customer.email, customer.active, customer.create_date, customer.last_update, customer.password]
         );
         return getCustomerByID(result.insertId);
-    }
 }
 async function updateCustomer(id, customer) {
-    const [result] = await pool.query(
-        `UPDATE customer SET first_name = ?, last_name = ?, email = ?, active = ?, last_update = ?, password = ? WHERE customer_id = ?`,
-        [customer.first_name, customer.last_name, customer.email, customer.active, customer.last_update, customer.password, id]
-    );
-    return getCustomerByID(id);
+    try {
+        const [result] = await pool.query(
+            `UPDATE customer SET first_name = ?, last_name = ?, email = ?, active = ?, last_update = ?, password = ? WHERE customer_id = ?`,
+            [customer.first_name, customer.last_name, customer.email, customer.active, customer.last_update, customer.password, id]
+        );
+        if (result.affectedRows === 0) {
+            console.log('error databse')
+            throw new Error('Customer not found');
+        }
+        return getCustomerByID(id);
+    } catch (error) {
+        console.error('Error updating customer:', error);
+        throw error; // יזרוק את השגיאה כך שתוכל לטפל בה מאוחר יותר
+    }
 }
+
+
+
 async function deleteCustomer(id) {
     const [result] = await pool.query(`DELETE FROM customer WHERE customer_id = ?`, [id]);
     return result.affectedRows > 0;
@@ -289,6 +308,10 @@ async function deleteLanguage(id) {
 // CRUD operations for the "admin" table
 async function getAdminByID(id) {
     const [rows] = await pool.query(`SELECT * FROM admin WHERE admin_id = ?`, [id]);
+    return rows[0];
+}
+async function getAdminByMail(email) {
+    const [rows] = await pool.query(`SELECT * FROM admin WHERE email = ?`, [email]);
     return rows[0];
 }
 async function getAllAdmins() {
@@ -634,6 +657,7 @@ module.exports = {
     updateLanguage,
     deleteLanguage,
     getAdminByID,
+    getAdminByMail,
     getAllAdmins,
     insertAdmin,
     updateAdmin,
