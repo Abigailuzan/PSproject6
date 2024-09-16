@@ -22,8 +22,9 @@ function AddMovieForm({ onSubmit }) {
       last_update :  new Date().toISOString().split('T')[0],
       movie_image: movieImageUrl,
       movie_video: movieVideoUrl,
+      category:'',
+      actor:''
     };
-
     onSubmit(movieData);
   };
 

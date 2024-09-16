@@ -18,7 +18,7 @@ function UserInfo() {
         if(userConfirmed){
             if(storage.value.email.includes('staff'))
             {
-                axios.delete(`http://localhost:5000/admins/${storage.value.id}`)
+                axios.delete(`http://localhost:5000/admins/${storage.value.id}/${storage.value.email}`)
                     .then(response => {
                         console.log("response data with ok: ", response.data);
                         alert('admin deleted successfully.');

@@ -60,7 +60,7 @@ async function deleteCustomer(id) {
 }
 async function getCustomerByEmail(email) {
     const [rows] = await pool.query(`SELECT * FROM customer WHERE email = ?`, [email]);
-    return rows[0] || undefined;
+    return rows[0] ;
 }
 
 // CRUD operations for the "movie" table
@@ -426,7 +426,10 @@ async function deleteMovieActor(actorId, filmId) {
     const [result] = await pool.query(`DELETE FROM movieactor WHERE actor_id = ? AND film_id = ?`, [actorId, filmId]);
     return result.affectedRows > 0;
 }
-
+async function deleteMovieActorByFilmId( filmId) {
+    const [result] = await pool.query(`DELETE FROM movieactor WHERE  film_id = ?`, [ filmId]);
+    return result.affectedRows > 0;
+}
 // CRUD operations for the "movie-category" table
 async function getMovieCategoryByIDs(filmId, categoryId) {
     const [rows] = await pool.query(`SELECT * FROM moviecategory WHERE film_id = ? AND category_id = ?`, [filmId, categoryId]);
@@ -685,5 +688,6 @@ module.exports = {
     getCategoriesOfMovie,
     getActorsOfMovie,
     getMoviesOfActor,
-    getAllActiveCustomers
+    getAllActiveCustomers,
+    deleteMovieActorByFilmId
 };

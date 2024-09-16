@@ -7,13 +7,13 @@ async function mailSendToCustomer(customer_email) {
         port: 465,
         secure: true,
         auth: {
-            user: "a0583240144@gmail.com",
-            pass: "ixch rrmn txsg shgq\n", // ודא שהסיסמה נכונה ואין רווחים מיותרים
+            user: "servermoviewatch@gmail.com",
+            pass: "pyjx xshm gevr deih\n", // ודא שהסיסמה נכונה ואין רווחים מיותרים
         },
     });
 
     let info = await transporter.sendMail({
-        from: '"Movie Watch Team" <a0583240144@gmail.com>',
+        from: '"Movie Watch Team" <servermoviewatch@gmail.com>',
         to: 'a0583240144@gmail.com',
         subject: "Welcome to Movie Watch!",
         html: `

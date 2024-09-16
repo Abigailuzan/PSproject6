@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Password from './Password';
 import '../Stlyles/Form.css';
+import useLocalStorage from "../UseHooks/useLocalStorage";
 
 function AddAdminForm({ onSubmit, error, clearError }) {
     const [firstName, setFirstName] = useState('');
@@ -10,6 +11,8 @@ function AddAdminForm({ onSubmit, error, clearError }) {
     const [password, setPassword] = useState('');
     const [password1, setPassword1] = useState('');
     const [localError, setLocalError] = useState(null);
+    const storage = useLocalStorage();
+
 
     // Clear errors when input is changed
     const handleInputChange = (setter, value) => {
@@ -33,7 +36,8 @@ function AddAdminForm({ onSubmit, error, clearError }) {
             active: 1,
             username: username,
             password: password,
-            last_update: new Date().toISOString().split('T')[0]
+            last_update: new Date().toISOString().split('T')[0],
+            verification_email:storage.value.email
         };
 
 

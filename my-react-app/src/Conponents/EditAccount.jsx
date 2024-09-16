@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import '../Stlyles/Form.css';
+import useLocalStorage from "../UseHooks/useLocalStorage";
 
 function EditAccount({ OnSubmit,OnSubmitAdmin, user }) {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
+    const storage = useLocalStorage();
+
 
     // עדכון השדות בכל פעם שה-user משתנה
     useEffect(() => {
@@ -28,6 +31,7 @@ function EditAccount({ OnSubmit,OnSubmitAdmin, user }) {
                 username: user.username,
                 password: user.password,
                 last_update: new Date().toISOString().split('T')[0],
+                verification_email: storage.value.email
             }
             OnSubmitAdmin(adminData);
         }

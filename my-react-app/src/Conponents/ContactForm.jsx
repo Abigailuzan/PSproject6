@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import '../Stlyles/Contact.css';
+import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -7,6 +9,8 @@ const ContactForm = () => {
     subject: '',
     message: ''
   });
+  const navigate = useNavigate();
+  const [error,setError] = useState('')
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -14,7 +18,25 @@ const ContactForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form submitted', formData);
+    const sendRequest = {
+      email:formData.email,
+      subject:formData.subject,
+      message:formData.message
+    }
+    axios.post('http://localhost:5000/contactus',sendRequest)
+        .then(response => {
+          const add = response.data;
+          alert(add.auto_response)
+          navigate("/home");
+        })
+        .catch(error => {
+          // Handle error and display error message from server
+          if (error.response && error.response.data && error.response.data.error) {
+            setError(error.response.data.error);
+          } else {
+            setError('An unknown error occurred');
+          }
+        });
   };
 
   return (
@@ -44,6 +66,7 @@ const ContactForm = () => {
             rows="4"
             required
           />
+          {error && <p className="error-message">{error}</p>}
           <button type="submit" className="submit-button">
             Send
           </button>

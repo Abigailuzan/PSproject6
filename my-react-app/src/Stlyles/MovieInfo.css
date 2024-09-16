@@ -1,5 +1,3 @@
-
-
 .video-container {
   display: flex;
   justify-content: center;
@@ -20,20 +18,29 @@ iframe {
   margin-right: auto;
   margin-bottom: 10px;
 }
+.description-container {
+  display: flex;
+  align-items: flex-start; /* מוודא שכל תוכן מיושר מלמעלה */
+}
 
-.h2-description{
-  font-size: 2rem;
-  margin:0px;
-  justify-content:right;
+.h2-description {
+  font-size: 1.3rem;
+  margin: 0;
   color: #fff;
+  display: inline;
+  margin-right: 0.5rem; /* רווח קטן בין הכותרת לתיאור */
+  white-space: nowrap; /* כדי שהכותרת לא תרד שורה */
 }
 
 .movie-description {
-  font-size: 1.2rem;
+  font-size: 1rem;
   line-height: 1.6;
   color: #fff;
   text-align: justify;
+  display: inline;
 }
+
+
 .tools{
   margin-left: 350px;
   margin-top:15px;

@@ -16,9 +16,10 @@ const { getCustomerByID,getCustomerByEmail, getAllCustomers, insertCustomer, upd
     deleteMovieCategory, getMoviesByCategory, getAllMovieYear, getMovieByRating, getPaymentByCustomer,
     getRentalByCustomer, getCategoriesOfMovie, getActorsOfMovie, getMoviesOfActor, getAllActiveCustomers,
     getTotalMovies,
-    getAdminByMail,
+    getAdminByMail,deleteMovieActorByFilmId,
 } = require("./database");
 const nodemailer = require("nodemailer");
+const {response} = require("express");
 const app = express();
 const port = 5000;
 
@@ -32,9 +33,9 @@ app.get('/customers/:id', async (req, res) => {
     try {
         const customer = await getCustomerByID(req.params.id);
         if (customer) {
-            res.status(200).json(customer);  // אם נמצא הלקוח, מחזיר את הנתונים שלו
+            return res.status(200).json(customer);
         } else {
-            res.status(404).json({ error: 'Customer not found' });  // אם לא נמצא הלקוח
+            return res.status(404).json({ error: 'Customer not found' });  // אם לא נמצא הלקוח
         }
     } catch (error) {
         res.status(500).json({ error: 'Error fetching customer' });
@@ -43,33 +44,37 @@ app.get('/customers/:id', async (req, res) => {
 app.get('/customers', async (req, res) => {
     try {
         const customers = await getAllCustomers();
-        res.status(200).json(customers);
+        return res.status(200).json(customers);
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching customers' });
+        return res.status(500).json({ error: 'Error fetching customers' });
     }
 });
 app.post('/customers', async (req, res) => {
     try {
-        if(await getCustomerByEmail(req.body.email)){
-            res.status(400).json({ error: 'Account with this email already exists' });
-        }
-        if (!req.body.password || !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(req.body.password)) {
-            res.status(400).json({ error: 'Password must contain at least one uppercase letter,' +
-                    ' one lowercase letter, one number, one special character, and be at least 8' +
-                    ' characters long.' });
-        }
-        if (req.body.email.includes('staff'))
-            res.status(400).json({ error: 'Email is problematic' });
-        else{
-            const newCustomer = await insertCustomer(req.body);
-            await mailSendToCustomer(newCustomer.email)
-            res.status(201).json(newCustomer);
+        // בדיקת אם קיים לקוח עם אותו מייל
+        if (await getCustomerByEmail(req.body.email)) {
+            return res.status(400).json({ error: 'Account with this email already exists' });
         }
 
+        if (!req.body.password || !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(req.body.password)) {
+            return res.status(400).json({
+                error: 'Password must contain at least one uppercase letter, one lowercase letter, one number, one special character, and be at least 8 characters long.'
+            });
+        }
+        if (req.body.email.includes('staff')) {
+            return res.status(400).json({ error: 'Email is problematic' });
+        }
+
+        // יצירת הלקוח
+        const newCustomer = await insertCustomer(req.body);
+        await mailSendToCustomer(newCustomer.email);
+        return res.status(201).json(newCustomer);
+
     } catch (error) {
-        res.status(500).json({ error: `Error creating customer ${error.message}` });
+        return res.status(500).json({ error: `Error creating customer: ${error.message}` });
     }
 });
+
 app.put('/customers/:id', async (req, res) => {
     try {
         /*const customer = await getCustomerByEmail(req.body.email);
@@ -77,41 +82,41 @@ app.put('/customers/:id', async (req, res) => {
             res.status(400).json({ error: 'Account with this email already exists' });
         }
         else */ if (req.body.email.includes('staff'))
-            res.status(400).json({ error: 'Email is problematic' });
+            return res.status(400).json({ error: 'Email is problematic' });
         const updatedCustomer = await updateCustomer(req.params.id, req.body);
         if (updatedCustomer) {
             console.log(updatedCustomer)
-            res.status(200).json(updatedCustomer);
+            return res.status(200).json(updatedCustomer);
         } else {
-            res.status(404).json({ error: 'Customer not found' });
+            return res.status(404).json({ error: 'Customer not found' });
         }
     } catch (error) {
         console.error('Error updating customer:', error.message);
-        res.status(500).json({ error: 'Error updating customer' });
+        return res.status(500).json({ error: 'Error updating customer' });
     }
 });
 app.delete('/customers/:id', async (req, res) => {
     try {
         const success = await deleteCustomer(req.params.id);  // מחיקת הלקוח
         if (success) {
-            res.status(204).end();  // אם הלקוח נמחק בהצלחה
+            return res.status(204).end();  // אם הלקוח נמחק בהצלחה
         } else {
-            res.status(404).json({ error: 'Customer not found' });  // אם הלקוח לא נמצא
+            return res.status(404).json({ error: 'Customer not found' });  // אם הלקוח לא נמצא
         }
     } catch (error) {
-        res.status(500).json({ error: 'Error deleting customer' });
+        return res.status(500).json({ error: 'Error deleting customer' });
     }
 });
 app.get('/customers/email/:email', async (req, res) => {
     try {
         const customer = await getCustomerByEmail(req.params.email);
         if (customer) {
-            res.status(200).json(customer);
+            return res.status(200).json(customer);
         } else {
-            res.status(404).json({ error: 'account does not exist' });
+            return res.status(404).json({ error: 'account does not exist' });
         }
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching customer by email' });
+        return res.status(500).json({ error: 'Error fetching customer by email' });
     }
 });
 
@@ -128,43 +133,52 @@ app.get('/movies', async (req, res) => {
         console.log("Movies:", movies); // הדפסת רשימת הסרטים
         const total = await getTotalMovies();
         console.log("Total movies:", total); // הדפסת סה"כ הסרטים
-        res.status(200).json({ movies, total });
+        return res.status(200).json({ movies, total });
     } catch (error) {
         console.error('Error fetching movies:', error); // הדפסת השגיאה
-        res.status(500).json({ error: 'Error fetching movies' });
+        return res.status(500).json({ error: 'Error fetching movies' });
     }
 });
 app.post('/movies', async (req, res) => {
     try {
+        if (!req.body.verification_email.includes('staff') ||  !await getAdminByMail(req.body.verification_email)){
+            return res.status(400).json({ error: 'only existing admins can insert a new admin' });
+        }
         const newMovie = await insertMovie(req.body);
-        res.status(201).json(newMovie);
+        return res.status(201).json(newMovie);
     } catch (error) {
-        res.status(500).json({ error: `Error creating customer  ${error.message}` });
+        return res.status(500).json({ error: `Error creating customer  ${error.message}` });
     }
 });
-app.put('/movies/:id', async (req, res) => {
+app.put('/movies/:id/:email', async (req, res) => {
     try {
+        if (!req.params.email.includes('staff') ||  !await getAdminByMail(req.params.email)){
+            return res.status(400).json({ error: 'only existing admins can update a movie' });
+        }
         const updatedMovie = await updateMovie(req.params.id, req.body);
         if (updatedMovie) {
-            res.status(200).json(updatedMovie);
+            return res.status(200).json(updatedMovie);
         } else {
-            res.status(404).json({ error: 'movie not found' });
+            return res.status(404).json({ error: 'movie not found' });
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Error updating movie' });
+        return res.status(500).json({ error: 'Error updating movie' });
     }
 });
-app.delete('/movies/:id', async (req, res) => {
+app.delete('/movies/:id/:email', async (req, res) => {
     try {
+        if (!req.params.email.includes('staff') ||  !await getAdminByMail(req.params.email)){
+            return res.status(400).json({ error: 'only existing admins can insert a new admin' });
+        }
         const success = await deleteMovie(req.params.id);
         if (success) {
-            res.status(204).end();
+            return res.status(204).end();
         } else {
-            res.status(404).json({ error: 'movie not found' });
+            return res.status(404).json({ error: 'movie not found' });
         }
     } catch (error) {
-        res.status(500).json({ error: 'Error deleting movie' });
+        return res.status(500).json({ error: 'Error deleting movie' });
     }
 });
 app.get('/movies/title/:title', async (req, res) => {
@@ -173,15 +187,18 @@ app.get('/movies/title/:title', async (req, res) => {
 });
 app.put('/movies/title/:title', async (req, res) => {
     try {
+        if (!req.body.verification_email.includes('staff') ||  !await getAdminByMail(req.body.verification_email)){
+            return res.status(400).json({ error: 'only existing admins can insert a new admin' });
+        }
         const updatedMovie = await updateMovieByTitle(req.params.title, req.body);
         if (updatedMovie) {
-            res.status(200).json(updatedMovie);
+            return res.status(200).json(updatedMovie);
         } else {
-            res.status(404).json({ error: 'movie not found' });
+            return res.status(404).json({ error: 'movie not found' });
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Error updating movie' });
+        return res.status(500).json({ error: 'Error updating movie' });
     }
 });
 
@@ -190,56 +207,56 @@ app.get('/actors/:id', async (req, res) => {
     try {
         const actor = await getActorByID(req.params.id);
         if (actor) {
-            res.status(200).json(actor);
+            return res.status(200).json(actor);
         } else {
-            res.status(404).json({ error: 'actor not found' });  // אם לא נמצא הלקוח
+            return res.status(404).json({ error: 'actor not found' });  // אם לא נמצא הלקוח
         }
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching actor' });
+        return res.status(500).json({ error: 'Error fetching actor' });
     }
 });
 app.get('/actors', async (req, res) => {
     try {
         const actors = await getAllActors();
-        res.status(200).json(actors);
+        return res.status(200).json(actors);
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching actors' });
+        return res.status(500).json({ error: 'Error fetching actors' });
     }
 });
 app.post('/actors', async (req, res) => {
     const newActor = await insertActor(req.body);
-    res.status(201).json(newActor);
+    return res.status(201).json(newActor);
     try {
         const newActor = await insertActor(req.body);
-        res.status(201).json(newActor);
+        return res.status(201).json(newActor);
     } catch (error) {
-        res.status(500).json({ error: 'Error creating Actor' });
+        return res.status(500).json({ error: 'Error creating Actor' });
     }
 });
 app.put('/actors/:id', async (req, res) => {
     try {
         const updatedActor = await updateActor(req.params.id, req.body);
         if (updatedActor) {
-            res.status(200).json(updatedActor);
+            return res.status(200).json(updatedActor);
         } else {
-            res.status(404).json({ error: 'Actor not found' });
+            return res.status(404).json({ error: 'Actor not found' });
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Error updating Actor' });
+        return res.status(500).json({ error: 'Error updating Actor' });
     }
 });
 app.delete('/actors/:id', async (req, res) => {
     try {
         const success = await deleteActor(req.params.id);
         if (success) {
-            res.status(204).end();
+            return res.status(204).end();
         } else {
-            res.status(404).json({ error: 'actor not found' });
+            return res.status(404).json({ error: 'actor not found' });
         }
     }
     catch (error) {
-        res.status(500).json({ error: 'Error deleting actor' });
+        return res.status(500).json({ error: 'Error deleting actor' });
     }
 });
 
@@ -248,53 +265,53 @@ app.get('/payments/:id', async (req, res) => {
     try {
         const payment = await getPaymentByID(req.params.id);
         if (payment) {
-            res.status(200).json(payment);
+            return res.status(200).json(payment);
         } else {
-            res.status(404).json({ error: 'payment not found' });  // אם לא נמצא הלקוח
+            return res.status(404).json({ error: 'payment not found' });  // אם לא נמצא הלקוח
         }
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching payment' });
+        return res.status(500).json({ error: 'Error fetching payment' });
     }
 });
 app.get('/payments', async (req, res) => {
     try {
         const payments = await getAllPayments();
-        res.status(200).json(payments);
+        return res.status(200).json(payments);
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching payments' });
+        return res.status(500).json({ error: 'Error fetching payments' });
     }
 });
 app.post('/payments', async (req, res) => {
     try {
         const newPayment = await insertPayment(req.body);
-        res.status(201).json(newPayment);
+        return res.status(201).json(newPayment);
     } catch (error) {
-        res.status(500).json({ error: `Error creating payment  ${error.message}` });
+        return res.status(500).json({ error: `Error creating payment  ${error.message}` });
     }
 });
 app.put('/payments/:id', async (req, res) => {
     try {
         const updatedPayment = await updatePayment(req.params.id, req.body);
         if (updatedPayment) {
-            res.status(200).json(updatedPayment);
+            return res.status(200).json(updatedPayment);
         } else {
-            res.status(404).json({ error: 'payment not found' });
+            return res.status(404).json({ error: 'payment not found' });
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Error updating payment' });
+        return res.status(500).json({ error: 'Error updating payment' });
     }
 });
 app.delete('/payments/:id', async (req, res) => {
     try {
         const success = await deletePayment(req.params.id);
         if (success) {
-            res.status(204).end();
+            return res.status(204).end();
         } else {
-            res.status(404).json({ error: 'payment not found' });
+            return res.status(404).json({ error: 'payment not found' });
         }
     } catch (error) {
-        res.status(500).json({ error: 'Error deleting payment' });
+        return res.status(500).json({ error: 'Error deleting payment' });
     }
 });
 
@@ -303,53 +320,53 @@ app.get('/rentals/:id', async (req, res) => {
     try {
         const rental = await getRentalByID(req.params.id);
         if (rental) {
-            res.status(200).json(rental);
+            return res.status(200).json(rental);
         } else {
-            res.status(404).json({ error: 'rental not found' });  // אם לא נמצא הלקוח
+            return res.status(404).json({ error: 'rental not found' });  // אם לא נמצא הלקוח
         }
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching rental' });
+        return res.status(500).json({ error: 'Error fetching rental' });
     }
 });
 app.get('/rentals', async (req, res) => {
     try {
         const rentals = await getAllRentals();
-        res.status(200).json(rentals);
+        return res.status(200).json(rentals);
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching rentals' });
+        return res.status(500).json({ error: 'Error fetching rentals' });
     }
 });
 app.post('/rentals', async (req, res) => {
     try {
         const newRental = await insertRental(req.body);
-        res.status(201).json(newRental);
+        return res.status(201).json(newRental);
     } catch (error) {
-        res.status(500).json({ error: 'Error creating rental' });
+        return res.status(500).json({ error: 'Error creating rental' });
     }
 });
 app.put('/rentals/:id', async (req, res) => {
     try {
         const updatedRental = await updateRental(req.params.id, req.body);
         if (updatedRental) {
-            res.status(200).json(updatedRental);
+            return res.status(200).json(updatedRental);
         } else {
-            res.status(404).json({ error: 'rental not found' });
+            return res.status(404).json({ error: 'rental not found' });
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Error updating rental' });
+        return res.status(500).json({ error: 'Error updating rental' });
     }
 });
 app.delete('/rentals/:id', async (req, res) => {
     try {
         const success = await deleteRental(req.params.id);
         if (success) {
-            res.status(204).end();
+            return res.status(204).end();
         } else {
-            res.status(404).json({ error: 'rental not found' });
+            return res.status(404).json({ error: 'rental not found' });
         }
     } catch (error) {
-        res.status(500).json({ error: 'Error deleting rental' });
+        return res.status(500).json({ error: 'Error deleting rental' });
     }
 });
 
@@ -358,54 +375,55 @@ app.get('/movieTexts/:id', async (req, res) => {
     try {
         const movieText = await getMovieTextByID(req.params.id);
         if (movieText) {
-            res.status(200).json(movieText);
+            return res.status(200).json(movieText);
         } else {
-            res.status(404).json({ error: 'movie with this text was not found' });  // אם לא נמצא
+            return res.status(404).json({ error: 'movie with this text was not found' });  // אם
+            // לא נמצא
             // הלקוח
         }
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching movies-text' });
+        return res.status(500).json({ error: 'Error fetching movies-text' });
     }
 });
 app.get('/movieTexts', async (req, res) => {
     try {
         const movieTexts = await getAllMovieTexts();
-        res.status(200).json(movieTexts);
+        return res.status(200).json(movieTexts);
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching movie-text' });
+        return res.status(500).json({ error: 'Error fetching movie-text' });
     }
 });
 app.post('/movieTexts', async (req, res) => {
     try {
         const newMovieText = await insertMovieText(req.body);
-        res.status(201).json(newMovieText);
+        return res.status(201).json(newMovieText);
     } catch (error) {
-        res.status(500).json({ error: 'Error creating new movie text' });
+        return res.status(500).json({ error: 'Error creating new movie text' });
     }
 });
 app.put('/movieTexts/:id', async (req, res) => {
     try {
         const updatedMovieText = await updateMovieText(req.params.id, req.body);
         if (updatedMovieText) {
-            res.status(200).json(updatedMovieText);
+            return res.status(200).json(updatedMovieText);
         } else {
-            res.status(404).json({ error: 'movie with this text was not found' });
+            return res.status(404).json({ error: 'movie with this text was not found' });
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Error updating movie text' });
+        return res.status(500).json({ error: 'Error updating movie text' });
     }
 });
 app.delete('/movieTexts/:id', async (req, res) => {
     try {
         const success = await deleteMovieText(req.params.id);
         if (success) {
-            res.status(204).end();
+            return res.status(204).end();
         } else {
-            res.status(404).json({ error: 'movie with that text was not found' });
+            return res.status(404).json({ error: 'movie with that text was not found' });
         }
     } catch (error) {
-        res.status(500).json({ error: 'Error deleting movie text' });
+        return res.status(500).json({ error: 'Error deleting movie text' });
     }
 });
 
@@ -414,54 +432,53 @@ app.get('/cities/:id', async (req, res) => {
    try {
         const city = await getCityByID(req.params.id);
         if (city) {
-            res.status(200).json(city);
+            return res.status(200).json(city);
         } else {
-            res.status(404).json({ error: 'city was not found' });  // אם לא נמצא
-            // הלקוח
+            return res.status(404).json({ error: 'city was not found' });  // אם לא נמצא
         }
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching city' });
+       return res.status(500).json({ error: 'Error fetching city' });
     }
 });
 app.get('/cities', async (req, res) => {
     try {
         const cities = await getAllCities();
-        res.status(200).json(cities);
+        return res.status(200).json(cities);
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching cities' });
+        return res.status(500).json({ error: 'Error fetching cities' });
     }
 });
 app.post('/cities', async (req, res) => {
     try {
         const newCity = await insertCity(req.body);
-        res.status(201).json(newCity);
+        return res.status(201).json(newCity);
     } catch (error) {
-        res.status(500).json({ error: 'Error creating new City ' });
+        return res.status(500).json({ error: 'Error creating new City ' });
     }
 });
 app.put('/cities/:id', async (req, res) => {
     try {
         const updatedCity = await updateCity(req.params.id, req.body);
         if (updatedCity) {
-            res.status(200).json(updatedCity);
+            return res.status(200).json(updatedCity);
         } else {
-            res.status(404).json({ error: 'City was not found' });
+            return res.status(404).json({ error: 'City was not found' });
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Error updating City' });
+        return res.status(500).json({ error: 'Error updating City' });
     }
 });
 app.delete('/cities/:id', async (req, res) => {
    try {
         const success = await deleteCity(req.params.id);
         if (success) {
-            res.status(204).end();
+            return res.status(204).end();
         } else {
-            res.status(404).json({ error: 'City that text was not found' });
+            return res.status(404).json({ error: 'City that text was not found' });
         }
     } catch (error) {
-        res.status(500).json({ error: 'Error deleting City' });
+       return res.status(500).json({ error: 'Error deleting City' });
     }
 });
 
@@ -470,54 +487,54 @@ app.get('/countries/:id', async (req, res) => {
     try {
         const country = await getCountryByID(req.params.id);
         if (country) {
-            res.status(200).json(country);
+            return res.status(200).json(country);
         } else {
-            res.status(404).json({ error: 'country was not found' });  // אם לא נמצא
+            return res.status(404).json({ error: 'country was not found' });  // אם לא נמצא
             // הלקוח
         }
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching country' });
+        return res.status(500).json({ error: 'Error fetching country' });
     }
 });
 app.get('/countries', async (req, res) => {
     try {
         const countries = await getAllCountries();
-        res.status(200).json(countries);
+        return res.status(200).json(countries);
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching countries' });
+        return res.status(500).json({ error: 'Error fetching countries' });
     }
 });
 app.post('/countries', async (req, res) => {
     try {
         const newCountry = await insertCountry(req.body);
-        res.status(201).json(newCountry);
+        return res.status(201).json(newCountry);
     } catch (error) {
-        res.status(500).json({ error: 'Error creating new Country ' });
+        return res.status(500).json({ error: 'Error creating new Country ' });
     }
 });
 app.put('/countries/:id', async (req, res) => {
     try {
         const updatedCountry = await updateCountry(req.params.id, req.body);
         if (updatedCountry) {
-            res.status(200).json(updatedCountry);
+            return res.status(200).json(updatedCountry);
         } else {
-            res.status(404).json({ error: 'Country was not found' });
+            return res.status(404).json({ error: 'Country was not found' });
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Error updating Country' });
+        return res.status(500).json({ error: 'Error updating Country' });
     }
 });
 app.delete('/countries/:id', async (req, res) => {
     try {
         const success = await deleteCountry(req.params.id);
         if (success) {
-            res.status(204).end();
+            return res.status(204).end();
         } else {
-            res.status(404).json({ error: 'Country that text was not found' });
+            return res.status(404).json({ error: 'Country that text was not found' });
         }
     } catch (error) {
-        res.status(500).json({ error: 'Error deleting Country' });
+        return res.status(500).json({ error: 'Error deleting Country' });
     }
 });
 
@@ -526,42 +543,42 @@ app.get('/languages/:id', async (req, res) => {
     try {
         const language = await getLanguageByID(req.params.id);
         if (language) {
-            res.status(200).json(language);
+            return res.status(200).json(language);
         } else {
-            res.status(404).json({ error: 'language was not found' });  // אם לא נמצא
+            return res.status(404).json({ error: 'language was not found' });  // אם לא נמצא
             // הלקוח
         }
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching language' });
+        return res.status(500).json({ error: 'Error fetching language' });
     }
 });
 app.get('/languages', async (req, res) => {
     try {
         const languages = await getAllLanguages();
-        res.status(200).json(languages);
+        return res.status(200).json(languages);
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching languages' });
+        return res.status(500).json({ error: 'Error fetching languages' });
     }
 });
 app.post('/languages', async (req, res) => {
     try {
         const newLanguage = await insertLanguage(req.body);
-        res.status(201).json(newLanguage);
+        return res.status(201).json(newLanguage);
     } catch (error) {
-        res.status(500).json({ error: 'Error creating new Language ' });
+        return res.status(500).json({ error: 'Error creating new Language ' });
     }
 });
 app.put('/languages/:id', async (req, res) => {
     try {
         const updatedLanguage = await updateLanguage(req.params.id, req.body);
         if (updatedLanguage) {
-            res.status(200).json(updatedLanguage);
+            return res.status(200).json(updatedLanguage);
         } else {
-            res.status(404).json({ error: 'Language was not found' });
+            return res.status(404).json({ error: 'Language was not found' });
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Error updating Language' });
+        return res.status(500).json({ error: 'Error updating Language' });
     }
 });
 app.delete('/languages/:id', async (req, res) => {
@@ -569,12 +586,12 @@ app.delete('/languages/:id', async (req, res) => {
     try {
         const success = await deleteLanguage(req.params.id);
         if (success) {
-            res.status(204).end();
+            return res.status(204).end();
         } else {
-            res.status(404).json({ error: 'languages that text was not found' });
+            return res.status(404).json({ error: 'languages that text was not found' });
         }
     } catch (error) {
-        res.status(500).json({ error: 'Error deleting languages' });
+        return res.status(500).json({ error: 'Error deleting languages' });
     }
 });
 
@@ -583,34 +600,34 @@ app.get('/admins/:id', async (req, res) => {
     try {
         const admin = await getAdminByID(req.params.id);
         if (admin) {
-            res.status(200).json(admin);
+            return res.status(200).json(admin);
         } else {
-            res.status(404).json({ error: 'admin was not found' });  // אם לא נמצא
+            return res.status(404).json({ error: 'admin was not found' });  // אם לא נמצא
             // הלקוח
         }
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching admin' });
+        return res.status(500).json({ error: 'Error fetching admin' });
     }
 });
 app.get('/admins/email/:email', async (req, res) => {
     try {
         const admin = await getAdminByMail(req.params.email);
         if (admin) {
-            res.status(200).json(admin);
+            return res.status(200).json(admin);
         } else {
-            res.status(404).json({ error: 'admin was not found' });  // אם לא נמצא
+            return res.status(404).json({ error: 'admin was not found' });  // אם לא נמצא
             // הלקוח
         }
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching admin' });
+        return res.status(500).json({ error: 'Error fetching admin' });
     }
 });
 app.get('/admins', async (req, res) => {
     try {
         const admins = await getAllAdmins();
-        res.status(200).json(admins);
+        return res.status(200).json(admins);
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching admins' });
+        return res.status(500).json({ error: 'Error fetching admins' });
     }
 });
 app.post('/admins', async (req, res) => {
@@ -619,8 +636,6 @@ app.post('/admins', async (req, res) => {
             console.log('Admin with this email already exists');
             return res.status(400).json({ error: 'Admin with this email already exists' });
         }
-
-        // Password validation
         if (!req.body.password || !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(req.body.password)) {
             console.log('Password must contain at least one uppercase letter, ' +
                 'one lowercase letter, one number, one special character, and be at least 8 characters long.');
@@ -628,56 +643,61 @@ app.post('/admins', async (req, res) => {
                 error: 'Password must contain at least one uppercase letter, one lowercase letter, one number, one special character, and be at least 8 characters long.'
             });
         }
-
         if (!req.body.email.includes('staff')) {
             console.log('Email is problematic!');
             return res.status(400).json({ error: 'Email is problematic!' });
         }
-
-        // Insert new admin into database
+        if (!req.body.verification_email.includes('staff') ||  !await getAdminByMail(req.body.verification_email)){
+            return res.status(400).json({ error: 'only existing admins can insert a new admin' });
+        }
         const newAdmin = await insertAdmin(req.body);
         if (newAdmin) {
-            res.status(201).json(newAdmin);
+            return res.status(201).json(newAdmin);
         } else {
-            res.status(401).json({ error: 'Failed to add the new admin' });
+            return res.status(401).json({ error: 'Failed to add the new admin' });
         }
     } catch (error) {
-        res.status(500).json({ error: `Error creating new Admin: ${error.message}` });
+        return res.status(500).json({ error: `Error creating new Admin: ${error.message}` });
     }
 });
-
-
 app.put('/admins/:id', async (req, res) => {
     try {
         if (!req.body.email.includes('staff'))
-            res.status(400).json({ error: 'Email is problematic' });
+            return res.status(400).json({ error: 'Email is problematic' });
+        if (!req.body.verification_email.includes('staff') ||  !await getAdminByMail(req.body.verification_email)){
+            return res.status(400).json({ error: 'only existing admins can insert a new admin' });
+        }
         const updatedAdmin = await updateAdmin(req.params.id, req.body);
         if (updatedAdmin) {
-            res.status(200).json(updatedAdmin);
+            return res.status(200).json(updatedAdmin);
         } else {
-            res.status(404).json({ error: 'admin was not found' });
+            return res.status(404).json({ error: 'admin was not found' });
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: `Error updating admin  ${error.message}` });
+        return res.status(500).json({ error: `Error updating admin  ${error.message}` });
     }
 });
-app.delete('/admins/:id', async (req, res) => {
+app.delete('/admins/:id/:email', async (req, res) => {
     try {
         const admins = await getAllAdmins();
         if (admins.length === 1) {
-            res.status(400).json({ error:'request to delete this account because of a safety' + ' issues'})
+            return res.status(400).json({ error:'request to delete this account because of a' +
+                    ' safety' + ' issues'})
+        }
+        if (!req.params.email.includes('staff') ||  !await getAdminByMail(req.params.email)){
+            return res.status(400).json({ error: 'only existing admins can delete a new admin' });
         }
         else{
             const success = await deleteAdmin(req.params.id);
             if (success) {
-                res.status(204).end();
+                return res.status(204).end();
             } else {
-                res.status(404).json({ error: 'admin that text was not found' });
+                return res.status(404).json({ error: 'admin that text was not found' });
             }
         }
     } catch (error) {
-        res.status(500).json({ error: 'Error deleting admin' });
+        return res.status(500).json({ error: 'Error deleting admin' });
     }
 });
 
@@ -686,48 +706,48 @@ app.get('/categories/:id', async (req, res) => {
     try {
         const category = await getCategoryByID(req.params.id);
         if (category) {
-            res.status(200).json(category);
+            return res.status(200).json(category);
         } else {
-            res.status(404).json({ error: 'category was not found' });  // אם לא נמצא
+            return res.status(404).json({ error: 'category was not found' });  // אם לא נמצא
         }
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching category' });
+        return res.status(500).json({ error: 'Error fetching category' });
     }
 });
 app.get('/categories', async (req, res) => {
     try {
         const categories = await getAllCategories();
-        res.status(200).json(categories);
+        return res.status(200).json(categories);
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching categories' });
+        return res.status(500).json({ error: 'Error fetching categories' });
     }
 });
 app.post('/categories', async (req, res) => {
   try {
         const newCategory = await insertCategory(req.body);
-        res.status(201).json(newCategory);
+      return res.status(201).json(newCategory);
     } catch (error) {
-        res.status(500).json({ error: 'Error creating new Category ' });
+      return res.status(500).json({ error: 'Error creating new Category ' });
     }
 });
-app.put('/categories/:id', async (req, res) => {
+app.put('/categories/:id/', async (req, res) => {
     try {
         const updatedCategory = await updateCategory(req.params.id, req.body);
-        res.status(201).json(updatedCategory);
+        return res.status(201).json(updatedCategory);
     } catch (error) {
-        res.status(500).json({ error: 'Error  update Category ' });
+        return res.status(500).json({ error: 'Error  update Category ' });
     }
 });
 app.delete('/categories/:id', async (req, res) => {
    try {
         const success = await deleteCategory(req.params.id);
         if (success) {
-            res.status(204).end();
+            return res.status(204).end();
         } else {
-            res.status(404).json({ error: 'category that text was not found' });
+            return res.status(404).json({ error: 'category that text was not found' });
         }
     } catch (error) {
-        res.status(500).json({ error: 'Error deleting category' });
+       return res.status(500).json({ error: 'Error deleting category' });
     }
 
 });
@@ -737,98 +757,131 @@ app.get('/movieactors/:actorId/:filmId', async (req, res) => {
     try {
         const movieActor = await getMovieActorByIDs(req.params.actorId, req.params.filmId);
         if (movieActor) {
-            res.status(200).json(movieActor);
+            return res.status(200).json(movieActor);
         } else {
-            res.status(404).json({ error: 'movie Actor was not found' });  // אם לא נמצא
+            return res.status(404).json({ error: 'movie Actor was not found' });  // אם לא נמצא
         }
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching movie Actor' });
+        return res.status(500).json({ error: 'Error fetching movie Actor' });
     }
 });
 app.get('/movieactors', async (req, res) => {
     try {
         const movieActors = await getAllMovieActors();
-        res.status(200).json(movieActors);
+        return res.status(200).json(movieActors);
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching movieActors' });
+        return res.status(500).json({ error: 'Error fetching movieActors' });
     }
 });
 app.post('/movieactors', async (req, res) => {
     try {
+        if (!req.body.verification_email.includes('staff') ||  !await getAdminByMail(req.body.verification_email)){
+            return res.status(400).json({ error: 'only existing admins can delete a movie' +
+                    '  actor ' });
+        }
         const newMovieActor = await insertMovieActor(req.body);
-        res.status(201).json(newMovieActor);
+        return res.status(201).json(newMovieActor);
     } catch (error) {
-        res.status(500).json({ error: `Error creating new Movie Actor  ${error.message}` });
+        return res.status(500).json({ error: `Error creating new Movie Actor  ${error.message}` });
     }
 });
-app.put('/movieactors/:actorId/:filmId', async (req, res) => {
+app.put('/movieactors/:actorId/:filmId/:email', async (req, res) => {
     try {
+        if (!req.params.email.includes('staff') ||  !await getAdminByMail(req.params.email)){
+            return res.status(400).json({ error: 'only existing admins can delete a movie' +
+                    '  actor ' });
+        }
         const updatedMovieActor = await updateMovieActor(req.params.actorId, req.params.filmId, req.body);
-        res.status(201).json(updatedMovieActor);
+        return res.status(201).json(updatedMovieActor);
     } catch (error) {
-        res.status(500).json({ error: `Error  update Movie Actor  ${error.message} ` });
+        return res.status(500).json({ error: `Error  update Movie Actor  ${error.message} ` });
     }
 });
-app.delete('/movieactors/:actorId/:filmId', async (req, res) => {
+app.delete('/movieactor/:actorId/:filmId', async (req, res) => {
    try {
+       if (!req.params.email.includes('staff') ||  !await getAdminByMail(req.params.email)){
+           return res.status(400).json({ error: 'only existing admins can delete a movie' +
+                   '  actor ' });
+       }
         const success = await deleteMovieActor(req.params.actorId, req.params.filmId);
         if (success) {
-            res.status(204).end();
+            return res.status(204).end();
         } else {
-            res.status(404).json({ error: 'movie-actor was not found' });
+            return res.status(404).json({ error: 'movie-actor was not found' });
         }
     } catch (error) {
-        res.status(500).json({ error: 'Error deleting movie-actor' });
+       return res.status(500).json({ error: 'Error deleting movie-actor' });
+    }
+});
+app.delete('/movieactors/:id/:email', async (req, res) => {
+    try {
+        if (!req.params.email.includes('staff') ||  !await getAdminByMail(req.params.email)){
+            return res.status(400).json({ error: 'only existing admins can delete a movie' +
+                    '  actor ' });
+        }
+        console.log(req.params.id,'server ')
+        const success = await deleteMovieActorByFilmId(req.params.id);
+        if (success) {
+            return res.status(204).end();
+        } else {
+            return res.status(404).json({ error: 'movie-actor was not found' });
+        }
+    } catch (error) {
+        return res.status(500).json({ error: 'Error deleting movie-actor' });
     }
 });
 
 // CRUD routes for Movie Category
-app.get('/moviecategories/:filmId/:categoryId', async (req, res) => {
+app.get('/moviecategories/:filmId/:categoryId/', async (req, res) => {
     try {
         const movieCategory = await getMovieCategoryByIDs(req.params.filmId, req.params.categoryId);
         if (movieCategory) {
-            res.status(200).json(movieCategory);
+            return res.status(200).json(movieCategory);
         } else {
-            res.status(404).json({ error: 'movies were not found' });  // אם לא נמצא
+            return res.status(404).json({ error: 'movies were not found' });  // אם לא נמצא
         }
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching  movies' });
+        return res.status(500).json({ error: 'Error fetching  movies' });
     }
 });
 app.get('/moviecategories', async (req, res) => {
     try {
         const movieCategories = await getAllMovieCategories();
-        res.status(200).json(movieCategories);
+        return res.status(200).json(movieCategories);
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching movie Categories' });
+        return res.status(500).json({ error: 'Error fetching movie Categories' });
     }
 });
 app.post('/moviecategories', async (req, res) => {
     try {
         const newMovieCategory = await insertMovieCategory(req.body);
-        res.status(201).json(newMovieCategory);
+        return res.status(201).json(newMovieCategory);
     } catch (error) {
-        res.status(500).json({ error: `Error creating new Movie Category  ${error.message}` });
+        return res.status(500).json({ error: `Error creating new Movie Category  ${error.message}` });
     }
 });
-app.put('/moviecategories/:filmId/:categoryId', async (req, res) => {
+app.put('/moviecategories/:filmId/:categoryId/:email', async (req, res) => {
     try {
+        if (!req.params.email.includes('staff') ||  !await deleteMovieActorByFilmId(req.params.email)){
+            return res.status(400).json({ error: 'only existing admins can update  a movie' +
+                    '  category ' });
+        }
         const updatedMovieCategory = await updateMovieCategory(req.params.filmId, req.params.categoryId, req.body);
-        res.status(201).json(updatedMovieCategory);
+        return res.status(201).json(updatedMovieCategory);
     } catch (error) {
-        res.status(500).json({ error: `Error update Movie Category  ${error.message} `});
+        return res.status(500).json({ error: `Error update Movie Category  ${error.message} `});
     }
 });
-app.delete('/moviecategories/:filmId/:categoryId', async (req, res) => {
+app.delete('/moviecategories/:filmId/:categoryId/:email', async (req, res) => {
     try {
         const success = await deleteMovieCategory(req.params.filmId, req.params.categoryId);
         if (success) {
-            res.status(204).end();
+            return res.status(204).end();
         } else {
-            res.status(404).json({ error: 'movie to this category was not found' });
+            return res.status(404).json({ error: 'movie to this category was not found' });
         }
     } catch (error) {
-        res.status(500).json({ error: 'Error deleting movie to this category' });
+        return res.status(500).json({ error: 'Error deleting movie to this category' });
     }
 });
 
@@ -838,11 +891,11 @@ app.get('/categories/movies/:categoryID',async (req, res)=>{
         const categoryID = req.params.categoryID;
         const moviesByCategory = await getMoviesByCategory(categoryID);
         if(moviesByCategory){
-            res.status(200).json(moviesByCategory);
+            return res.status(200).json(moviesByCategory);
         }
     }catch (error)
     {
-        res.status(500).json({ error: 'Error fetching movies to this category' });
+        return res.status(500).json({ error: 'Error fetching movies to this category' });
     }
 })
 app.get('/movies/year/:year',async (req,res)=>{
@@ -850,10 +903,10 @@ app.get('/movies/year/:year',async (req,res)=>{
         const year = req.params.year;
         const moviesToYear = await getAllMovieYear(year);
         if(moviesToYear){
-            res.status(200).json(moviesToYear);
+            return res.status(200).json(moviesToYear);
         }
     }catch (error){
-        res.status(500).json({ error: `${error.message}` });
+        return res.status(500).json({ error: `${error.message}` });
     }
 })
 app.get('/movies/rating/:rating',async (req,res)=>{
@@ -861,10 +914,10 @@ app.get('/movies/rating/:rating',async (req,res)=>{
         const rating = req.params.rating.toUpperCase();
         const moviesToRating = await getMovieByRating(rating);
         if(moviesToRating){
-            res.status(200).json(moviesToRating);
+            return res.status(200).json(moviesToRating);
         }
     }catch (error){
-        res.status(500).json({ error: `${error.message}` });
+        return res.status(500).json({ error: `${error.message}` });
     }
 })
 app.get('/customer/payment/:id',async (req,res)=>{
@@ -872,10 +925,10 @@ app.get('/customer/payment/:id',async (req,res)=>{
         const customerID = req.params.id;
         const PaymentByCustomer = await getPaymentByCustomer(customerID);
         if(PaymentByCustomer){
-            res.status(200).json(PaymentByCustomer);
+            return res.status(200).json(PaymentByCustomer);
         }
     }catch (error){
-        res.status(500).json({ error: `${error.message}` });
+        return res.status(500).json({ error: `${error.message}` });
     }
 })
 app.get('/customer/rental/:id',async (req,res)=>{
@@ -883,10 +936,10 @@ app.get('/customer/rental/:id',async (req,res)=>{
         const customerID = req.params.id;
         const RentalByCustomer = await getRentalByCustomer(customerID);
         if(RentalByCustomer){
-            res.status(200).json(RentalByCustomer);
+            return res.status(200).json(RentalByCustomer);
         }
     }catch (error){
-        res.status(500).json({ error: `${error.message}` });
+        return res.status(500).json({ error: `${error.message}` });
     }
 })
 app.get('/movies/categories/:id',async (req,res)=>{
@@ -894,10 +947,10 @@ app.get('/movies/categories/:id',async (req,res)=>{
         const movieID = req.params.id;
         const CategoriesOfMovie = await getCategoriesOfMovie(movieID);
         if(CategoriesOfMovie){
-            res.status(200).json(CategoriesOfMovie);
+            return res.status(200).json(CategoriesOfMovie);
         }
     }catch (error){
-        res.status(500).json({ error: `${error.message}` });
+        return res.status(500).json({ error: `${error.message}` });
     }
 })
 app.get('/movies/actors/:id',async (req,res)=>{
@@ -905,10 +958,10 @@ app.get('/movies/actors/:id',async (req,res)=>{
         const movieID = req.params.id;
         const ActorsOfMovie = await getActorsOfMovie(movieID);
         if(ActorsOfMovie){
-            res.status(200).json(ActorsOfMovie);
+            return res.status(200).json(ActorsOfMovie);
         }
     }catch (error){
-        res.status(500).json({ error: `${error.message}` });
+        return res.status(500).json({ error: `${error.message}` });
     }
 })
 app.get('/actors/movies/:id',async (req,res)=>{
@@ -916,10 +969,10 @@ app.get('/actors/movies/:id',async (req,res)=>{
         const actorID = req.params.id;
         const MoviesOfActor = await getMoviesOfActor(actorID);
         if(MoviesOfActor){
-            res.status(200).json(MoviesOfActor);
+            return res.status(200).json(MoviesOfActor);
         }
     }catch (error){
-        res.status(500).json({ error: `${error.message}` });
+        return res.status(500).json({ error: `${error.message}` });
     }
 })
 app.get('/active/customers', async (req, res) => {
@@ -927,13 +980,22 @@ app.get('/active/customers', async (req, res) => {
         const activeCustomers = await getAllActiveCustomers();
         console.log(activeCustomers)
         if(activeCustomers){
-            res.status(200).json(activeCustomers);
+            return res.status(200).json(activeCustomers);
         }
     } catch (error) {
-        res.status(500).json({ error: `${error.message}` });
+        return res.status(500).json({ error: `${error.message}` });
     }
 });
 
+app.post('/contactus',async (req,res)=>{
+   try{
+       const requestData = req.body;
+       await mailSendToAdmin(requestData);
+       return res.status(200).json({auto_response:'thank you for contacting us'});
+   } catch (error) {
+       return res.status(500).json({ error: `${error.message}` });
+   }
+});
 
 module.exports = app;
 app.listen(port, () => {
@@ -949,13 +1011,13 @@ async function mailSendToCustomer(customer_email) {
         port: 465,
         secure: true,
         auth: {
-            user: "a0583240144@gmail.com",
-            pass: "ixch rrmn txsg shgq\n",
+            user: 'servermoviewatch@gmail.com',
+            pass: "pyjx xshm gevr deih\n",
         },
     });
 
     let info = await transporter.sendMail({
-        from: '"Movie Watch Team" <a0583240144@gmail.com>',
+        from: '"Movie Watch Team" <servermoviewatch@gmail.com>',
         to: customer_email,
         subject: "Welcome to Movie Watch!",
         html: `
@@ -977,6 +1039,38 @@ async function mailSendToCustomer(customer_email) {
             </div>
         </div>
         `,
+    });
+    console.log(info.messageId);
+}
+async function mailSendToAdmin(requestContactUs) {
+
+    let transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: {
+            user: 'servermoviewatch@gmail.com',
+            pass: "pyjx xshm gevr deih\n",
+        },
+    });
+
+    let info = await transporter.sendMail({
+        from: '"Movie Watch Team" <servermoviewatch@gmail.com>',
+        to: 'moviestaff109@gmail.com',
+        subject: requestContactUs.subject,
+        html: `
+    <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+        <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+            <div style="color: #555555; line-height: 1.6;">
+                <p style="font-size: 16px;">${requestContactUs.message}</p>
+                <p style="font-size: 14px; color: #888888;">The request was asked by: <strong>${requestContactUs.email}</strong></p>
+            </div>
+        </div>
+        <div style="text-align: center; padding-top: 20px;">
+            <p style="font-size: 12px; color: #888888;">&copy; 2024 Movie Watch. All rights reserved.</p>
+        </div>
+    </div>
+    `,
     });
 
     console.log(info.messageId);

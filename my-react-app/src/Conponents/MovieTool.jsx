@@ -6,6 +6,7 @@ import useLocalStorage from '../UseHooks/useLocalStorage'
 import { Link} from 'react-router-dom';
 function MovieTool({ id ,title }) {
     const storage = useLocalStorage();
+    console.log(id,title)
     const handleEdit = () => {
         console.log('Edit movie');
         //handleClose();
@@ -17,12 +18,12 @@ function MovieTool({ id ,title }) {
       };
   return (
     <div className='tools'>
-    {storage?.value.email.includes('@staff') &&<div>
+    {storage?.value.email.includes('staff') &&<div>
       <Tooltip title="Delete" arrow>
           <DeleteIcon onClick={handleDelete } className="icon" />
        </Tooltip>
       <Tooltip title="Edit" arrow>
-     <Link to={`/movie/$${id}/{title}/Edit`}>  
+     <Link to={`/movie/${id}/${title}/Edit`}>
        <EditIcon className="icon" />
     </Link>
     </Tooltip>
