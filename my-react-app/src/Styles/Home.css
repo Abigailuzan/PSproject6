@@ -1,0 +1,67 @@
+.filters-container {
+  display: flex;
+  align-items: center; /* Align items vertically in the center */
+  justify-content: space-between; /* Space out items evenly */
+  gap: 10px; /* Smaller gap between filters */
+  margin-bottom: 20px;
+  padding: 10px; /* Add some padding for better spacing */
+  border-radius: 8px; /* Rounded corners */
+}
+
+.filter {
+  flex: 1;
+  min-width: 100px; /* Minimum width for filters */
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Align search bar to the right */
+}
+
+.search-input {
+  padding: 5px;
+  border: none;
+  outline: none;
+  background-color: #333;
+  color: #fff;
+  width: 200px; /* Fixed width for search input */
+  height: 40px; /* Increase height for better usability */
+  border-radius: 5px; /* Rounded corners */
+}
+
+.search-button {
+  background-color: #00ff00;
+  border: none;
+  cursor: pointer;
+  padding: 0 15px; /* Add horizontal padding */
+  height: 40px; /* Match height with search input */
+  border-radius: 5px; /* Rounded corners */
+  margin-left: 5px; /* Add space between input and button */
+}
+
+h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
+  background-color: #1f1f1f;
+  color: #fff;
+}
+
+.home-content {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  justify-content: center;
+  margin: 0 auto;
+  max-width: 1200px;
+}

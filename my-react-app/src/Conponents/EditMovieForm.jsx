@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import '../Stlyles/MovieForm.css';
+import '../Styles/MovieForm.css';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import useLocalStorage from "../UseHooks/useLocalStorage";
 import Checkbox from '@mui/material/Checkbox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-const checkedIcon = <CheckBoxIcon fontSize="small" />;
+//const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+//const checkedIcon = <CheckBoxIcon fontSize="small" />;
 function EditMovieForm({ movie, onSubmit, categoryList, actorsList }) {
     console.log(movie);
     const [title, setTitle] = useState('');
@@ -30,17 +30,14 @@ function EditMovieForm({ movie, onSubmit, categoryList, actorsList }) {
             setRating(movie.rating || '');
             setMovieImageUrl(movie.movie_image || '');
             setMovieVideoUrl(movie.movie_video || '');
-
-            // בדיקה אם actors_list קיים והוא מערך
             if (Array.isArray(movie.actors_list)) {
                 const selectedActors = movie.actors_list.map(actor =>
                     actorsList.find(item =>
                         item.first_name === actor.first_name && item.last_name === actor.last_name
                     )
-                ).filter(Boolean); // סינון שחקנים שלא נמצאים ב-actorsList
-                setActors(selectedActors); // הגדרת השחקנים הנבחרים
+                ).filter(Boolean);
+                setActors(selectedActors);
             }
-
             const selectedCategory = categoryList.find(cat => cat.name === movie.category_name);
             setCategory(selectedCategory || null);
         }

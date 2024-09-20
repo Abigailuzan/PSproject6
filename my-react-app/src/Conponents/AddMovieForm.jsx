@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
-import '../Stlyles/MovieForm.css'; 
-
-function AddMovieForm({ onSubmit }) {
+import '../Styles/MovieForm.css';
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
+import Checkbox from "@mui/material/Checkbox";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import useLocalStorage from "../UseHooks/useLocalStorage";
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
+function AddMovieForm({ onSubmit ,  categoryList, actorsList}) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [releaseYear, setReleaseYear] = useState('');
@@ -9,12 +16,15 @@ function AddMovieForm({ onSubmit }) {
   const [rating, setRating] = useState('');
   const [movieImageUrl, setMovieImageUrl] = useState('');
   const [movieVideoUrl, setMovieVideoUrl] = useState('');
+  const [category, setCategory] = useState([]);
+  const [actors, setActors] = useState([]);
+  const storage = useLocalStorage();
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const movieData = {
-      title:title,
+      title:title.toUpperCase(),
       description:description,
       release_year: releaseYear,
       length:length,
@@ -22,9 +32,13 @@ function AddMovieForm({ onSubmit }) {
       last_update :  new Date().toISOString().split('T')[0],
       movie_image: movieImageUrl,
       movie_video: movieVideoUrl,
-      category:'',
-      actor:''
+      category:category,
+      actor:actors,
+      verification_email:storage.value.email
     };
+    console.log(movieData)
+    console.log(actors)
+    console.log(category)
     onSubmit(movieData);
   };
 
@@ -80,6 +94,49 @@ function AddMovieForm({ onSubmit }) {
             <option value="R">R</option>
           </select>
         </div>
+        <Autocomplete
+            value={category || null} // מבטיח ש-null יינתן במקרה של ערך ריק
+            onChange={(e, newValue) => setCategory(newValue)}
+            options={categoryList}
+            getOptionLabel={(option) => option.name ? `${option.name}` :"category"} // הצגת placeholder
+            isOptionEqualToValue={(option, value) => option.name === value?.name} // השוואת אפשרויות לערך נבחר
+            sx={{ width: 300 }}
+            renderInput={(params) =>
+                <TextField
+                    {...params}
+                    label="category"
+                    placeholder="select category"
+                    required
+                    error={!category}
+                    helperText={!category ? "select category" : ""}
+                />
+            }
+        />
+
+        {/* Autocomplete for Actors with Checkboxes */}
+        <Autocomplete
+            multiple
+            id="checkboxes-tags-demo"
+            options={actorsList}
+            getOptionLabel={(option) => `${option.first_name} ${option.last_name}`}
+            value={actors}
+            onChange={(e, newValue) => setActors(newValue)} // מעדכן את הרשימה בהתאם לבחירה
+            disableCloseOnSelect
+            renderOption={(props, option, { selected }) => (
+                <li {...props}>
+                  <Checkbox icon= <CheckBoxOutlineBlankIcon fontSize="small" />
+                  checkedIcon=<CheckBoxIcon fontSize="small" />
+                  style={{ marginRight: 8 }}
+                  checked={selected}
+                  />
+                  {`${option.first_name} ${option.last_name}`}
+                </li>
+            )}
+            style={{ width: 500 }}
+            renderInput={(params) => (
+                <TextField {...params} label="Actors" placeholder="Select actors" />
+            )}
+        />
         <div className="form-group">
           <label>Movie Image URL</label>
           <input
@@ -97,6 +154,7 @@ function AddMovieForm({ onSubmit }) {
             required
           />
         </div>
+
         <button type="submit" className="submit-button">Add Movie</button>
       </form>
     </div>

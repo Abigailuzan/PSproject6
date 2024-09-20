@@ -23,7 +23,6 @@ async function getCustomerByID(id) {
     //console.log('database values:', rows[0]);
     return rows[0];
 }
-
 async function getAllCustomers() {
     const [rows] = await pool.query(`SELECT * FROM customer`);
     return rows;
@@ -51,9 +50,6 @@ async function updateCustomer(id, customer) {
         throw error; // יזרוק את השגיאה כך שתוכל לטפל בה מאוחר יותר
     }
 }
-
-
-
 async function deleteCustomer(id) {
     const [result] = await pool.query(`DELETE FROM customer WHERE customer_id = ?`, [id]);
     return result.affectedRows > 0;
@@ -72,9 +68,23 @@ async function getAllMovies(limit,offset) {
     const [rows] = await pool.query(`SELECT * FROM movie LIMIT ? OFFSET ?`,[limit,offset]);
     return rows;
 }
+async function getMoviesByTitle(title, limit, offset) {
+    const searchTitle = `%${title}%`;
+    const [rows] = await pool.query(`SELECT * FROM movie WHERE LOWER(title) LIKE LOWER(?) LIMIT ? OFFSET ?`, [searchTitle, limit, offset]);
+    return rows;
+}
+
 async function getTotalMovies() {
     const [[{ total }]] = await pool.query(`SELECT COUNT(*) as total FROM movie`);
     return total;
+}
+async function getTotalMoviesByTitle(title) {
+    const searchTitle = `%${title}%`;
+    const [rows] = await pool.query(`SELECT COUNT(*) as total FROM movie WHERE LOWER(title) LIKE LOWER(?)`, [searchTitle]);
+    if (rows.length > 0) {
+        return rows[0].total;
+    }
+    return 0;
 }
 
 async function insertMovie(movie) {
@@ -94,10 +104,6 @@ async function updateMovie(id, movie) {
 async function deleteMovie(id) {
     const [result] = await pool.query(`DELETE FROM movie WHERE film_id = ?`, [id]);
     return result.affectedRows > 0;
-}
-async function getMoviesByTitle(title) {
-    const [rows] = await pool.query(`SELECT * FROM movie WHERE title LIKE ?`, [`%${title}%`]);
-    return rows[0];
 }
 async function updateMovieByTitle(title, updated_Movie) {
     const movie = await getMoviesByTitle(title);
@@ -193,34 +199,6 @@ async function deleteRental(id) {
     return result.affectedRows > 0;
 }
 
-// CRUD operations for the "movie_text" table
-async function getMovieTextByID(id) {
-    const [rows] = await pool.query(`SELECT * FROM movieText WHERE film_id = ?`, [id]);
-    return rows[0];
-}
-async function getAllMovieTexts() {
-    const [rows] = await pool.query(`SELECT * FROM movieText`);
-    return rows;
-}
-async function insertMovieText(movieText) {
-    const [result] = await pool.query(
-        `INSERT INTO movieText ( title, description) VALUES (?, ?)`,
-        [ movieText.title, movieText.description]
-    );
-    return getMovieTextByID(result.insertId);
-}
-async function updateMovieText(id, movieText) {
-    const [result] = await pool.query(
-        `UPDATE movieText SET title = ?, description = ? WHERE film_id = ?`,
-        [movieText.title, movieText.description, id]
-    );
-    return getMovieTextByID(id);
-}
-async function deleteMovieText(id) {
-    const [result] = await pool.query(`DELETE FROM movieText WHERE film_id = ?`, [id]);
-    return result.affectedRows > 0;
-}
-
 // CRUD operations for the "city" table
 async function getCityByID(id) {
     const [rows] = await pool.query(`SELECT * FROM city WHERE city_id = ?`, [id]);
@@ -277,34 +255,6 @@ async function deleteCountry(id) {
     return result.affectedRows > 0;
 }
 
-// CRUD operations for the "language" table
-async function getLanguageByID(id) {
-    const [rows] = await pool.query(`SELECT * FROM language WHERE language_id = ?`, [id]);
-    return rows[0];
-}
-async function getAllLanguages() {
-    const [rows] = await pool.query(`SELECT * FROM language`);
-    return rows;
-}
-async function insertLanguage(language) {
-    const [result] = await pool.query(
-        `INSERT INTO language (name, last_update) VALUES (?, ?)`,
-        [language.name, language.last_update]
-    );
-    return getLanguageByID(result.insertId);
-}
-async function updateLanguage(id, language) {
-    const [result] = await pool.query(
-        `UPDATE language SET name = ?, last_update = ? WHERE language_id = ?`,
-        [language.name, language.last_update, id]
-    );
-    return getLanguageByID(id);
-}
-async function deleteLanguage(id) {
-    const [result] = await pool.query(`DELETE FROM language WHERE language_id = ?`, [id]);
-    return result.affectedRows > 0;
-}
-
 // CRUD operations for the "admin" table
 async function getAdminByID(id) {
     const [rows] = await pool.query(`SELECT * FROM admin WHERE admin_id = ?`, [id]);
@@ -319,26 +269,18 @@ async function getAllAdmins() {
     return rows;
 }
 async function insertAdmin(admin) {
-    if (!admin.email.includes('staff'))
-        throw new Error( "admins must includes staff in mail");
-    else {
         const [result] = await pool.query(
             `INSERT INTO admin (first_name, last_name, email, active, username, password, last_update) VALUES ( ?, ?, ?, ?, ?, ?, ?)`,
             [admin.first_name, admin.last_name, admin.email, admin.active, admin.username, admin.password, admin.last_update]
         );
         return getAdminByID(result.insertId);
-    }
 }
 async function updateAdmin(id, admin) {
-    if (!admin.email.includes('staff'))
-        throw "admins must includes staff in mail";
-    else{
         const [result] = await pool.query(
             `UPDATE admin SET first_name = ?, last_name = ?, email = ?, active = ?, username = ?, password = ?, last_update = ? WHERE admin_id = ?`,
             [admin.first_name, admin.last_name, admin.email,  admin.active, admin.username,admin.password, admin.last_update, id]
         );
         return getAdminByID(id);
-    }
 }
 async function deleteAdmin(id) {
     const [result] = await pool.query(`DELETE FROM admin WHERE admin_id = ?`, [id]);
@@ -430,6 +372,7 @@ async function deleteMovieActorByFilmId( filmId) {
     const [result] = await pool.query(`DELETE FROM movieactor WHERE  film_id = ?`, [ filmId]);
     return result.affectedRows > 0;
 }
+
 // CRUD operations for the "movie-category" table
 async function getMovieCategoryByIDs(filmId, categoryId) {
     const [rows] = await pool.query(`SELECT * FROM moviecategory WHERE film_id = ? AND category_id = ?`, [filmId, categoryId]);
@@ -484,9 +427,13 @@ async function deleteMovieCategory(filmId, categoryId) {
     const [result] = await pool.query(`DELETE FROM moviecategory WHERE film_id = ? AND category_id = ?`, [filmId, categoryId]);
     return result.affectedRows > 0;
 }
+async function deleteMovieCategoryByFilmId(filmId) {
+    const [result] = await pool.query(`DELETE FROM moviecategory WHERE film_id = ? `, [filmId]);
+    return result.affectedRows > 0;
+}
 
 
-//more interesting function
+//more interesting function for the filtering options
 async function getAllMovieYear(year){
     const [rows] = await pool.query(`SELECT * FROM movie WHERE release_year = ?`,[year]);
     if (rows.length>0)
@@ -513,7 +460,7 @@ async function getMovieByRating(rating) {
 
 
     if (rows.length > 0) {
-        return rows; // מחזירים את כל הסרטים שמצאנו
+        return rows;
     }
 
     throw new Error(`No movies found for rating ${rating}`);
@@ -608,6 +555,41 @@ async function getAllActiveCustomers() {
     throw new Error(`No active customers were found`);
 }
 
+async function getAllMoviesByClientRequest(userFilter) {
+    let query = `
+        SELECT m.title, m.description, m.release_year, m.length, m.rating, m.movie_image, m.movie_video
+        FROM movie m
+        LEFT JOIN movieactor ma ON m.film_id = ma.film_id
+        LEFT JOIN actor a ON ma.actor_id = a.actor_id
+        LEFT JOIN moviecategory mc ON m.film_id = mc.film_id
+        LEFT JOIN category c ON mc.category_id = c.category_id
+        WHERE 1=1
+    `;
+    let DataUser = [];
+
+    if (userFilter.actor_name) {
+        query += " AND a.actor_name = ?";
+        DataUser.push(userFilter.actor_name);
+    }
+    if (userFilter.category_name) {
+        query += " AND c.category_name = ?";
+        DataUser.push(userFilter.category_name);
+    }
+    if (userFilter.release_year) {
+        query += " AND m.release_year = ?";
+        DataUser.push(userFilter.release_year);
+    }
+    if (userFilter.rating) {
+        query += " AND m.rating = ?";
+        DataUser.push(userFilter.rating);
+    }
+    if (userFilter.length) {
+        query += " AND m.length = ?";
+        DataUser.push(userFilter.length);
+    }
+    const [rows] = await pool.query(query, DataUser);
+    return rows;
+}
 
 module.exports = {
     getCustomerByID,
@@ -639,11 +621,6 @@ module.exports = {
     insertRental,
     updateRental,
     deleteRental,
-    getMovieTextByID,
-    getAllMovieTexts,
-    insertMovieText,
-    updateMovieText,
-    deleteMovieText,
     getCityByID,
     getAllCities,
     insertCity,
@@ -654,11 +631,6 @@ module.exports = {
     insertCountry,
     updateCountry,
     deleteCountry,
-    getLanguageByID,
-    getAllLanguages,
-    insertLanguage,
-    updateLanguage,
-    deleteLanguage,
     getAdminByID,
     getAdminByMail,
     getAllAdmins,
@@ -689,5 +661,8 @@ module.exports = {
     getActorsOfMovie,
     getMoviesOfActor,
     getAllActiveCustomers,
-    deleteMovieActorByFilmId
+    deleteMovieActorByFilmId,
+    deleteMovieCategoryByFilmId,
+    getTotalMoviesByTitle,
+    getAllMoviesByClientRequest
 };

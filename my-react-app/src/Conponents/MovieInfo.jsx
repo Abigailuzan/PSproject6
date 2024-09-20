@@ -1,5 +1,5 @@
 import React from 'react'
-import '../Stlyles/MovieInfo.css';
+import '../Styles/MovieInfo.css';
 import MovieTool from './MovieTool';
 import MovieCard from "./MovieCard";
 

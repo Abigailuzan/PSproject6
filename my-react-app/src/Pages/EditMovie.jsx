@@ -3,7 +3,11 @@ import {useParams} from 'react-router-dom'
 import Navbar from '../Conponents/Navbar'
 import EditMovieForm from '../Conponents/EditMovieForm';
 import axios from "axios";
-import {getTotalMovieInfo} from '../Tools/movieTotalInformation'
+import {
+    getAllActorsList,
+    getAllCategoryList,
+    getTotalMovieInfo
+} from '../Tools/movieTotalInformation'
 import { useNavigate } from 'react-router-dom';
 import useLocalStorage from "../UseHooks/useLocalStorage";
 
@@ -27,28 +31,10 @@ function EditMovie() {
     }, [id]);
     // get all categories from DB
     useEffect(() => {
-        axios.get('http://localhost:5000/categories')
-            .then(response => {
-                const categories = response.data;
-                console.log(categories);
-                setCategoryList(categories);
-            })
-            .catch(error => {
-                console.error('There was an error fetching the categories!', error);
-            });
+        getAllCategoryList(setCategoryList).then(r => null)
+        getAllActorsList(setActors).then(r => null)
     }, []);
-  // get all actors from DB
-    useEffect(() => {
-        axios.get('http://localhost:5000/actors')
-            .then(response => {
-                const actors = response.data;
-                console.log(actors);
-                setActors(actors);
-            })
-            .catch(error => {
-                console.error('There was an error fetching the actors!', error);
-            });
-    }, []);
+
   async function onSubmit(movie,id){
       await axios.put(`http://localhost:5000/movies/${id}/${storage.value.email}`,movie)
           .then(response => {

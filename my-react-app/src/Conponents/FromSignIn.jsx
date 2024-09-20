@@ -3,7 +3,7 @@ import Password from './Password';
 import { useNavigate } from 'react-router-dom';
 import useLocalStorage from '../UseHooks/useLocalStorage';
 import { Link } from 'react-router-dom';
-import '../Stlyles/Form.css';
+import '../Styles/Form.css';
 import axios from 'axios';
 
 function FromSignIn() {

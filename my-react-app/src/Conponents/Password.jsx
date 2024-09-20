@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../Stlyles/Password.css';
+import '../Styles/Password.css';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 

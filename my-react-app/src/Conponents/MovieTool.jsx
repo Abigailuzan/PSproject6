@@ -3,18 +3,23 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Tooltip from '@mui/material/Tooltip';
 import useLocalStorage from '../UseHooks/useLocalStorage'
-import { Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
+import axios from "axios";
 function MovieTool({ id ,title }) {
     const storage = useLocalStorage();
+    const navigate = useNavigate();
     console.log(id,title)
-    const handleEdit = () => {
-        console.log('Edit movie');
-        //handleClose();
-      };
     
       const handleDelete = () => {
-        console.log('Delete movie');
-        //handleClose(); 
+          axios.delete(`http://localhost:5000/movies/${id}/${storage.value.email}`)
+              .then(response => {
+                  alert(`movie ${title} was deleted successfully`)
+                  console.log('Delete movie');
+                  navigate('/home')
+              })
+              .catch(error => {
+                  console.error('There was an error deleting the movie', error);
+              });
       };
   return (
     <div className='tools'>

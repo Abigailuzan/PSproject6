@@ -1,7 +1,7 @@
 
 import React from 'react'
 import { Link } from 'react-router-dom';
-import '../Stlyles/Navbar.css';
+import '../Styles/Navbar.css';
 // import LogoutIcon from '@mui/icons-material/Logout';
 // import LoginIcon from '@mui/icons-material/Login';
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../Stlyles/Form.css';
+import '../Styles/Form.css';
 import useLocalStorage from "../UseHooks/useLocalStorage";
 
 function EditAccount({ OnSubmit,OnSubmitAdmin, user }) {

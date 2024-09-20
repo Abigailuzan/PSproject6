@@ -1,7 +1,7 @@
 import React from 'react'
 import HomeIcon from '@mui/icons-material/Home';
 import { Link } from 'react-router-dom';
-import '../Stlyles/Navbar.css';
+import '../Styles/Navbar.css';
 import InOutButton from './InOutButton';
 import Tooltip from '@mui/material/Tooltip';
 

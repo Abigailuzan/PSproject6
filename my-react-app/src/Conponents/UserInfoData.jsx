@@ -1,5 +1,5 @@
 import React from 'react'
-import '../Stlyles/UserInfoData.css';
+import '../Styles/UserInfoData.css';
 function UserInfoData({user}) {
   return (
       <div className="user-info-container">

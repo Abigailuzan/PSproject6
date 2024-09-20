@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import '../Stlyles/AboutUs.css'
+import '../Styles/AboutUs.css'
 import Article from '../Conponents/Article';
 import Table from '../Conponents/Table';
 import Navbar from '../Conponents/Navbar';

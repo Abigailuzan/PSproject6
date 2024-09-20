@@ -1,32 +1,27 @@
 const express = require('express');
 const cors = require('cors');
 const { getCustomerByID,getCustomerByEmail, getAllCustomers, insertCustomer, updateCustomer, deleteCustomer,
-    getMovieByID, getAllMovies, insertMovie, updateMovie, deleteMovie, getMoviesByTitle, updateMovieByTitle,
+    getMovieByID, getAllMovies,getTotalMoviesByTitle, insertMovie, updateMovie, deleteMovie, getMoviesByTitle, updateMovieByTitle,
     getActorByID, getAllActors, insertActor, updateActor, deleteActor,
     getPaymentByID, getAllPayments, insertPayment, updatePayment, deletePayment,
     getRentalByID, getAllRentals, insertRental, updateRental, deleteRental,
-    getMovieTextByID, getAllMovieTexts, insertMovieText, updateMovieText, deleteMovieText,
     getCityByID, getAllCities, insertCity, updateCity, deleteCity,
     getCountryByID, getAllCountries, insertCountry, updateCountry, deleteCountry,
-    getLanguageByID, getAllLanguages, insertLanguage, updateLanguage, deleteLanguage,
     getAdminByID, getAllAdmins, insertAdmin, updateAdmin, deleteAdmin,
     getCategoryByID, getAllCategories, insertCategory, updateCategory, deleteCategory,
     getMovieActorByIDs, getAllMovieActors, insertMovieActor, updateMovieActor, deleteMovieActor,
     getMovieCategoryByIDs, getAllMovieCategories, insertMovieCategory, updateMovieCategory,
     deleteMovieCategory, getMoviesByCategory, getAllMovieYear, getMovieByRating, getPaymentByCustomer,
     getRentalByCustomer, getCategoriesOfMovie, getActorsOfMovie, getMoviesOfActor, getAllActiveCustomers,
-    getTotalMovies,
-    getAdminByMail,deleteMovieActorByFilmId,
+    getTotalMovies, getAdminByMail,deleteMovieActorByFilmId,deleteMovieCategoryByFilmId,getAllMoviesByClientRequest
 } = require("./database");
 const nodemailer = require("nodemailer");
-const {response} = require("express");
 const app = express();
 const port = 5000;
 
 app.use(cors());
 app.use(express.json());
 
-// הוסף כאן את כל הראוטים, כמו שהגדרת:
 
 // CRUD routes for Customer
 app.get('/customers/:id', async (req, res) => {
@@ -74,7 +69,6 @@ app.post('/customers', async (req, res) => {
         return res.status(500).json({ error: `Error creating customer: ${error.message}` });
     }
 });
-
 app.put('/customers/:id', async (req, res) => {
     try {
         /*const customer = await getCustomerByEmail(req.body.email);
@@ -130,12 +124,24 @@ app.get('/movies', async (req, res) => {
     const offset = parseInt(req.query.offset, 10) || 0;
     try {
         const movies = await getAllMovies(limit, offset);
-        console.log("Movies:", movies); // הדפסת רשימת הסרטים
         const total = await getTotalMovies();
-        console.log("Total movies:", total); // הדפסת סה"כ הסרטים
         return res.status(200).json({ movies, total });
     } catch (error) {
         console.error('Error fetching movies:', error); // הדפסת השגיאה
+        return res.status(500).json({ error: 'Error fetching movies' });
+    }
+});
+app.get('/movies/title/:title', async (req, res) => {
+    const limit = parseInt(req.query.limit, 10) || 20;
+    const offset = parseInt(req.query.offset, 10) || 0;
+    try {
+        const movies = await getMoviesByTitle(req.params.title,limit,offset);
+        console.log("Movies:", movies);
+        const total = await getTotalMoviesByTitle(req.params.title);
+        console.log("Total movies:", total);
+        return res.status(200).json({ movies, total });
+    } catch (error) {
+        console.error('Error fetching movies:', error);
         return res.status(500).json({ error: 'Error fetching movies' });
     }
 });
@@ -169,10 +175,12 @@ app.put('/movies/:id/:email', async (req, res) => {
 app.delete('/movies/:id/:email', async (req, res) => {
     try {
         if (!req.params.email.includes('staff') ||  !await getAdminByMail(req.params.email)){
-            return res.status(400).json({ error: 'only existing admins can insert a new admin' });
+            return res.status(400).json({ error: 'only existing admins can delete a movie' });
         }
-        const success = await deleteMovie(req.params.id);
-        if (success) {
+        const successDeleteMovie = await deleteMovie(req.params.id);
+        const successDeleteMovieCategory = await deleteMovieCategoryByFilmId(req.params.id);
+        const successDeleteMovieActor = await deleteMovieActorByFilmId(req.params.id);
+        if (successDeleteMovie && successDeleteMovieCategory && successDeleteMovieActor) {
             return res.status(204).end();
         } else {
             return res.status(404).json({ error: 'movie not found' });
@@ -181,13 +189,9 @@ app.delete('/movies/:id/:email', async (req, res) => {
         return res.status(500).json({ error: 'Error deleting movie' });
     }
 });
-app.get('/movies/title/:title', async (req, res) => {
-    const movies = await getMoviesByTitle(req.params.title);
-    res.json(movies);
-});
-app.put('/movies/title/:title', async (req, res) => {
+app.put('/movies/title/:title/:email', async (req, res) => {
     try {
-        if (!req.body.verification_email.includes('staff') ||  !await getAdminByMail(req.body.verification_email)){
+        if (!req.params.email.includes('staff') ||  !await getAdminByMail(req.params.email)){
             return res.status(400).json({ error: 'only existing admins can insert a new admin' });
         }
         const updatedMovie = await updateMovieByTitle(req.params.title, req.body);
@@ -203,6 +207,7 @@ app.put('/movies/title/:title', async (req, res) => {
 });
 
 // CRUD routes for Actor
+//TODO add verification od admin email for post put and delete
 app.get('/actors/:id', async (req, res) => {
     try {
         const actor = await getActorByID(req.params.id);
@@ -224,8 +229,6 @@ app.get('/actors', async (req, res) => {
     }
 });
 app.post('/actors', async (req, res) => {
-    const newActor = await insertActor(req.body);
-    return res.status(201).json(newActor);
     try {
         const newActor = await insertActor(req.body);
         return res.status(201).json(newActor);
@@ -261,6 +264,7 @@ app.delete('/actors/:id', async (req, res) => {
 });
 
 // CRUD routes for Payment
+//TODO remark all those functions
 app.get('/payments/:id', async (req, res) => {
     try {
         const payment = await getPaymentByID(req.params.id);
@@ -316,6 +320,7 @@ app.delete('/payments/:id', async (req, res) => {
 });
 
 // CRUD routes for Rental
+//TODO change the name to history
 app.get('/rentals/:id', async (req, res) => {
     try {
         const rental = await getRentalByID(req.params.id);
@@ -371,6 +376,7 @@ app.delete('/rentals/:id', async (req, res) => {
 });
 
 // CRUD routes for Movie Text
+//TODO remark all those functions
 app.get('/movieTexts/:id', async (req, res) => {
     try {
         const movieText = await getMovieTextByID(req.params.id);
@@ -428,6 +434,7 @@ app.delete('/movieTexts/:id', async (req, res) => {
 });
 
 // CRUD routes for City
+//TODO check for adding this to movie information
 app.get('/cities/:id', async (req, res) => {
    try {
         const city = await getCityByID(req.params.id);
@@ -483,6 +490,7 @@ app.delete('/cities/:id', async (req, res) => {
 });
 
 // CRUD routes for Country
+//TODO check for adding this to movie information
 app.get('/countries/:id', async (req, res) => {
     try {
         const country = await getCountryByID(req.params.id);
@@ -535,63 +543,6 @@ app.delete('/countries/:id', async (req, res) => {
         }
     } catch (error) {
         return res.status(500).json({ error: 'Error deleting Country' });
-    }
-});
-
-// CRUD routes for Language
-app.get('/languages/:id', async (req, res) => {
-    try {
-        const language = await getLanguageByID(req.params.id);
-        if (language) {
-            return res.status(200).json(language);
-        } else {
-            return res.status(404).json({ error: 'language was not found' });  // אם לא נמצא
-            // הלקוח
-        }
-    } catch (error) {
-        return res.status(500).json({ error: 'Error fetching language' });
-    }
-});
-app.get('/languages', async (req, res) => {
-    try {
-        const languages = await getAllLanguages();
-        return res.status(200).json(languages);
-    } catch (error) {
-        return res.status(500).json({ error: 'Error fetching languages' });
-    }
-});
-app.post('/languages', async (req, res) => {
-    try {
-        const newLanguage = await insertLanguage(req.body);
-        return res.status(201).json(newLanguage);
-    } catch (error) {
-        return res.status(500).json({ error: 'Error creating new Language ' });
-    }
-});
-app.put('/languages/:id', async (req, res) => {
-    try {
-        const updatedLanguage = await updateLanguage(req.params.id, req.body);
-        if (updatedLanguage) {
-            return res.status(200).json(updatedLanguage);
-        } else {
-            return res.status(404).json({ error: 'Language was not found' });
-        }
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: 'Error updating Language' });
-    }
-});
-app.delete('/languages/:id', async (req, res) => {
-
-    try {
-        const success = await deleteLanguage(req.params.id);
-        if (success) {
-            return res.status(204).end();
-        } else {
-            return res.status(404).json({ error: 'languages that text was not found' });
-        }
-    } catch (error) {
-        return res.status(500).json({ error: 'Error deleting languages' });
     }
 });
 
@@ -854,6 +805,10 @@ app.get('/moviecategories', async (req, res) => {
 });
 app.post('/moviecategories', async (req, res) => {
     try {
+        if (!req.body.verification_email.includes('staff') ||  !await getAdminByMail(req.body.verification_email)){
+            return res.status(400).json({ error: 'only existing admins can update  a movie' +
+                    '  category ' });
+        }
         const newMovieCategory = await insertMovieCategory(req.body);
         return res.status(201).json(newMovieCategory);
     } catch (error) {
@@ -862,7 +817,7 @@ app.post('/moviecategories', async (req, res) => {
 });
 app.put('/moviecategories/:filmId/:categoryId/:email', async (req, res) => {
     try {
-        if (!req.params.email.includes('staff') ||  !await deleteMovieActorByFilmId(req.params.email)){
+        if (!req.params.email.includes('staff') ||  !await getAdminByMail(req.params.email)){
             return res.status(400).json({ error: 'only existing admins can update  a movie' +
                     '  category ' });
         }
@@ -986,7 +941,6 @@ app.get('/active/customers', async (req, res) => {
         return res.status(500).json({ error: `${error.message}` });
     }
 });
-
 app.post('/contactus',async (req,res)=>{
    try{
        const requestData = req.body;
@@ -995,6 +949,19 @@ app.post('/contactus',async (req,res)=>{
    } catch (error) {
        return res.status(500).json({ error: `${error.message}` });
    }
+});
+
+app.get('/movies/filters', async (req, res) => {
+    try {
+        const movies = await getAllMoviesByClientRequest(req.query); // שימוש ב-req.query
+        if(movies.length > 0)
+            res.status(200).json(movies)
+        else
+            res.status(404).json({error: 'No movies found'});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
 
 module.exports = app;

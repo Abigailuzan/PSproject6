@@ -4,7 +4,7 @@ import Navbar from '../Conponents/Navbar';
 import MovieInfo from '../Conponents/MovieInfo';
 import MovieCard from '../Conponents/MovieCard';
 import useLocalStorage from '../UseHooks/useLocalStorage';
-import '../Stlyles/Movie.css';
+import '../Styles/Movie.css';
 import axios from 'axios';
 import {getTotalMovieInfo}from '../Tools/movieTotalInformation'
 function Movie() {
@@ -32,10 +32,9 @@ function Movie() {
                 const response = await axios.get(`http://localhost:5000/categories/movies/${movie.category_id}`);
                 const categoryMovies = response.data;
                 console.log(categoryMovies)
-                // נוסיף עד 5 סרטים מאותה קטגוריה
                 movieList = [...categoryMovies.slice(0, 5)];
 
-                setMovies(movieList); // עדכון state של הסרטים
+                setMovies(movieList);
             } catch (error) {
                 console.error('There was an error fetching category movies!', error);
             }
@@ -47,17 +46,14 @@ function Movie() {
     }, [movie.category_id]);
     useEffect(() => {
         const fetchMoviesForActors = async () => {
-            let movieList = [...movies]; // רשימה מצטברת לסרטים
+            let movieList = [...movies];
             if (movie.actors_list && movie.actors_list.length > 0) {
                 for (const actor of movie.actors_list) {
-                    if (movieList.length >= 10) break; // אם כבר יש 10 סרטים, מפסיקים
-
+                    if (movieList.length >= 10) break;
                     try {
                         const response = await axios.get(`http://localhost:5000/actors/movies/${actor.actor_id}`);
                         const actorMovies = response.data;
                         console.log(actorMovies)
-
-                        // נוסיף סרטים רק עד שנגיע ל-10 סרטים בסה"כ
                         if (actorMovies.length + movieList.length <= 10) {
                             movieList = [...movieList, ...actorMovies];
                         } else {
@@ -68,7 +64,7 @@ function Movie() {
                         console.error('There was an error fetching movies for actors!', error);
                     }
                 }
-                setMovies(movieList); // עדכון state של הסרטים
+                setMovies(movieList);
             }
         };
 

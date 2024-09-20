@@ -2,7 +2,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import AddIcon from '@mui/icons-material/Add';
 import { Link } from 'react-router-dom';
 import Tooltip from '@mui/material/Tooltip';
-import '../Stlyles/Navbar.css';
+import '../Styles/Navbar.css';
 import React from 'react'
 
 function AdminToolBar() {

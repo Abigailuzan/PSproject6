@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Password from './Password';
-import '../Stlyles/Form.css'; 
+import '../Styles/Form.css';
 
 function NewAccount({ onSubmit }) {
   const [firstName, setFirstName] = useState('');

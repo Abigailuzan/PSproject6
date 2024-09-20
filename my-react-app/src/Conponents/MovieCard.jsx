@@ -1,5 +1,5 @@
 import React ,{useState}from 'react';
-import '../Stlyles/MovieCard.css';
+import '../Styles/MovieCard.css';
 import {  useNavigate} from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';

@@ -1,5 +1,5 @@
 import React from 'react'
-import '../Stlyles/AboutUs.css'
+import '../Styles/AboutUs.css'
 function Table() {
   return (
       <div className="grid-item">

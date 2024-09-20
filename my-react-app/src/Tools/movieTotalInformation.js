@@ -1,4 +1,5 @@
 import axios from "axios";
+import {useEffect} from "react";
 
 export async function getTotalMovieInfo(id){
     let movie = {} ;
@@ -35,3 +36,27 @@ export async function getTotalMovieInfo(id){
         });
     return movie;
 }
+
+export async function getAllCategoryList(setCategoryList){
+    await axios.get('http://localhost:5000/categories')
+        .then(response => {
+            const categories = response.data;
+            console.log(categories);
+            setCategoryList(categories);
+        })
+        .catch(error => {
+            console.error('There was an error fetching the categories!', error);
+        });
+}
+export async function getAllActorsList(setActors){
+    await axios.get('http://localhost:5000/actors')
+        .then(response => {
+            const actors = response.data;
+            console.log(actors);
+            setActors(actors);
+        })
+        .catch(error => {
+            console.error('There was an error fetching the actors!', error);
+        });
+}
+

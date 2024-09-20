@@ -1,5 +1,5 @@
 import React from 'react';
-import '../Stlyles/Navbar.css';
+import '../Styles/Navbar.css';
 import { Link } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
