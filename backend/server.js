@@ -13,7 +13,8 @@ const { getCustomerByID,getCustomerByEmail, getAllCustomers, insertCustomer, upd
     getMovieCategoryByIDs, getAllMovieCategories, insertMovieCategory, updateMovieCategory,
     deleteMovieCategory, getMoviesByCategory, getAllMovieYear, getMovieByRating, getPaymentByCustomer,
     getRentalByCustomer, getCategoriesOfMovie, getActorsOfMovie, getMoviesOfActor, getAllActiveCustomers,
-    getTotalMovies, getAdminByMail,deleteMovieActorByFilmId,deleteMovieCategoryByFilmId,getAllMoviesByClientRequest
+    getTotalMovies, getAdminByMail,deleteMovieActorByFilmId,deleteMovieCategoryByFilmId,
+    getFilteredMoviesByClientRequest,getFilteredMoviesCount
 } = require("./database");
 const nodemailer = require("nodemailer");
 const app = express();
@@ -953,16 +954,17 @@ app.post('/contactus',async (req,res)=>{
 
 app.get('/movies/filters', async (req, res) => {
     try {
-        const movies = await getAllMoviesByClientRequest(req.query); // שימוש ב-req.query
-        if(movies.length > 0)
-            res.status(200).json(movies)
-        else
-            res.status(404).json({error: 'No movies found'});
+        console.log('req.query ' + req.query.name)
+        res.status(200).json(getMovieByID(1000))
+        /*const movies = await getFilteredMoviesByClientRequest(req.query);
+        res.status(200).json(movies);*/
     } catch (error) {
-        console.error(error);
+        console.error('Error fetching filtered movies:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+
 
 module.exports = app;
 app.listen(port, () => {

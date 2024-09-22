@@ -555,22 +555,51 @@ async function getAllActiveCustomers() {
     throw new Error(`No active customers were found`);
 }
 
-async function getAllMoviesByClientRequest(userFilter) {
+async function getFilteredMoviesByClientRequest(userFilter) {
     let query = `
         SELECT m.title, m.description, m.release_year, m.length, m.rating, m.movie_image, m.movie_video
         FROM movie m
-        LEFT JOIN movieactor ma ON m.film_id = ma.film_id
-        LEFT JOIN actor a ON ma.actor_id = a.actor_id
         LEFT JOIN moviecategory mc ON m.film_id = mc.film_id
         LEFT JOIN category c ON mc.category_id = c.category_id
         WHERE 1=1
     `;
     let DataUser = [];
 
-    if (userFilter.actor_name) {
-        query += " AND a.actor_name = ?";
-        DataUser.push(userFilter.actor_name);
+    if (userFilter.name) {
+        query += " AND c.name = ?";
+        DataUser.push(userFilter.name);
     }
+    if (userFilter.release_year) {
+        query += " AND m.release_year = ?";
+        DataUser.push(userFilter.release_year);
+    }
+    if (userFilter.rating) {
+        query += " AND m.rating = ?";
+        DataUser.push(userFilter.rating);
+    }
+    if (userFilter.length) {
+        query += " AND m.length = ?";
+        DataUser.push(userFilter.length);
+    }
+
+    console.log("SQL Query:", query);
+    console.log("DataUser:", DataUser);
+
+    const [rows] = await pool.query(query, DataUser);
+    return rows;
+}
+
+
+async function getFilteredMoviesCount(userFilter) {
+    let query = `
+        SELECT COUNT(DISTINCT m.film_id) AS total
+        FROM movie m
+        LEFT JOIN moviecategory mc ON m.film_id = mc.film_id
+        LEFT JOIN category c ON mc.category_id = c.category_id
+        WHERE 1=1
+    `;
+    let DataUser = [];
+
     if (userFilter.category_name) {
         query += " AND c.category_name = ?";
         DataUser.push(userFilter.category_name);
@@ -587,9 +616,11 @@ async function getAllMoviesByClientRequest(userFilter) {
         query += " AND m.length = ?";
         DataUser.push(userFilter.length);
     }
+
     const [rows] = await pool.query(query, DataUser);
-    return rows;
+    return rows[0].total;
 }
+
 
 module.exports = {
     getCustomerByID,
@@ -664,5 +695,6 @@ module.exports = {
     deleteMovieActorByFilmId,
     deleteMovieCategoryByFilmId,
     getTotalMoviesByTitle,
-    getAllMoviesByClientRequest
+    getFilteredMoviesByClientRequest,
+    getFilteredMoviesCount
 };

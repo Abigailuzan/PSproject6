@@ -12,8 +12,9 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
-import {getAllActorsList, getAllCategoryList} from "../Tools/movieTotalInformation";
+import { getAllCategoryList } from "../Tools/movieTotalInformation";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
+
 function Home() {
     const [movies, setMovies] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -23,16 +24,13 @@ function Home() {
     const [userName, setUserName] = useState(null);
     const [searchText, setSearchText] = useState('');
     const [categoryList, setCategoryList] = useState([]);
-    const [actorsList, setActorsList] = useState([]);
     const [releaseYear, setReleaseYear] = useState('');
     const [length, setLength] = useState('');
     const [rating, setRating] = useState('');
-    const [category, setCategory] = useState([]);
-    const [actors, setActors] = useState([]);
+    const [category, setCategory] = useState({});
 
     useEffect(() => {
         getAllCategoryList(setCategoryList).then(r => null);
-        getAllActorsList(setActorsList).then(r => null);
     }, []);
 
     useEffect(() => {
@@ -88,6 +86,25 @@ function Home() {
             });
     };
 
+    async function handleFilter() {
+        console.log(category.name,'rating' + rating,'release year' + releaseYear,'length ' + length)
+        const filterData  = {
+            name:category.name || null,
+            release_year : releaseYear|| null,
+            length:length||null,
+            rating:rating|| null
+        }
+        axios.get(`http://localhost:5000/movies/filters?name = ${filterData}`)
+            .then(response => {
+                console.log("response data: ", response.data);
+                setMovies(response.data.movies);
+                setTotalMovies(response.data.total);
+            })
+            .catch(error => {
+                console.error('There was an error fetching the movies!', error);
+            });
+    }
+
     return (
         <div className="home-container">
             <nav className="nav">
@@ -105,37 +122,16 @@ function Home() {
                         onChange={(e, newValue) => setCategory(newValue)}
                         options={categoryList}
                         getOptionLabel={(option) => option.name ? `${option.name}` : "category"}
-                        isOptionEqualToValue={(option, value) => option.name === value?.name}
                         renderInput={(params) =>
                             <TextField
                                 {...params}
                                 label="Category"
                                 placeholder="Select category"
-                                required
                                 size="small"
                             />
                         }
                     />
-                </div>
-                <div className="filter">
-                    <Autocomplete
-                        value={actors || null}
-                        onChange={(e, newValue) => setActors(newValue)}
-                        options={actorsList}
-                        getOptionLabel={(option) => option.first_name && option.last_name ? `${option.first_name} ${option.last_name}` : "actors"}
-                        isOptionEqualToValue={(option, value) =>
-                            option.first_name === value?.first_name && option.last_name === value?.last_name
-                        }
-                        renderInput={(params) =>
-                            <TextField
-                                {...params}
-                                label="Actor"
-                                placeholder="Select actor"
-                                required
-                                size="small"
-                            />
-                        }
-                    />
+
                 </div>
                 <div className="filter">
                     <Autocomplete
@@ -143,17 +139,16 @@ function Home() {
                         onChange={(e, newValue) => setReleaseYear(newValue)}
                         options={Array.from(new Array(131), (val, index) => 1900 + index)}
                         getOptionLabel={(option) => `${option}`}
-                        isOptionEqualToValue={(option, value) => option === value}
                         renderInput={(params) =>
                             <TextField
                                 {...params}
                                 label="Year"
                                 placeholder="Select year"
-                                required
                                 size="small"
                             />
                         }
                     />
+
                 </div>
                 <div className="filter">
                     <Autocomplete
@@ -190,7 +185,7 @@ function Home() {
                             />
                         }
                     />
-                    <FilterAltIcon/>
+                    <button onClick={handleFilter}><FilterAltIcon /></button>
                     <div className="search-bar">
                         <input
                             className="search-input"
