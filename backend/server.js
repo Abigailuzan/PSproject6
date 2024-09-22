@@ -920,6 +920,18 @@ app.get('/movies/actors/:id',async (req,res)=>{
         return res.status(500).json({ error: `${error.message}` });
     }
 })
+app.get('/moviesFilters', async (req, res) => {
+    try {
+        console.log('Received query:', req.query); 
+        res.status(200).json("hi");
+        // Here you'd normally handle the request, e.g.:
+        // const movies = await getFilteredMoviesByClientRequest(req.query);
+        // res.status(200).json(movies);
+    } catch (error) {
+        console.error('Error fetching filtered movies:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 app.get('/actors/movies/:id',async (req,res)=>{
     try{
         const actorID = req.params.id;
@@ -952,17 +964,7 @@ app.post('/contactus',async (req,res)=>{
    }
 });
 
-app.get('/movies/filters', async (req, res) => {
-    try {
-        console.log('req.query ' + req.query.name)
-        res.status(200).json(getMovieByID(1000))
-        /*const movies = await getFilteredMoviesByClientRequest(req.query);
-        res.status(200).json(movies);*/
-    } catch (error) {
-        console.error('Error fetching filtered movies:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-});
+
 
 
 

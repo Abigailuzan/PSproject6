@@ -94,15 +94,17 @@ function Home() {
             length:length||null,
             rating:rating|| null
         }
-        axios.get(`http://localhost:5000/movies/filters?name = ${filterData}`)
+        const queryParams = new URLSearchParams(filterData).toString();
+        axios.get(`http://localhost:5000/moviesFilters?${queryParams}`)
             .then(response => {
                 console.log("response data: ", response.data);
-                setMovies(response.data.movies);
-                setTotalMovies(response.data.total);
+                // setMovies(response.data.movies);
+                // setTotalMovies(response.data.total);
             })
             .catch(error => {
                 console.error('There was an error fetching the movies!', error);
             });
+
     }
 
     return (
