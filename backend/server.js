@@ -319,6 +319,7 @@ app.delete('/payments/:id', async (req, res) => {
         return res.status(500).json({ error: 'Error deleting payment' });
     }
 });
+
 // CRUD routes for history
 app.get('/history/:id', async (req, res) => {
     try {
