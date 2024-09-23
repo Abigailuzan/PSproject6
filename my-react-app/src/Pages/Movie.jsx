@@ -6,20 +6,20 @@ import MovieCard from '../Conponents/MovieCard';
 import useLocalStorage from '../UseHooks/useLocalStorage';
 import '../Styles/Movie.css';
 import axios from 'axios';
-import {getTotalMovieInfo}from '../Tools/movieTotalInformation'
+import {getTotalMovieInfo} from '../Tools/movieTotalInformation';
+
 function Movie() {
     const storage = useLocalStorage();
     const {id, title} = useParams();
     const [movies, setMovies] = useState([]);
     const [movie, setMovie] = useState({});
 
-
     useEffect(() => {
         setMovie({});
         setMovies([]);
         const fetchMovieData = async () => {
-            const fetchedMovie = await getTotalMovieInfo(id); // מחכה עד שהפונקציה תחזיר את הערכים
-            setMovie(fetchedMovie); // שומר את הערך שהתקבל במשתנה movie
+            const fetchedMovie = await getTotalMovieInfo(id);
+            setMovie(fetchedMovie);
         };
 
         fetchMovieData().then(r => null); // קריאה לפונקציה האסינכרונית
@@ -30,10 +30,13 @@ function Movie() {
             try {
                 let movieList = []; // איפוס רשימת הסרטים
                 const response = await axios.get(`http://localhost:5000/categories/movies/${movie.category_id}`);
-                const categoryMovies = response.data;
-                console.log(categoryMovies)
-                movieList = [...categoryMovies.slice(0, 5)];
+                let categoryMovies = response.data;
 
+                // סינון הסרטים בעלי ה-id השווה ל-id המסוים
+                categoryMovies = categoryMovies.filter(m => m.film_id !== id);
+                console.log(categoryMovies);
+
+                movieList = [...categoryMovies.slice(0, 5)];
                 setMovies(movieList);
             } catch (error) {
                 console.error('There was an error fetching category movies!', error);
@@ -43,7 +46,8 @@ function Movie() {
         if (movie.category_id) {
             fetchMoviesForCategory().then();
         }
-    }, [movie.category_id]);
+    }, [movie.category_id, id]);
+
     useEffect(() => {
         const fetchMoviesForActors = async () => {
             let movieList = [...movies];
@@ -52,8 +56,12 @@ function Movie() {
                     if (movieList.length >= 10) break;
                     try {
                         const response = await axios.get(`http://localhost:5000/actors/movies/${actor.actor_id}`);
-                        const actorMovies = response.data;
-                        console.log(actorMovies)
+                        let actorMovies = response.data;
+
+                        // סינון הסרטים בעלי ה-id השווה ל-id המסוים
+                        actorMovies = actorMovies.filter(m => m.film_id !== id);
+                        console.log(actorMovies);
+
                         if (actorMovies.length + movieList.length <= 10) {
                             movieList = [...movieList, ...actorMovies];
                         } else {
@@ -71,7 +79,7 @@ function Movie() {
         if (movie.actors_list && movie.actors_list.length > 0) {
             fetchMoviesForActors().then(r => null);
         }
-    }, [movie.actors_list]);
+    }, [movie.actors_list, id, movies]);
 
     return (
         <div>

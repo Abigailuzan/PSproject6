@@ -2,25 +2,25 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
 
 iframe {
- margin-left: 350px;
-   justify-content: center;
+  margin-left: 21.875rem;
+  justify-content: center;
   align-items: center;
-  
 }
+
 .description-container {
-  margin-top:5px;
-  max-width: 800px;
-  margin-left: 350px;
+  margin-top: 0.3125rem;
+  max-width: 50rem;
+  margin-left: 21.875rem;
   margin-right: auto;
-  margin-bottom: 10px;
+  margin-bottom: 0.625rem;
 }
+
 .description-container {
   display: flex;
-  align-items: flex-start; /* מוודא שכל תוכן מיושר מלמעלה */
+  align-items: flex-start;
 }
 
 .h2-description {
@@ -28,8 +28,8 @@ iframe {
   margin: 0;
   color: #fff;
   display: inline;
-  margin-right: 0.5rem; /* רווח קטן בין הכותרת לתיאור */
-  white-space: nowrap; /* כדי שהכותרת לא תרד שורה */
+  margin-right: 0.3125rem;
+  white-space: nowrap;
 }
 
 .movie-description {
@@ -40,8 +40,7 @@ iframe {
   display: inline;
 }
 
-
-.tools{
-  margin-left: 350px;
-  margin-top:15px;
+.tools {
+  margin-left: 21.875rem;
+  margin-top: 0.9375rem;
 }

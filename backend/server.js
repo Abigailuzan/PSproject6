@@ -14,7 +14,7 @@ const { getCustomerByID,getCustomerByEmail, getAllCustomers, insertCustomer, upd
     deleteMovieCategory, getMoviesByCategory, getAllMovieYear, getMovieByRating, getPaymentByCustomer,
     getRentalByCustomer, getCategoriesOfMovie, getActorsOfMovie, getMoviesOfActor, getAllActiveCustomers,
     getTotalMovies, getAdminByMail,deleteMovieActorByFilmId,deleteMovieCategoryByFilmId,
-    getFilteredMoviesByClientRequest,getFilteredMoviesCount
+    getFilteredMoviesByClientRequest
 } = require("./database");
 const nodemailer = require("nodemailer");
 const app = express();
@@ -922,11 +922,9 @@ app.get('/movies/actors/:id',async (req,res)=>{
 })
 app.get('/moviesFilters', async (req, res) => {
     try {
-        console.log('Received query:', req.query); 
-        res.status(200).json("hi");
-        // Here you'd normally handle the request, e.g.:
-        // const movies = await getFilteredMoviesByClientRequest(req.query);
-        // res.status(200).json(movies);
+        console.log('Received query:', (req.query));
+        const {movies,total} = await getFilteredMoviesByClientRequest(req.query);
+        res.status(200).json({movies:movies,total:total});
     } catch (error) {
         console.error('Error fetching filtered movies:', error);
         res.status(500).json({ error: 'Internal Server Error' });

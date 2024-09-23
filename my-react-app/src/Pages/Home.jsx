@@ -27,7 +27,7 @@ function Home() {
     const [releaseYear, setReleaseYear] = useState('');
     const [length, setLength] = useState('');
     const [rating, setRating] = useState('');
-    const [category, setCategory] = useState({});
+    const [category, setCategory] = useState('');
 
     useEffect(() => {
         getAllCategoryList(setCategoryList).then(r => null);
@@ -89,17 +89,18 @@ function Home() {
     async function handleFilter() {
         console.log(category.name,'rating' + rating,'release year' + releaseYear,'length ' + length)
         const filterData  = {
-            name:category.name || null,
-            release_year : releaseYear|| null,
-            length:length||null,
-            rating:rating|| null
+            name:category?.name || '',
+            release_year : releaseYear|| '',
+            length:length||'',
+            rating:rating|| ''
         }
+        console.log(filterData)
         const queryParams = new URLSearchParams(filterData).toString();
         axios.get(`http://localhost:5000/moviesFilters?${queryParams}`)
             .then(response => {
                 console.log("response data: ", response.data);
-                // setMovies(response.data.movies);
-                // setTotalMovies(response.data.total);
+                setMovies(response.data.movies);
+                setTotalMovies(response.data.total);
             })
             .catch(error => {
                 console.error('There was an error fetching the movies!', error);
@@ -110,20 +111,33 @@ function Home() {
     return (
         <div className="home-container">
             <nav className="nav">
-                <NavbarLeft name={userName} />
+                <NavbarLeft name={userName}/>
                 <h1>Welcome {userName ? userName : ' '}</h1>
                 <div className="nav-actions">
-                    {storage.value && storage.value.email && storage.value.email.includes('staff') && <AdminToolBar />}
-                    <InOutButton name={userName} setUsername={setUserName} logOut={handleClickLogout} />
+                    <div className="search-bar">
+                        <input
+                            className="search-input"
+                            placeholder="Search..."
+                            value={searchText}
+                            onChange={(e) => setSearchText(e.target.value)}
+                        />
+                        <button className="search-button" onClick={handleSearch}>
+                            <SearchIcon/>
+                        </button>
+                    </div>
+                    {storage.value && storage.value.email && storage.value.email.includes('staff') &&
+                        <AdminToolBar/>}
+                    <InOutButton name={userName} setUsername={setUserName}
+                                 logOut={handleClickLogout}/>
                 </div>
             </nav>
             <div className="filters-container">
                 <div className="filter">
                     <Autocomplete
-                        value={category || null}
+                        value={category|| null}
                         onChange={(e, newValue) => setCategory(newValue)}
                         options={categoryList}
-                        getOptionLabel={(option) => option.name ? `${option.name}` : "category"}
+                        getOptionLabel={(option) => `${option?.name}`}
                         renderInput={(params) =>
                             <TextField
                                 {...params}
@@ -164,7 +178,6 @@ function Home() {
                                 {...params}
                                 label="Length"
                                 placeholder="Select movie length"
-                                required
                                 size="small"
                             />
                         }
@@ -182,29 +195,19 @@ function Home() {
                                 {...params}
                                 label="Rating"
                                 placeholder="Select movie rating"
-                                required
                                 size="small"
                             />
                         }
                     />
-                    <button onClick={handleFilter}><FilterAltIcon /></button>
-                    <div className="search-bar">
-                        <input
-                            className="search-input"
-                            placeholder="Search..."
-                            value={searchText}
-                            onChange={(e) => setSearchText(e.target.value)}
-                        />
-                        <button className="search-button" onClick={handleSearch}>
-                            <SearchIcon/>
-                        </button>
-                    </div>
+                </div>
+                <div>
+                    <button onClick={handleFilter}><FilterAltIcon/></button>
                 </div>
             </div>
             <div className="home-content">
-                {movies && movies.length > 0 ? (
+            {movies && movies.length > 0 ? (
                     movies.map((movie, index) => (
-                        <MovieCard key={index} {...movie} storage={storage} />
+                        <MovieCard key={index} {...movie} storage={storage}/>
                     ))
                 ) : (
                     <p>No movies available.</p>
@@ -213,14 +216,15 @@ function Home() {
 
             <div className="pagination">
                 <button onClick={handlePreviousPage} disabled={currentPage === 1}>
-                    <ArrowBackIosNewIcon fontSize='small' />
+                    <ArrowBackIosNewIcon fontSize='small'/>
                 </button>
                 <span>Page {currentPage}</span>
-                <button onClick={handleNextPage} disabled={currentPage * moviesPerPage >= totalMovies}>
-                    <ArrowForwardIosIcon fontSize='small' />
+                <button onClick={handleNextPage}
+                        disabled={currentPage * moviesPerPage >= totalMovies}>
+                    <ArrowForwardIosIcon fontSize='small'/>
                 </button>
             </div>
-            <Footer />
+            <Footer/>
         </div>
     );
 }

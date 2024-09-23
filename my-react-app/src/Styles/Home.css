@@ -1,16 +1,28 @@
 .filters-container {
   display: flex;
+  flex-wrap: wrap; /* מאפשר עטיפה בשורות במסכים קטנים */
   align-items: center; /* Align items vertically in the center */
   justify-content: space-between; /* Space out items evenly */
-  gap: 10px; /* Smaller gap between filters */
-  margin-bottom: 20px;
-  padding: 10px; /* Add some padding for better spacing */
-  border-radius: 8px; /* Rounded corners */
+  gap: 0.625rem; /* 10px = 0.625rem */
+  margin-bottom: 1.25rem; /* 20px = 1.25rem */
+  padding: 0.625rem; /* 10px = 0.625rem */
+  border-radius: 0.5rem; /* 8px = 0.5rem */
+  background-color: #1f1f1f; /* רקע כהה לפילטרים */
 }
 
 .filter {
   flex: 1;
-  min-width: 100px; /* Minimum width for filters */
+  min-width: 6.25rem; /* 100px = 6.25rem */
+  color: white; /* טקסט לבן */
+}
+
+.filter select, .filter input {
+  background-color: #333; /* רקע כהה לשדות */
+  color: white; /* טקסט לבן */
+  border: none; /* הסרת הגבול */
+  padding: 0.625rem; /* ריווח פנימי */
+  border-radius: 0.3125rem; /* פינות מעוגלות */
+  width: 100%; /* התאמת השדה לגודל הפילטר */
 }
 
 .search-bar {
@@ -20,31 +32,58 @@
 }
 
 .search-input {
-  padding: 5px;
+  padding: 0.3125rem; /* 5px = 0.3125rem */
   border: none;
   outline: none;
   background-color: #333;
   color: #fff;
-  width: 200px; /* Fixed width for search input */
-  height: 40px; /* Increase height for better usability */
-  border-radius: 5px; /* Rounded corners */
+  width: 12.5rem; /* 200px = 12.5rem */
+  height: 2.5rem; /* 40px = 2.5rem */
+  border-radius: 0.3125rem; /* 5px = 0.3125rem */
 }
 
 .search-button {
   background-color: #00ff00;
   border: none;
   cursor: pointer;
-  padding: 0 15px; /* Add horizontal padding */
-  height: 40px; /* Match height with search input */
-  border-radius: 5px; /* Rounded corners */
-  margin-left: 5px; /* Add space between input and button */
+  padding: 0 0.9375rem; /* 15px = 0.9375rem */
+  height: 2.5rem; /* 40px = 2.5rem */
+  border-radius: 0.3125rem; /* 5px = 0.3125rem */
+  margin-left: 0.3125rem; /* 5px = 0.3125rem */
+}
+
+.pagination {
+  display: flex;
+  justify-content: center; /* למרכז את התוכן לרוחב */
+  align-items: center; /* ליישר את התוכן אנכית */
+  margin-top: 1.25rem; /* מרווח עליון (20px) */
+  gap: 0.625rem; /* מרווח בין האלמנטים (10px) */
+}
+
+.pagination button {
+  background-color: #1f1f1f; /* רקע כהה לכפתורים */
+  color: white; /* טקסט לבן */
+  border: none;
+  padding: 0.625rem; /* ריווח פנימי של 10px */
+  border-radius: 0.3125rem; /* פינות מעוגלות */
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  color: #1f1f1f;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-size: 1rem;
+  color: white;
 }
 
 h1 {
   font-size: 3rem;
   font-weight: 700;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 1.25rem;
   color: white;
 }
 
@@ -59,9 +98,76 @@ h1 {
 
 .home-content {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 20px;
+  gap: 1.25rem;
   justify-content: center;
   margin: 0 auto;
-  max-width: 1200px;
+  max-width: 75rem;
 }
+.MuiAutocomplete-root .MuiOutlinedInput-root {
+  background-color: #333 !important;
+  color: white !important;
+}
+
+.MuiAutocomplete-root .MuiOutlinedInput-notchedOutline {
+  border-color: #333 !important;
+}
+
+.MuiAutocomplete-root .MuiInputLabel-root {
+  color: white !important;
+
+.MuiAutocomplete-root .MuiInputBase-input {
+  color: white !important;
+}
+
+@media screen and (min-width: 1200px) {
+  .home-content {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .search-input {
+    width: 15rem;
+  }
+  h1 {
+    font-size: 3.5rem;
+  }
+}
+
+@media screen and (min-width: 992px) and (max-width: 1199px) {
+  .home-content {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .search-input {
+    width: 14rem;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .home-content {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .search-input {
+    width: 13rem;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .home-content {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .search-input {
+    width: 100%;
+  }
+  h1 {
+    font-size: 2.5rem;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .filters-container {
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+  .filter {
+    width: 100%;
+    text-align: center;
+  }
+}}

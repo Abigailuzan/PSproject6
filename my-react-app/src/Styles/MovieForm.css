@@ -1,67 +1,66 @@
-/* Center the form and style it */
 .form-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; 
-    background-color:  #1f1f1f;
-    padding-top: 10px;
-    margin: 0;
-  }
-  
-  .movie-form {
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 600px;
-    max-width: 100%;
-    margin-top: 20px;
-  }
-  
-  .movie-form h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  .form-group label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #333;
-  }
-  
-  .form-group input,
-  .form-group textarea,
-  .form-group select {
-    width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-  }
-  
-  .form-group textarea {
-    resize: none;
-    height: 100px;
-  }
-  
-  .submit-button {
-    padding: 10px;
-    width: 100%;
-    background-color: limegreen;
-    color: #000;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-  }
-  
-  .submit-button:hover {
-    background-color: #32cd32;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color:  #1f1f1f;
+  padding-top: 0.625rem;
+  margin: 0;
+}
+
+.movie-form {
+  background: #fff;
+  padding: 1.25rem;
+  border-radius: 0.625rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+  width: 37.5rem;
+  max-width: 100%;
+  margin-top: 1.25rem;
+}
+
+.movie-form h2 {
+  text-align: center;
+  margin-bottom: 1.25rem;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 0.9375rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 0.3125rem;
+  color: #333;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 0.625rem;
+  border-radius: 0.3125rem;
+  border: 0.0625rem solid #ccc;
+  font-size: 1rem;
+}
+
+.form-group textarea {
+  resize: none;
+  height: 6.25rem;
+}
+
+.submit-button {
+  padding: 0.625rem;
+  width: 100%;
+  background-color: limegreen;
+  color: #000;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.submit-button:hover {
+  background-color: #32cd32;
+}

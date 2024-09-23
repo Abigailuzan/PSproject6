@@ -1,27 +1,27 @@
 .user-info-container {
-    background-color: #1f1f1f; /* Dark background */
-    color: white; /* White text color */
-    padding: 20px;
-    max-width: 500px; /* Adjust width as necessary */
-    margin: 40px auto; /* Center align the container */
-    border-radius: 8px;
+    background-color: #1f1f1f;
+    color: white;
+    padding: 1.25rem;
+    max-width: 31.25rem;
+    margin: 2.5rem auto;
+    border-radius: 0.5rem;
 }
 
 .user-info-container div {
-    margin-bottom: 10px; /* Space between each label and value */
+    margin-bottom: 0.625rem;
 }
 
 .user-info-container label {
-    font-weight: bold; /* Make labels bold */
-    display: block; /* Block makes it take the full width */
+    font-weight: bold;
+    display: block;
 }
 
 .user-info-container p {
-    background-color: #333; /* Slightly lighter background for contrast */
-    padding: 10px;
-    border-radius: 4px;
-    
+    background-color: #333;
+    padding: 0.625rem;
+    border-radius: 0.25rem;
 }
-.label-user{
+
+.label-user {
     color: white;
 }

@@ -557,7 +557,7 @@ async function getAllActiveCustomers() {
 
 async function getFilteredMoviesByClientRequest(userFilter) {
     let query = `
-        SELECT m.title, m.description, m.release_year, m.length, m.rating, m.movie_image, m.movie_video
+        SELECT m.film_id, m.title, m.description, m.release_year, m.length, m.rating, m.movie_image, m.movie_video
         FROM movie m
         LEFT JOIN moviecategory mc ON m.film_id = mc.film_id
         LEFT JOIN category c ON mc.category_id = c.category_id
@@ -565,19 +565,19 @@ async function getFilteredMoviesByClientRequest(userFilter) {
     `;
     let DataUser = [];
 
-    if (userFilter.name) {
+    if (userFilter.name !=='') {
         query += " AND c.name = ?";
         DataUser.push(userFilter.name);
     }
-    if (userFilter.release_year) {
+    if (userFilter.release_year!=='') {
         query += " AND m.release_year = ?";
         DataUser.push(userFilter.release_year);
     }
-    if (userFilter.rating) {
+    if (userFilter.rating !=='') {
         query += " AND m.rating = ?";
         DataUser.push(userFilter.rating);
     }
-    if (userFilter.length) {
+    if (userFilter.length !=='') {
         query += " AND m.length = ?";
         DataUser.push(userFilter.length);
     }
@@ -586,40 +586,9 @@ async function getFilteredMoviesByClientRequest(userFilter) {
     console.log("DataUser:", DataUser);
 
     const [rows] = await pool.query(query, DataUser);
-    return rows;
+    return {movies:rows,total:rows[0]?.total};
 }
 
-
-async function getFilteredMoviesCount(userFilter) {
-    let query = `
-        SELECT COUNT(DISTINCT m.film_id) AS total
-        FROM movie m
-        LEFT JOIN moviecategory mc ON m.film_id = mc.film_id
-        LEFT JOIN category c ON mc.category_id = c.category_id
-        WHERE 1=1
-    `;
-    let DataUser = [];
-
-    if (userFilter.category_name) {
-        query += " AND c.category_name = ?";
-        DataUser.push(userFilter.category_name);
-    }
-    if (userFilter.release_year) {
-        query += " AND m.release_year = ?";
-        DataUser.push(userFilter.release_year);
-    }
-    if (userFilter.rating) {
-        query += " AND m.rating = ?";
-        DataUser.push(userFilter.rating);
-    }
-    if (userFilter.length) {
-        query += " AND m.length = ?";
-        DataUser.push(userFilter.length);
-    }
-
-    const [rows] = await pool.query(query, DataUser);
-    return rows[0].total;
-}
 
 
 module.exports = {
@@ -696,5 +665,4 @@ module.exports = {
     deleteMovieCategoryByFilmId,
     getTotalMoviesByTitle,
     getFilteredMoviesByClientRequest,
-    getFilteredMoviesCount
 };

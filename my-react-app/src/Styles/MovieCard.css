@@ -1,13 +1,13 @@
 .movie-card {
     background-color: #222;
-    border-radius: 10px;
+    border-radius: 0.625rem;
     overflow: hidden;
-    width: 150px;
-    margin: 20px;
+    width: 9.375rem;
+    margin: 1.25rem;
     cursor: pointer;
-    height: 150px;
+    height: 9.375rem;
     transition: transform 0.2s;
-    position: relative; /* מאפשר הצבת תוכן בצורה אבסולוטית */
+    position: relative;
 }
 
 .movie-card:hover {
@@ -16,9 +16,9 @@
 
 .movie-image {
     width: 100%;
-    height: 100%; /* מתאים את התמונה לגובה הכרטיס */
+    height: 100%;
     object-fit: cover;
-    opacity: 0.7; /* שקיפות לתמונה */
+    opacity: 0.7;
 }
 
 .card-details {
@@ -26,59 +26,45 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    background: rgba(0, 0, 0, 0.5); /* רקע שחור שקוף */
+    background: rgba(0, 0, 0, 0.5);
     color: #fff;
-    padding: 5px;
+    padding: 0.3125rem;
     text-align: center;
 }
 
 .card-title {
     margin: 0;
-    font-size: 16px;
+    font-size: 1rem;
     color: #ffffff;
 }
-  
-  .card-info {
-    margin: 5px 0 0;
-    font-size: 12px;
-    color: #bbb;
-  }
-  /* .more-options-icon {
-    color: #bbb;
-    cursor: pointer;
-    transition: color 0.3s ease;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-  } */
-  
-  /* .more-options-icon:hover {
-    color: limegreen;
-  }
-  
 
-  .dropdown-menu {
+.card-info {
+    margin: 0.3125rem 0 0;
+    font-size: 0.75rem;
+    color: #bbb;
+}
+
+.dropdown-menu {
     position: absolute;
-    top: 30px;
-    right: 10px;
+    top: 1.875rem;
+    right: 0.625rem;
     background-color: #333;
-    border: 1px solid #555;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 10px;
+    border: 0.0625rem solid #555;
+    border-radius: 0.3125rem;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+    padding: 0.625rem;
     z-index: 1000;
-  }
-  
-  .dropdown-item {
+}
+
+.dropdown-item {
     color: white;
     cursor: pointer;
-    margin: 5px 0;
-    padding: 5px 10px;
+    margin: 0.3125rem 0;
+    padding: 0.3125rem 0.625rem;
     transition: background-color 0.2s ease;
-  }
-  
-  .dropdown-item:hover {
+}
+
+.dropdown-item:hover {
     background-color: limegreen;
     color: black;
-  }
-   */
+}
