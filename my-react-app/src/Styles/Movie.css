@@ -2,3 +2,18 @@ h2 {
     margin-left: 13.4375rem;
     font-size: 2rem;
 }
+
+/* Media Queries */
+@media (max-width: 768px) {
+    h2 {
+        margin-left: 5rem; /* Reduce left margin */
+        font-size: 1.5rem; /* Adjust font size */
+    }
+}
+
+@media (max-width: 480px) {
+    h2 {
+        margin-left: 2rem; /* Further reduce left margin */
+        font-size: 1.25rem; /* Further adjust font size */
+    }
+}

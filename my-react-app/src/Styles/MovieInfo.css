@@ -16,9 +16,6 @@ iframe {
   margin-left: 21.875rem;
   margin-right: auto;
   margin-bottom: 0.625rem;
-}
-
-.description-container {
   display: flex;
   align-items: flex-start;
 }
@@ -43,4 +40,58 @@ iframe {
 .tools {
   margin-left: 21.875rem;
   margin-top: 0.9375rem;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  iframe {
+    margin-left: 5rem; /* Reduce left margin for smaller screens */
+    width: 80%; /* Adjust width for responsiveness */
+  }
+
+  .description-container {
+    max-width: 90%; /* Make description container responsive */
+    margin-left: 5rem; /* Reduce left margin */
+  }
+
+  .h2-description {
+    font-size: 1.1rem; /* Adjust heading size */
+  }
+
+  .movie-description {
+    font-size: 0.9rem; /* Adjust description font size */
+  }
+
+  .tools {
+    margin-left: 5rem; /* Reduce margin */
+  }
+}
+
+@media (max-width: 480px) {
+  .video-container {
+    flex-direction: column; /* Stack video and description */
+    align-items: center; /* Center items */
+  }
+
+  iframe {
+    margin-left: 0; /* Remove left margin */
+    width: 100%; /* Make iframe full width */
+  }
+
+  .description-container {
+    margin-left: 0; /* Remove left margin */
+    margin-right: 0; /* Remove right margin */
+  }
+
+  .h2-description {
+    font-size: 1rem; /* Further adjust heading size */
+  }
+
+  .movie-description {
+    font-size: 0.8rem; /* Further adjust description font size */
+  }
+
+  .tools {
+    margin-left: 0; /* Remove left margin */
+  }
 }

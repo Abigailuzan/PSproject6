@@ -114,6 +114,10 @@ function Home() {
                 <NavbarLeft name={userName}/>
                 <h1>Welcome {userName ? userName : ' '}</h1>
                 <div className="nav-actions">
+                    {storage.value && storage.value.email && storage.value.email.includes('staff') &&
+                        <AdminToolBar/>}
+                    <InOutButton name={userName} setUsername={setUserName}
+                                 logOut={handleClickLogout}/>
                     <div className="search-bar">
                         <input
                             className="search-input"
@@ -125,16 +129,12 @@ function Home() {
                             <SearchIcon/>
                         </button>
                     </div>
-                    {storage.value && storage.value.email && storage.value.email.includes('staff') &&
-                        <AdminToolBar/>}
-                    <InOutButton name={userName} setUsername={setUserName}
-                                 logOut={handleClickLogout}/>
                 </div>
             </nav>
             <div className="filters-container">
                 <div className="filter">
                     <Autocomplete
-                        value={category|| null}
+                        value={category || null}
                         onChange={(e, newValue) => setCategory(newValue)}
                         options={categoryList}
                         getOptionLabel={(option) => `${option?.name}`}

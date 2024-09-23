@@ -24,3 +24,25 @@
 .footer-link:hover {
     color: limegreen;
 }
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .footer-nav {
+        flex-direction: column; /* Stack links vertically */
+        gap: 1rem; /* Adjust gap for vertical spacing */
+    }
+}
+
+@media (max-width: 480px) {
+    .footer {
+        padding: 0.625rem 0; /* Reduce padding */
+    }
+
+    .footer-nav {
+        gap: 0.5rem; /* Reduce gap on smaller screens */
+    }
+
+    .footer-link {
+        font-size: 0.9rem; /* Slightly reduce font size */
+    }
+}

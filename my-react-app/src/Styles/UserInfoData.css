@@ -25,3 +25,38 @@
 .label-user {
     color: white;
 }
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .user-info-container {
+        max-width: 90%; /* Make the container more responsive */
+        padding: 1rem; /* Adjust padding */
+        margin: 1.5rem auto; /* Adjust margin for smaller screens */
+    }
+
+    .user-info-container div {
+        margin-bottom: 0.5rem; /* Reduce spacing between items */
+    }
+
+    .user-info-container label {
+        font-size: 0.9rem; /* Slightly smaller font size */
+    }
+
+    .user-info-container p {
+        font-size: 0.9rem; /* Slightly smaller font size */
+    }
+}
+
+@media (max-width: 480px) {
+    .user-info-container {
+        padding: 0.75rem; /* Further reduce padding */
+    }
+
+    .user-info-container label {
+        font-size: 0.85rem; /* Further reduce font size */
+    }
+
+    .user-info-container p {
+        font-size: 0.85rem; /* Further reduce font size */
+    }
+}

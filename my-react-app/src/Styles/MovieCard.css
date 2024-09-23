@@ -68,3 +68,33 @@
     background-color: limegreen;
     color: black;
 }
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .movie-card {
+        width: 80%; /* Make card width responsive */
+        height: auto; /* Allow height to adjust */
+    }
+
+    .card-title {
+        font-size: 0.9rem; /* Adjust font size for title */
+    }
+
+    .card-info {
+        font-size: 0.65rem; /* Adjust font size for info */
+    }
+}
+
+@media (max-width: 480px) {
+    .movie-card {
+        margin: 0.625rem; /* Reduce margin */
+    }
+
+    .card-title {
+        font-size: 0.8rem; /* Further reduce title size */
+    }
+
+    .card-info {
+        font-size: 0.6rem; /* Further reduce info size */
+    }
+}
