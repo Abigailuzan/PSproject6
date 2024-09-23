@@ -107,7 +107,6 @@ function Home() {
             });
 
     }
-
     return (
         <div className="home-container">
             <nav className="nav">

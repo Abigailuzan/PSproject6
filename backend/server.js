@@ -4,7 +4,7 @@ const { getCustomerByID,getCustomerByEmail, getAllCustomers, insertCustomer, upd
     getMovieByID, getAllMovies,getTotalMoviesByTitle, insertMovie, updateMovie, deleteMovie, getMoviesByTitle, updateMovieByTitle,
     getActorByID, getAllActors, insertActor, updateActor, deleteActor,
     getPaymentByID, getAllPayments, insertPayment, updatePayment, deletePayment,
-    getRentalByID, getAllRentals, insertRental, updateRental, deleteRental,
+    getAllHistory, insertHistory, updateHistory, deleteHistory,
     getCityByID, getAllCities, insertCity, updateCity, deleteCity,
     getCountryByID, getAllCountries, insertCountry, updateCountry, deleteCountry,
     getAdminByID, getAllAdmins, insertAdmin, updateAdmin, deleteAdmin,
@@ -320,119 +320,56 @@ app.delete('/payments/:id', async (req, res) => {
     }
 });
 
-// CRUD routes for Rental
-//TODO change the name to history
-app.get('/rentals/:id', async (req, res) => {
+// CRUD routes for history
+app.get('/history/:id', async (req, res) => {
     try {
-        const rental = await getRentalByID(req.params.id);
-        if (rental) {
-            return res.status(200).json(rental);
+        const history = await getAllHistory(req.params.id);
+        if (history && history.length > 0) {
+            return res.status(200).json(history);
         } else {
-            return res.status(404).json({ error: 'rental not found' });  // אם לא נמצא הלקוח
+            return res.status(404).json({ error: 'No movies found for this customer' });
         }
     } catch (error) {
-        return res.status(500).json({ error: 'Error fetching rental' });
-    }
-});
-app.get('/rentals', async (req, res) => {
-    try {
-        const rentals = await getAllRentals();
-        return res.status(200).json(rentals);
-    } catch (error) {
-        return res.status(500).json({ error: 'Error fetching rentals' });
-    }
-});
-app.post('/rentals', async (req, res) => {
-    try {
-        const newRental = await insertRental(req.body);
-        return res.status(201).json(newRental);
-    } catch (error) {
-        return res.status(500).json({ error: 'Error creating rental' });
-    }
-});
-app.put('/rentals/:id', async (req, res) => {
-    try {
-        const updatedRental = await updateRental(req.params.id, req.body);
-        if (updatedRental) {
-            return res.status(200).json(updatedRental);
-        } else {
-            return res.status(404).json({ error: 'rental not found' });
-        }
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: 'Error updating rental' });
-    }
-});
-app.delete('/rentals/:id', async (req, res) => {
-    try {
-        const success = await deleteRental(req.params.id);
-        if (success) {
-            return res.status(204).end();
-        } else {
-            return res.status(404).json({ error: 'rental not found' });
-        }
-    } catch (error) {
-        return res.status(500).json({ error: 'Error deleting rental' });
+        return res.status(500).json({ error: 'Error fetching customer movie history' });
     }
 });
 
-// CRUD routes for Movie Text
-//TODO remark all those functions
-app.get('/movieTexts/:id', async (req, res) => {
+
+app.post('/history', async (req, res) => {
     try {
-        const movieText = await getMovieTextByID(req.params.id);
-        if (movieText) {
-            return res.status(200).json(movieText);
+        const newRental = await insertHistory(req.body);
+        return res.status(201).json(newRental);
+    } catch (error) {
+        return res.status(500).json({ error: 'Error creating history' });
+    }
+});
+app.put('/history/:id', async (req, res) => {
+    try {
+        const updatedHistory = await updateHistory(req.params.id, req.body);
+        if (updatedHistory.length > 0) { // Ensure there are returned rows
+            return res.status(200).json(updatedHistory);
         } else {
-            return res.status(404).json({ error: 'movie with this text was not found' });  // אם
-            // לא נמצא
-            // הלקוח
-        }
-    } catch (error) {
-        return res.status(500).json({ error: 'Error fetching movies-text' });
-    }
-});
-app.get('/movieTexts', async (req, res) => {
-    try {
-        const movieTexts = await getAllMovieTexts();
-        return res.status(200).json(movieTexts);
-    } catch (error) {
-        return res.status(500).json({ error: 'Error fetching movie-text' });
-    }
-});
-app.post('/movieTexts', async (req, res) => {
-    try {
-        const newMovieText = await insertMovieText(req.body);
-        return res.status(201).json(newMovieText);
-    } catch (error) {
-        return res.status(500).json({ error: 'Error creating new movie text' });
-    }
-});
-app.put('/movieTexts/:id', async (req, res) => {
-    try {
-        const updatedMovieText = await updateMovieText(req.params.id, req.body);
-        if (updatedMovieText) {
-            return res.status(200).json(updatedMovieText);
-        } else {
-            return res.status(404).json({ error: 'movie with this text was not found' });
+            return res.status(404).json({ error: 'History not found' });
         }
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: 'Error updating movie text' });
+        return res.status(500).json({ error: 'Error updating history' });
     }
 });
-app.delete('/movieTexts/:id', async (req, res) => {
+
+app.delete('/history/:id', async (req, res) => {
     try {
-        const success = await deleteMovieText(req.params.id);
+        const success = await deleteHistory(req.params.id);
         if (success) {
             return res.status(204).end();
         } else {
-            return res.status(404).json({ error: 'movie with that text was not found' });
+            return res.status(404).json({ error: 'History not found' });
         }
     } catch (error) {
-        return res.status(500).json({ error: 'Error deleting movie text' });
+        return res.status(500).json({ error: 'Error deleting history' });
     }
 });
+
 
 // CRUD routes for City
 //TODO check for adding this to movie information
@@ -961,8 +898,6 @@ app.post('/contactus',async (req,res)=>{
        return res.status(500).json({ error: `${error.message}` });
    }
 });
-
-
 
 
 

@@ -7,26 +7,34 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Tooltip from '@mui/material/Tooltip';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import axios from "axios";
 const MovieCard = ({ film_id,title, type, season, episode, movie_image ,storage}) => {
   // const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
-  // const handleClick = (event) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
-
-  // const handleClose = () => {
-  //   setAnchorEl(null);
-  // };
-
 
   const handleClick=()=>{
     if (storage.value){
+      if(!storage.value.email.includes('staff')){
+        const historyMovie = {
+          customer_id: storage.value.id,
+          film_id:film_id,
+          last_update :  new Date().toISOString().split('T')[0],
+        }
+        axios.post(`http://localhost:5000/history`,historyMovie)
+            .then(response => {
+              console.log("response data: ", response.data);
+              //setMovies(response.data.movies);
+              //setTotalMovies(response.data.total);
+            })
+            .catch(error => {
+              console.error(error);
+            });
+      }
       navigate( `/movie/${film_id}/${title}`);
     }
     else{
       navigate( '/sign-in');
     }
-
   }
 
   return (

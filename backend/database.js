@@ -171,31 +171,37 @@ async function deletePayment(id) {
     return result.affectedRows > 0;
 }
 
-// CRUD operations for the "rental" table
-async function getRentalByID(id) {
-    const [rows] = await pool.query(`SELECT * FROM rental WHERE rental_id = ?`, [id]);
-    return rows[0];
-}
-async function getAllRentals() {
-    const [rows] = await pool.query(`SELECT * FROM rental`);
+// CRUD operations for the "history" table
+
+async function getAllHistory(customer_id) {
+    const [rows] = await pool.query(`
+        SELECT movie.*
+        FROM history
+        JOIN movie ON history.film_id = movie.film_id
+        WHERE history.customer_id = ?
+    `, [customer_id]);
     return rows;
 }
-async function insertRental(rental) {
+
+
+async function insertHistory(history) {
     const [result] = await pool.query(
-        `INSERT INTO rental (rental_date, inventory_id, customer_id, return_date, last_update) VALUES (?, ?, ?, ?, ?)`,
-        [rental.rental_date, rental.inventory_id, rental.customer_id, rental.return_date, rental.last_update]
+        `INSERT INTO history (customer_id, film_id, last_update) VALUES (?, ?, ?)`,
+        [history.customer_id, history.film_id, history.last_update]
     );
-    return getRentalByID(result.insertId);
+    return getAllHistory(history.customer_id);
 }
-async function updateRental(id, rental) {
+
+async function updateHistory(id, history) {
     const [result] = await pool.query(
-        `UPDATE rental SET rental_date = ?, inventory_id = ?, customer_id = ?, return_date = ?, last_update = ? WHERE rental_id = ?`,
-        [rental.rental_date, rental.inventory_id, rental.customer_id, rental.return_date, rental.last_update, id]
+        `UPDATE history SET customer_id = ?, film_id = ?, last_update = ? WHERE customer_id = ?`,
+        [history.customer_id, history.film_id, history.last_update, id]
     );
-    return getRentalByID(id);
+    return getAllHistory(id);
 }
-async function deleteRental(id) {
-    const [result] = await pool.query(`DELETE FROM rental WHERE rental_id = ?`, [id]);
+
+async function deleteHistory(id) {
+    const [result] = await pool.query(`DELETE FROM history WHERE customer_id = ?`, [id]);
     return result.affectedRows > 0;
 }
 
@@ -616,11 +622,10 @@ module.exports = {
     insertPayment,
     updatePayment,
     deletePayment,
-    getRentalByID,
-    getAllRentals,
-    insertRental,
-    updateRental,
-    deleteRental,
+    getAllHistory,
+    insertHistory,
+    updateHistory,
+    deleteHistory,
     getCityByID,
     getAllCities,
     insertCity,

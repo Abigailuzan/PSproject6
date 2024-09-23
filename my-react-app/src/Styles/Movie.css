@@ -1,19 +1,43 @@
 h2 {
     margin-left: 13.4375rem;
     font-size: 2rem;
+    /* Add padding to make it look better */
+    padding: 0.5rem 0; /* Optional: Add padding for better spacing */
 }
 
 /* Media Queries */
-@media (max-width: 768px) {
+@media (max-width: 1024px) { /* For tablets and small laptops */
+    h2 {
+        margin-left: 10rem; /* Adjust left margin */
+        font-size: 1.75rem; /* Adjust font size */
+    }
+}
+
+@media (max-width: 768px) { /* For landscape phones */
     h2 {
         margin-left: 5rem; /* Reduce left margin */
         font-size: 1.5rem; /* Adjust font size */
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 600px) { /* For portrait phones */
+    h2 {
+        margin-left: 3rem; /* Further reduce left margin */
+        font-size: 1.375rem; /* Slightly smaller font size */
+    }
+}
+
+@media (max-width: 480px) { /* For very small screens */
     h2 {
         margin-left: 2rem; /* Further reduce left margin */
         font-size: 1.25rem; /* Further adjust font size */
+    }
+}
+
+/* Optional: Add a general responsive margin */
+@media (max-width: 320px) { /* For very small devices */
+    h2 {
+        margin-left: 1rem; /* Adjust for the smallest devices */
+        font-size: 1.1rem; /* Further reduce font size */
     }
 }
