@@ -4,7 +4,7 @@ function Table() {
   return (
       <div className="grid-item">
         <div id="prices">
-               {/* Table displaying movie categories and their price ranges */}
+
                <table>
                  <thead>
                    <tr>

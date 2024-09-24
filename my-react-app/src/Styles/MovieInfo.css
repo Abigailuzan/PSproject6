@@ -42,56 +42,56 @@ iframe {
   margin-top: 0.9375rem;
 }
 
-/* Media Queries */
+
 @media (max-width: 768px) {
   iframe {
-    margin-left: 5rem; /* Reduce left margin for smaller screens */
-    width: 80%; /* Adjust width for responsiveness */
+    margin-left: 5rem;
+    width: 80%;
   }
 
   .description-container {
-    max-width: 90%; /* Make description container responsive */
-    margin-left: 5rem; /* Reduce left margin */
+    max-width: 90%;
+    margin-left: 5rem;
   }
 
   .h2-description {
-    font-size: 1.1rem; /* Adjust heading size */
+    font-size: 1.1rem;
   }
 
   .movie-description {
-    font-size: 0.9rem; /* Adjust description font size */
+    font-size: 0.9rem;
   }
 
   .tools {
-    margin-left: 5rem; /* Reduce margin */
+    margin-left: 5rem;
   }
 }
 
 @media (max-width: 480px) {
   .video-container {
-    flex-direction: column; /* Stack video and description */
-    align-items: center; /* Center items */
+    flex-direction: column;
+    align-items: center;
   }
 
   iframe {
-    margin-left: 0; /* Remove left margin */
-    width: 100%; /* Make iframe full width */
+    margin-left: 0;
+    width: 100%;
   }
 
   .description-container {
-    margin-left: 0; /* Remove left margin */
-    margin-right: 0; /* Remove right margin */
+    margin-left: 0;
+    margin-right: 0;
   }
 
   .h2-description {
-    font-size: 1rem; /* Further adjust heading size */
+    font-size: 1rem;
   }
 
   .movie-description {
-    font-size: 0.8rem; /* Further adjust description font size */
+    font-size: 0.8rem;
   }
 
   .tools {
-    margin-left: 0; /* Remove left margin */
+    margin-left: 0;
   }
 }

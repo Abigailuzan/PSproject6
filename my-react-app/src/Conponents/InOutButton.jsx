@@ -1,9 +1,7 @@
-
 import React from 'react'
 import { Link } from 'react-router-dom';
 import '../Styles/Navbar.css';
-// import LogoutIcon from '@mui/icons-material/Logout';
-// import LoginIcon from '@mui/icons-material/Login';
+
 
 function InOutButton({name,logOut}) {
   return (

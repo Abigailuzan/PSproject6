@@ -10,16 +10,12 @@ function AddAdmin() {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
-    // Function to clear the error
     const clearError = () => setError(null);
 
     function onSubmit(admins) {
         axios.post('http://localhost:5000/admins', admins)
             .then(response => {
-                console.log('Admin added successfully');
                 const addedAdmin = response.data;
-                console.log(addedAdmin + '!!');
-
                 storage.remove();
                 storage.set({
                     id: addedAdmin.admin_id,
@@ -28,11 +24,9 @@ function AddAdmin() {
                     userLastName: addedAdmin.last_name
                 });
 
-                // Navigate to home on success
                 navigate("/home");
             })
             .catch(error => {
-                // Handle error and display error message from server
                 if (error.response && error.response.data && error.response.data.error) {
                     setError(error.response.data.error);
                 } else {

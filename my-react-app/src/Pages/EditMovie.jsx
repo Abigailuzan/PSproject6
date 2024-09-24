@@ -3,11 +3,7 @@ import {useParams} from 'react-router-dom'
 import Navbar from '../Conponents/Navbar'
 import EditMovieForm from '../Conponents/EditMovieForm';
 import axios from "axios";
-import {
-    getAllActorsList,
-    getAllCategoryList,
-    getTotalMovieInfo
-} from '../Tools/movieTotalInformation'
+import {getAllActorsList, getAllCategoryList, getTotalMovieInfo} from '../Tools/movieTotalInformation'
 import { useNavigate } from 'react-router-dom';
 import useLocalStorage from "../UseHooks/useLocalStorage";
 
@@ -24,9 +20,7 @@ function EditMovie() {
         const fetchMovieData = async () => {
             const fetchedMovie = await getTotalMovieInfo(id);
             setMovie(fetchedMovie);
-            console.log(fetchedMovie)
         };
-
         fetchMovieData().then(r => null); // קריאה לפונקציה האסינכרונית
     }, [id]);
     // get all categories from DB
@@ -39,7 +33,6 @@ function EditMovie() {
       await axios.put(`http://localhost:5000/movies/${id}/${storage.value.email}`,movie)
           .then(response => {
               const movieUpdate = response.data;
-              console.log(movieUpdate);
               alert('movie was updating successfully')
           })
           .catch(error => {
@@ -54,7 +47,6 @@ function EditMovie() {
       await axios.put(`http://localhost:5000/moviecategories/${id}/${movie.category.category_id}/${storage.value.email}`,category_movie_update)
           .then(response => {
               const categoryMovieUpdate = response.data;
-              console.log(categoryMovieUpdate);
           })
           .catch(error => {
               console.error('There was an error updating the category!', error);
@@ -62,7 +54,6 @@ function EditMovie() {
       await axios.delete(`http://localhost:5000/movieactors/${id}/${storage.value.email}`)
           .then(response => {
               const actorMovieUpdate = response.data;
-              console.log(actorMovieUpdate,'dalete ');
           })
           .catch(error => {
               console.error('There was an error updating the actors!', error);
@@ -77,7 +68,6 @@ function EditMovie() {
           await axios.post(`http://localhost:5000/movieactors`,actor_movie_update)
               .then(response => {
                   const actorMovieUpdate = response.data;
-                  console.log(actorMovieUpdate);
               })
               .catch(error => {
                   console.error('There was an error updating the actors!', error);

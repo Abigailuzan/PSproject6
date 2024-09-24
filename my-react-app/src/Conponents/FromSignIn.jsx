@@ -19,13 +19,10 @@ function FromSignIn() {
             axios
                 .get(`http://localhost:5000/admins/email/${email}`)
                 .then((response) => {
-                    console.log('response data: ', response.data);
                     let admin = response.data;
-
-                    // בדיקה אם הסיסמה שגויה
                     if (admin.password !== password) {
-                        setPassword(''); // מאפסים את שדה הסיסמה
-                        throw new Error('password incorrect'); // זורקים שגיאה לעצור את התהליך ולהציג הודעה
+                        setPassword('');
+                        throw new Error('password incorrect');
                     }
                     storage.set({
                         id: admin.admin_id,
@@ -39,7 +36,6 @@ function FromSignIn() {
                 .catch((error) => {
                     console.error('Error: ', error);
 
-                    // הצגת הודעת השגיאה למשתמש
                     if (error.response && error.response.data && error.response.data.error) {
                         setError(error.response.data.error);
                     } else {
@@ -50,14 +46,11 @@ function FromSignIn() {
             await axios
                 .get(`http://localhost:5000/customers/email/${email}`)
                 .then((response) => {
-                    console.log('response data: ', response.data);
                     let customer = response.data;
-
                     if (customer.password !== password) {
                         setPassword(''); // מאפסים את שדה הסיסמה
                         throw new Error('password incorrect'); // זורקים שגיאה כדי להפסיק את התהליך
                     }
-
                     storage.set({
                         id: customer.customer_id,
                         email: customer.email,
@@ -68,7 +61,6 @@ function FromSignIn() {
                 })
                 .catch((error) => {
                     console.error('Error: ', error);
-
                     if (error.response && error.response.data && error.response.data.error) {
                         setError(error.response.data.error);
                     } else {

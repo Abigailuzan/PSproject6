@@ -9,7 +9,6 @@ function EditAccount({ OnSubmit,OnSubmitAdmin, user }) {
     const storage = useLocalStorage();
 
 
-    // עדכון השדות בכל פעם שה-user משתנה
     useEffect(() => {
         if (user) {
             setFirstName(user.first_name);

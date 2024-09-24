@@ -77,7 +77,6 @@ function Home() {
         }
         axios.get(`http://localhost:5000/movies/title/${sanitizedSearchText}?limit=${moviesPerPage}&offset=${(currentPage - 1) * moviesPerPage}`)
             .then(response => {
-                console.log("response data: ", response.data);
                 setMovies(response.data.movies);
                 setTotalMovies(response.data.total);
             })
@@ -87,18 +86,15 @@ function Home() {
     };
 
     async function handleFilter() {
-        console.log(category.name,'rating' + rating,'release year' + releaseYear,'length ' + length)
         const filterData  = {
             name:category?.name || '',
             release_year : releaseYear|| '',
             length:length||'',
             rating:rating|| ''
         }
-        console.log(filterData)
         const queryParams = new URLSearchParams(filterData).toString();
         axios.get(`http://localhost:5000/moviesFilters?${queryParams}`)
             .then(response => {
-                console.log("response data: ", response.data);
                 setMovies(response.data.movies);
                 setTotalMovies(response.data.total);
             })

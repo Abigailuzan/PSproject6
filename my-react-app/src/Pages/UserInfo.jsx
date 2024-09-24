@@ -27,7 +27,6 @@ function UserInfo() {
             })
             .catch(error => {
                 console.error('Error fetching user history:', error);
-                //setLocalError('Failed to load user movie history.');
             });
     }, [storage.value]);
 

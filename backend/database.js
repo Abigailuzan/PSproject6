@@ -20,7 +20,6 @@ async function getCustomerByID(id) {
         [id]
     );
 
-    //console.log('database values:', rows[0]);
     return rows[0];
 }
 async function getAllCustomers() {
@@ -494,7 +493,6 @@ async function getCategoriesOfMovie(movieID) {
         throw new Error('Movie does not exist');
     }
 
-    // שליפת הקטגוריות של הסרט
     const [rows] = await pool.query(`
         SELECT c.*
         FROM category c
@@ -502,9 +500,8 @@ async function getCategoriesOfMovie(movieID) {
         WHERE mc.film_id = ?
     `, [movieID]);
 
-    // בדיקה אם נמצאו קטגוריות
     if (rows.length > 0) {
-        return rows; // מחזירים את הקטגוריות
+        return rows;
     }
 
     throw new Error(`No categories were found for movie ${movieID}`);
@@ -530,13 +527,11 @@ async function getActorsOfMovie(movieID) {
     throw new Error(`No actors were found for movie ${movieID}`);
 }
 async function getMoviesOfActor(actorID) {
-    // בדיקה אם השחקן קיים
     const actorExist = await getActorByID(actorID);
     if (!actorExist) {
         throw new Error('Actor does not exist');
     }
 
-    // שליפת כל הסרטים בהם השחקן שיחק
     const [rows] = await pool.query(`
         SELECT m.*
         FROM movie m
@@ -544,7 +539,6 @@ async function getMoviesOfActor(actorID) {
         WHERE ma.actor_id = ?
     `, [actorID]);
 
-    // בדיקה אם נמצאו סרטים
     if (rows.length > 0) {
         return rows;
     }
@@ -555,7 +549,7 @@ async function getAllActiveCustomers() {
     const [rows] = await pool.query(`SELECT * FROM customer WHERE active = 1`);
     console.log(rows)
     if (rows.length > 0) {
-        return rows; // מחזירים את הלקוחות האקטיביים
+        return rows;
     }
 
     throw new Error(`No active customers were found`);

@@ -11,7 +11,6 @@ function CreateAccount() {
     async function onSubmit(customer,setError){
         await axios.post('http://localhost:5000/customers',customer)
             .then(response => {
-                console.log('customer added')
                 const addedCustomer = response.data;
                 storage.set({id: addedCustomer.customer_id ,email:addedCustomer.email,userName:addedCustomer.first_name,userLastName:addedCustomer.last_name});
                 navigate("/home");

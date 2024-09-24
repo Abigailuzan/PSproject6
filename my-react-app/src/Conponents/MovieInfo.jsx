@@ -1,19 +1,17 @@
 import React from 'react'
 import '../Styles/MovieInfo.css';
 import MovieTool from './MovieTool';
-import MovieCard from "./MovieCard";
 
 function MovieInfo( { movie } ) {
     console.log(movie)
     const getEmbedUrl = (url) => {
-        if (!url) return ''; // במקרה שאין קישור
-        // בדוק אם הקישור הוא מ-YouTube והמר אותו לקישור להטמעה
+        if (!url) return '';
         const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
         const match = url.match(youtubeRegex);
         if (match && match[1]) {
             return `https://www.youtube.com/embed/${match[1]}`;
         }
-        return url; // אם זה לא קישור YouTube, השתמש בקישור הקיים
+        return url;
     };
 
     return (

@@ -208,7 +208,6 @@ app.put('/movies/title/:title/:email', async (req, res) => {
 });
 
 // CRUD routes for Actor
-//TODO add verification od admin email for post put and delete
 app.get('/actors/:id', async (req, res) => {
     try {
         const actor = await getActorByID(req.params.id);
@@ -229,6 +228,7 @@ app.get('/actors', async (req, res) => {
         return res.status(500).json({ error: 'Error fetching actors' });
     }
 });
+/*
 app.post('/actors', async (req, res) => {
     try {
         const newActor = await insertActor(req.body);
@@ -263,9 +263,6 @@ app.delete('/actors/:id', async (req, res) => {
         return res.status(500).json({ error: 'Error deleting actor' });
     }
 });
-
-// CRUD routes for Payment
-//TODO remark all those functions
 app.get('/payments/:id', async (req, res) => {
     try {
         const payment = await getPaymentByID(req.params.id);
@@ -319,7 +316,7 @@ app.delete('/payments/:id', async (req, res) => {
         return res.status(500).json({ error: 'Error deleting payment' });
     }
 });
-
+*/
 // CRUD routes for history
 app.get('/history/:id', async (req, res) => {
     try {
@@ -333,8 +330,6 @@ app.get('/history/:id', async (req, res) => {
         return res.status(500).json({ error: 'Error fetching customer movie history' });
     }
 });
-
-
 app.post('/history', async (req, res) => {
     try {
         const newRental = await insertHistory(req.body);
@@ -356,7 +351,6 @@ app.put('/history/:id', async (req, res) => {
         return res.status(500).json({ error: 'Error updating history' });
     }
 });
-
 app.delete('/history/:id', async (req, res) => {
     try {
         const success = await deleteHistory(req.params.id);
@@ -370,9 +364,9 @@ app.delete('/history/:id', async (req, res) => {
     }
 });
 
-
+/*
 // CRUD routes for City
-//TODO check for adding this to movie information
+
 app.get('/cities/:id', async (req, res) => {
    try {
         const city = await getCityByID(req.params.id);
@@ -428,7 +422,6 @@ app.delete('/cities/:id', async (req, res) => {
 });
 
 // CRUD routes for Country
-//TODO check for adding this to movie information
 app.get('/countries/:id', async (req, res) => {
     try {
         const country = await getCountryByID(req.params.id);
@@ -483,7 +476,7 @@ app.delete('/countries/:id', async (req, res) => {
         return res.status(500).json({ error: 'Error deleting Country' });
     }
 });
-
+*/
 // CRUD routes for Admin
 app.get('/admins/:id', async (req, res) => {
     try {
@@ -777,7 +770,7 @@ app.delete('/moviecategories/:filmId/:categoryId/:email', async (req, res) => {
         return res.status(500).json({ error: 'Error deleting movie to this category' });
     }
 });
-
+/*
 //advanced functions
 app.get('/categories/movies/:categoryID',async (req, res)=>{
     try{
@@ -857,6 +850,7 @@ app.get('/movies/actors/:id',async (req,res)=>{
         return res.status(500).json({ error: `${error.message}` });
     }
 })
+*/
 app.get('/moviesFilters', async (req, res) => {
     try {
         console.log('Received query:', (req.query));

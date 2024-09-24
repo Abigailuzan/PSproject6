@@ -3,7 +3,6 @@ import '../Styles/AboutUs.css'
 function Article() {
   return (
     <article>
-    {/* Section about the company's story */}
     <section>
       <h2 className="h2-about-us">OUR STORY</h2>
       <p className="p-about">  
@@ -13,7 +12,6 @@ function Article() {
       </p>
     </section>
 
-    {/* Section about the company's vision */}
     <section>
       <h2 className="h2-about-us">OUR VISION</h2>
       <p className="p-about">

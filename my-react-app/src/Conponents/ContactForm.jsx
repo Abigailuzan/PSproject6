@@ -30,7 +30,6 @@ const ContactForm = () => {
           navigate("/home");
         })
         .catch(error => {
-          // Handle error and display error message from server
           if (error.response && error.response.data && error.response.data.error) {
             setError(error.response.data.error);
           } else {

@@ -14,16 +14,14 @@ function AddAdminForm({ onSubmit, error, clearError }) {
     const storage = useLocalStorage();
 
 
-    // Clear errors when input is changed
     const handleInputChange = (setter, value) => {
         setter(value);
-        clearError();  // Clear the error when any input is changed
+        clearError();
     };
 
     async function handleSubmit(event) {
         event.preventDefault();
 
-        // Check if passwords match
         if (password !== password1) {
             setLocalError("Passwords are not the same.");
             return;
@@ -42,7 +40,6 @@ function AddAdminForm({ onSubmit, error, clearError }) {
 
 
         try {
-            // Try to submit the data
             await onSubmit(userData);
         } catch (err) {
             setLocalError('Error occurred. Please try again.');

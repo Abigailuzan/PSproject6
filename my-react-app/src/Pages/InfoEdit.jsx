@@ -14,7 +14,6 @@ function InfoEdit() {
         {
             axios.get(`http://localhost:5000/admins/${storage.value.id}`)
                 .then(response => {
-                    console.log("response data get : ", response.data); // הדפס את התגובה
                     setCustomer(response.data)
                 })
                 .catch(error => {
@@ -24,7 +23,6 @@ function InfoEdit() {
         else{
             axios.get(`http://localhost:5000/customers/${storage.value.id}`)
                 .then(response => {
-                    console.log("response data get : ", response.data); // הדפס את התגובה
                     setCustomer(response.data)
                 })
                 .catch(error => {
@@ -36,7 +34,6 @@ function InfoEdit() {
     async function OnSubmit(userData){
         axios.put(`http://localhost:5000/customers/${storage.value.id}`, userData)
             .then(response => {
-                console.log("response data with ok: ", response.data); // הדפס את התגובה
                 setCustomer(response.data);
                 storage.remove()
                 storage.set({id: userData.customer_id ,email:userData.email,userName:userData.first_name,userLastName:userData.last_name});
@@ -50,7 +47,6 @@ function InfoEdit() {
     async function OnSubmitAdmin(userDataAdmin){
         axios.put(`http://localhost:5000/admins/${storage.value.id}`, userDataAdmin)
             .then(response => {
-                console.log("response data with ok: ", response.data); // הדפס את התגובה
                 setCustomer(response.data);
                 storage.remove()
                 storage.set({id: userDataAdmin.admin_id ,email:userDataAdmin.email,userName:userDataAdmin.first_name,userLastName:userDataAdmin.last_name});

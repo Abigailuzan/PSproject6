@@ -36,9 +36,6 @@ function AddMovieForm({ onSubmit ,  categoryList, actorsList}) {
       actor:actors,
       verification_email:storage.value.email
     };
-    console.log(movieData)
-    console.log(actors)
-    console.log(category)
     onSubmit(movieData);
   };
 
@@ -95,11 +92,11 @@ function AddMovieForm({ onSubmit ,  categoryList, actorsList}) {
           </select>
         </div>
         <Autocomplete
-            value={category || null} // מבטיח ש-null יינתן במקרה של ערך ריק
+            value={category || null}
             onChange={(e, newValue) => setCategory(newValue)}
             options={categoryList}
-            getOptionLabel={(option) => option.name ? `${option.name}` :"category"} // הצגת placeholder
-            isOptionEqualToValue={(option, value) => option.name === value?.name} // השוואת אפשרויות לערך נבחר
+            getOptionLabel={(option) => option.name ? `${option.name}` :"category"}
+            isOptionEqualToValue={(option, value) => option.name === value?.name}
             sx={{ width: 300 }}
             renderInput={(params) =>
                 <TextField
@@ -113,14 +110,13 @@ function AddMovieForm({ onSubmit ,  categoryList, actorsList}) {
             }
         />
 
-        {/* Autocomplete for Actors with Checkboxes */}
         <Autocomplete
             multiple
             id="checkboxes-tags-demo"
             options={actorsList}
             getOptionLabel={(option) => `${option.first_name} ${option.last_name}`}
             value={actors}
-            onChange={(e, newValue) => setActors(newValue)} // מעדכן את הרשימה בהתאם לבחירה
+            onChange={(e, newValue) => setActors(newValue)}
             disableCloseOnSelect
             renderOption={(props, option, { selected }) => (
                 <li {...props}>

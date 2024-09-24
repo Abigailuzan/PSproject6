@@ -8,13 +8,11 @@ import axios from "axios";
 function MovieTool({ id ,title }) {
     const storage = useLocalStorage();
     const navigate = useNavigate();
-    console.log(id,title)
-    
+
       const handleDelete = () => {
           axios.delete(`http://localhost:5000/movies/${id}/${storage.value.email}`)
               .then(response => {
                   alert(`movie ${title} was deleted successfully`)
-                  console.log('Delete movie');
                   navigate('/home')
               })
               .catch(error => {

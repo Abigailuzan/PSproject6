@@ -18,10 +18,7 @@ function AddMovie() {
     async function onSubmit(movie) {
         try {
             const response = await axios.post('http://localhost:5000/movies', movie);
-            console.log('Movie added:', response.data);
             const filmId = response.data.film_id;
-
-
             if (movie.actor && movie.actor.length > 0) {
                 for (const actor of movie.actor) {
                     const actor_movie_create = {
@@ -33,7 +30,6 @@ function AddMovie() {
                     await axios.post(`http://localhost:5000/movieactors`, actor_movie_create);
                 }
             }
-
             const category_movie_create = {
                 film_id: filmId,  // שימוש ב filmId מתוך response
                 category_id: movie.category.category_id,
@@ -41,7 +37,6 @@ function AddMovie() {
                 verification_email: movie.verification_email
             };
             await axios.post(`http://localhost:5000/moviecategories`, category_movie_create);
-
             alert('Movie added successfully');
             navigate('/home');
         } catch (error) {

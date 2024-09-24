@@ -1,9 +1,7 @@
 import axios from "axios";
-import {useEffect} from "react";
 
 export async function getTotalMovieInfo(id){
     let movie = {} ;
-    // מביא סרט לפי ID
     await axios.get(`http://localhost:5000/movies/${id}`)
         .then(response => {
             console.log("response data: ", response.data);
@@ -12,7 +10,6 @@ export async function getTotalMovieInfo(id){
         .catch(error => {
             console.error('There was an error fetching the movie!', error);
         });
-    //מביא קטגוריה של הסרט המסוים לפי ID
     await axios.get(`http://localhost:5000/movies/categories/${id}`)
         .then(response => {
             console.log(response.data);
@@ -24,7 +21,6 @@ export async function getTotalMovieInfo(id){
         .catch(error => {
             console.error('There was an error fetching the categories!', error);
         });
-    //מביא רשימת שחקנים לפי סרט מסוים ב ID
     await axios.get(`http://localhost:5000/movies/actors/${id}`)
         .then(response => {
             movie = {...movie,

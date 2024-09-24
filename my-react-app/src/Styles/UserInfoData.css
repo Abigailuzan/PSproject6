@@ -28,109 +28,109 @@
 
 .history-content {
     display: flex;
-    flex-wrap: wrap; /* To ensure movies break into additional rows if there isn't enough space */
-    gap: 1rem; /* Space between movie cards */
-    justify-content: center; /* Center the movies */
-    margin-top: 1rem; /* Space above the movie history */
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1rem;
 }
 
 .movie-card {
     background-color: #333;
-    padding: 0.75rem; /* Reduced internal padding for the card */
+    padding: 0.75rem;
     border-radius: 0.5rem;
-    width: 10rem; /* Reduced card width */
+    width: 10rem;
     text-align: center;
     color: white;
 }
 
 .movie-card img {
-    width: 100%; /* Adjust image width to card width */
+    width: 100%;
     height: auto;
     border-radius: 0.5rem;
 }
 
-/* History title */
+
 .history-content h1 {
     text-align: center;
     width: 100%;
     font-size: 1.5rem;
     color: white;
-    margin-bottom: 1rem; /* Space between title and movie list */
+    margin-bottom: 1rem;
 }
 
-/* Button container styles */
+
 .button-container {
-    margin-top: 0.05rem; /* Add some spacing above the buttons */
-    display: flex; /* Align buttons in a row */
-    justify-content: center; /* Center the buttons */
-    gap: 0.5rem; /* Add some spacing between the buttons */
+    margin-top: 0.05rem;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
 }
 
 .button-container button {
-    background-color: #333; /* Button background color */
-    color: white; /* Button text color */
-    border: none; /* Remove border */
-    border-radius: 0.5rem; /* Rounded corners */
-    padding: 0.5rem 1rem; /* Padding inside the button */
-    cursor: pointer; /* Pointer on hover */
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
 }
 
 .button-container button:hover {
-    background-color: #444; /* Darker background on hover */
+    background-color: #444;
 }
 
-/* Media Queries */
+
 @media (max-width: 768px) {
     .movie-card {
-        width: 12rem; /* Reduce card width on smaller screens */
+        width: 12rem;
     }
 
     .user-info-container {
-        max-width: 90%; /* Make the container more responsive */
-        padding: 1rem; /* Adjust padding */
-        margin: 1.5rem auto; /* Adjust margin for smaller screens */
+        max-width: 90%;
+        padding: 1rem;
+        margin: 1.5rem auto;
     }
 
     .user-info-container div {
-        margin-bottom: 0.5rem; /* Reduce spacing between items */
+        margin-bottom: 0.5rem;
     }
 
     .user-info-container label {
-        font-size: 0.9rem; /* Slightly smaller font size */
+        font-size: 0.9rem;
     }
 
     .user-info-container p {
-        font-size: 0.9rem; /* Slightly smaller font size */
+        font-size: 0.9rem;
     }
 }
 
 @media (max-width: 480px) {
     .user-info-container {
-        padding: 0.75rem; /* Further reduce padding */
+        padding: 0.75rem;
     }
 
     .user-info-container label {
-        font-size: 0.85rem; /* Further reduce font size */
+        font-size: 0.85rem;
     }
 
     .user-info-container p {
-        font-size: 0.85rem; /* Further reduce font size */
+        font-size: 0.85rem;
     }
 
     .movie-card {
-        width: 10rem; /* Reduce card width on smaller screens */
+        width: 10rem;
     }
 }
 
-/* Media Queries */
+
 @media (max-width: 768px) {
     .movie-card {
-        width: 8rem; /* Further reduce card width on smaller screens */
+        width: 8rem;
     }
 }
 
 @media (max-width: 480px) {
     .movie-card {
-        width: 6.5rem; /* Further reduce card width on smaller screens */
+        width: 6.5rem;
     }
 }

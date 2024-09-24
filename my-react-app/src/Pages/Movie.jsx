@@ -31,10 +31,7 @@ function Movie() {
                 let movieList = []; // איפוס רשימת הסרטים
                 const response = await axios.get(`http://localhost:5000/categories/movies/${movie.category_id}`);
                 let categoryMovies = response.data;
-
-                // סינון הסרטים בעלי ה-id השווה ל-id המסוים
                 categoryMovies = categoryMovies.filter(m => m.film_id !== id);
-                console.log(categoryMovies);
 
                 movieList = [...categoryMovies.slice(0, 5)];
                 setMovies(movieList);
@@ -58,9 +55,7 @@ function Movie() {
                         const response = await axios.get(`http://localhost:5000/actors/movies/${actor.actor_id}`);
                         let actorMovies = response.data;
 
-                        // סינון הסרטים בעלי ה-id השווה ל-id המסוים
                         actorMovies = actorMovies.filter(m => m.film_id !== id);
-                        console.log(actorMovies);
 
                         if (actorMovies.length + movieList.length <= 10) {
                             movieList = [...movieList, ...actorMovies];
