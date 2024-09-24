@@ -228,7 +228,7 @@ app.get('/actors', async (req, res) => {
         return res.status(500).json({ error: 'Error fetching actors' });
     }
 });
-/*
+
 app.post('/actors', async (req, res) => {
     try {
         const newActor = await insertActor(req.body);
@@ -316,7 +316,7 @@ app.delete('/payments/:id', async (req, res) => {
         return res.status(500).json({ error: 'Error deleting payment' });
     }
 });
-*/
+
 // CRUD routes for history
 app.get('/history/:id', async (req, res) => {
     try {
@@ -770,7 +770,7 @@ app.delete('/moviecategories/:filmId/:categoryId/:email', async (req, res) => {
         return res.status(500).json({ error: 'Error deleting movie to this category' });
     }
 });
-/*
+
 //advanced functions
 app.get('/categories/movies/:categoryID',async (req, res)=>{
     try{
@@ -850,7 +850,7 @@ app.get('/movies/actors/:id',async (req,res)=>{
         return res.status(500).json({ error: `${error.message}` });
     }
 })
-*/
+
 app.get('/moviesFilters', async (req, res) => {
     try {
         console.log('Received query:', (req.query));

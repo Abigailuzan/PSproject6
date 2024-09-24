@@ -201,7 +201,7 @@ async function updateHistory(id, history) {
 
 async function deleteHistory(id) {
     const [result] = await pool.query(`DELETE FROM history WHERE customer_id = ?`, [id]);
-    return result.affectedRows > 0;
+    return result;
 }
 
 // CRUD operations for the "city" table

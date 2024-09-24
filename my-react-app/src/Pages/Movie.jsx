@@ -67,6 +67,7 @@ function Movie() {
                         console.error('There was an error fetching movies for actors!', error);
                     }
                 }
+                console.log(movieList)
                 setMovies(movieList);
             }
         };
