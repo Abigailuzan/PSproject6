@@ -42,7 +42,7 @@ function EditMovie() {
           {
               film_id:id,
               category_id:movie.category.category_id,
-              last_update:movie.last_update
+              last_update: new Date().toISOString().split('T')[0]
           }
       await axios.put(`http://localhost:5000/moviecategories/${id}/${movie.category.category_id}/${storage.value.email}`,category_movie_update)
           .then(response => {

@@ -34,6 +34,8 @@ function Movie() {
                 categoryMovies = categoryMovies.filter(m => m.film_id !== id);
 
                 movieList = [...categoryMovies.slice(0, 5)];
+
+                console.log(movieList)
                 setMovies(movieList);
             } catch (error) {
                 console.error('There was an error fetching category movies!', error);
@@ -43,7 +45,7 @@ function Movie() {
         if (movie.category_id) {
             fetchMoviesForCategory().then();
         }
-    }, [movie.category_id, id]);
+    }, [id,movie]);
 
     useEffect(() => {
         const fetchMoviesForActors = async () => {
@@ -63,6 +65,7 @@ function Movie() {
                             const remaining = 10 - movieList.length;
                             movieList = [...movieList, ...actorMovies.slice(0, remaining)];
                         }
+                        console.log(movieList)
                     } catch (error) {
                         console.error('There was an error fetching movies for actors!', error);
                     }
@@ -75,7 +78,7 @@ function Movie() {
         if (movie.actors_list && movie.actors_list.length > 0) {
             fetchMoviesForActors().then(r => null);
         }
-    }, [movie.actors_list, id, movies]);
+    }, [movie.actors_list,id,movie]);
 
     return (
         <div>

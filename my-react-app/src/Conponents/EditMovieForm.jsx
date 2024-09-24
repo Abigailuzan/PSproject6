@@ -60,6 +60,7 @@ function EditMovieForm({ movie, onSubmit, categoryList, actorsList }) {
             actors: actors,
             verification_email: storage.value.email,
         };
+        console.log(movieData)
         onSubmit(movieData, movie.film_id);
     };
 

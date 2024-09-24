@@ -379,8 +379,8 @@ async function deleteMovieActorByFilmId( filmId) {
 }
 
 // CRUD operations for the "movie-category" table
-async function getMovieCategoryByIDs(filmId, categoryId) {
-    const [rows] = await pool.query(`SELECT * FROM moviecategory WHERE film_id = ? AND category_id = ?`, [filmId, categoryId]);
+async function getMovieCategoryByIDs(filmId) {
+    const [rows] = await pool.query(`SELECT * FROM moviecategory WHERE film_id = ? `, [filmId]);
     return rows[0];
 }
 async function getAllMovieCategories() {
@@ -409,23 +409,25 @@ async function insertMovieCategory(movieCategory) {
 }
 async function updateMovieCategory(filmId, categoryId, movieCategory) {
 
-    const movie = await getCategoryByID(categoryId);
-    const category = await getMovieByID(filmId);
-
+    const category = await getCategoryByID(categoryId);
+    const movie = await getMovieByID(filmId);
+    console.log(movie,category)
     if (!movie || !category) {
         throw new Error('movie or category does not exist');
     }
 
-    const movieCategoryRelation = await getMovieCategoryByIDs(filmId,categoryId);
+    const movieCategoryRelation = await getMovieCategoryByIDs(filmId);
+    console.log(movieCategoryRelation)
+
     if (!movieCategoryRelation ) {
         throw new Error('movie category relation does not exists');
     }
     else{
         const [result] = await pool.query(
-            `UPDATE moviecategory SET film_id = ?,category_id = ?,last_update = ? WHERE film_id = ? AND category_id = ?`,
-            [movieCategory.film_id,movieCategory.category_id, movieCategory.last_update,filmId,categoryId]
+            `UPDATE moviecategory SET film_id = ?,category_id = ?,last_update = ? WHERE film_id = ? `,
+            [movieCategory.film_id,movieCategory.category_id, movieCategory.last_update,filmId]
         );
-        return getMovieCategoryByIDs(movieCategory.film_id, movieCategory.category_id);
+        return getMovieCategoryByIDs(filmId);
     }
 }
 async function deleteMovieCategory(filmId, categoryId) {
@@ -447,15 +449,17 @@ async function getAllMovieYear(year){
 
 }
 async function getMoviesByCategory(categoryID) {
-    const [movies] = await pool.query(`
-        SELECT m.*
-        FROM movie m
-        INNER JOIN moviecategory mc ON m.film_id = mc.film_id
-        WHERE mc.category_id = ?
-    `, [categoryID]);
+    const movies = await pool.query(`
+    SELECT m.* 
+    FROM movie m 
+    INNER JOIN moviecategory mc ON m.film_id = mc.film_id 
+    WHERE mc.category_id = ?
+`, [categoryID]);
 
-    if (movies.length > 0) {
-        return movies; // מחזירים את כל הסרטים שמצאנו
+    console.log('Movies:', movies[0]); // רק התוצאות עצמן
+
+    if (movies[0].length > 0) {
+        return movies[0]; // מחזירים את כל הסרטים שמצאנו
     }
 
     throw new Error(`No movies found for category ID ${categoryID}`);
