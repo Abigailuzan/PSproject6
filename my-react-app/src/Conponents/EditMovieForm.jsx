@@ -117,7 +117,7 @@ function EditMovieForm({ movie, onSubmit, categoryList, actorsList }) {
                 </div>
 
                 {/* Autocomplete for Category */}
-                <Autocomplete
+                <Autocomplete className='filter-edit'
                     value={category}
                     onChange={(e, newValue) => setCategory(newValue)}
                     options={categoryList}
@@ -127,7 +127,7 @@ function EditMovieForm({ movie, onSubmit, categoryList, actorsList }) {
                 />
 
                 {/* Autocomplete for Actors with Checkboxes */}
-                <Autocomplete
+                <Autocomplete className='filter-edit'
                     multiple
                     id="checkboxes-tags-demo"
                     options={actorsList}

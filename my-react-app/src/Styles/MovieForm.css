@@ -65,20 +65,20 @@
   background-color: #32cd32;
 }
 
-.MuiAutocomplete-root .MuiOutlinedInput-root {
+.filter-edit .MuiOutlinedInput-root {
   background-color: white !important;
   color: black !important;
 }
 
-.MuiAutocomplete-root .MuiOutlinedInput-notchedOutline {
+.filter-edit .MuiOutlinedInput-notchedOutline {
   border-color: white !important;
 }
 
-.MuiAutocomplete-root .MuiInputLabel-root {
+.filter-edit .MuiInputLabel-root {
   color: black !important;
 }
 
-.MuiAutocomplete-root .MuiInputBase-input {
+.filter-edit .MuiInputBase-input {
   color: black !important;
 }
 @media (max-width: 768px) {
