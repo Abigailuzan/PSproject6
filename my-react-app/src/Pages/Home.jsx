@@ -42,7 +42,6 @@ function Home() {
     useEffect(() => {
         axios.get(`http://localhost:5000/movies?limit=${moviesPerPage}&offset=${(currentPage - 1) * moviesPerPage}`)
             .then(response => {
-                console.log("response data: ", response.data);
                 setMovies(response.data.movies);
                 setTotalMovies(response.data.total);
             })
@@ -129,6 +128,7 @@ function Home() {
             <div className="filters-container">
                 <div className="filter">
                     <Autocomplete
+                        className='filter-edit'
                         value={category || null}
                         onChange={(e, newValue) => setCategory(newValue)}
                         options={categoryList}
@@ -146,6 +146,7 @@ function Home() {
                 </div>
                 <div className="filter">
                     <Autocomplete
+                        className='filter-edit'
                         value={releaseYear || null}
                         onChange={(e, newValue) => setReleaseYear(newValue)}
                         options={Array.from(new Array(131), (val, index) => 1900 + index)}
@@ -163,6 +164,7 @@ function Home() {
                 </div>
                 <div className="filter">
                     <Autocomplete
+                        className='filter-edit'
                         value={length || null}
                         onChange={(e, newValue) => setLength(newValue)}
                         options={Array.from(new Array(301), (val, index) => 60 + index)}
@@ -180,6 +182,7 @@ function Home() {
                 </div>
                 <div className="filter">
                     <Autocomplete
+                        className='filter-edit'
                         value={rating || null}
                         onChange={(e, newValue) => setRating(newValue)}
                         options={['G', 'PG', 'PG-13', 'R', 'NC-17']}

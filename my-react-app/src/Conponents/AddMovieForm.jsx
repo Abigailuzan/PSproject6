@@ -109,7 +109,6 @@ function AddMovieForm({ onSubmit ,  categoryList, actorsList}) {
                 />
             }
         />
-
         <Autocomplete
             multiple
             id="checkboxes-tags-demo"

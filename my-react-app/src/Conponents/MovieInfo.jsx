@@ -3,7 +3,6 @@ import '../Styles/MovieInfo.css';
 import MovieTool from './MovieTool';
 
 function MovieInfo( { movie } ) {
-    console.log(movie)
     const getEmbedUrl = (url) => {
         if (!url) return '';
         const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/;

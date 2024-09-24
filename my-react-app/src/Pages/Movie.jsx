@@ -7,7 +7,14 @@ import useLocalStorage from '../UseHooks/useLocalStorage';
 import '../Styles/Movie.css';
 import axios from 'axios';
 import {getTotalMovieInfo} from '../Tools/movieTotalInformation';
-
+const removeDuplicates = (movieList) => {
+    const seen = new Set();
+    return movieList.filter(movie => {
+        const duplicate = seen.has(movie.film_id);
+        seen.add(movie.film_id);
+        return !duplicate;
+    });
+};
 function Movie() {
     const storage = useLocalStorage();
     const {id, title} = useParams();
@@ -22,63 +29,41 @@ function Movie() {
             setMovie(fetchedMovie);
         };
 
-        fetchMovieData().then(r => null); // קריאה לפונקציה האסינכרונית
+        fetchMovieData().then(r => null);
     }, [id]);
-
     useEffect(() => {
-        const fetchMoviesForCategory = async () => {
+        const fetchMoviesForCategoryAndActors = async () => {
+            let combinedMovieList = []; 
             try {
-                let movieList = []; // איפוס רשימת הסרטים
-                const response = await axios.get(`http://localhost:5000/categories/movies/${movie.category_id}`);
-                let categoryMovies = response.data;
-                categoryMovies = categoryMovies.filter(m => m.film_id !== id);
+                if (movie.category_id) {
+                    const categoryResponse = await axios.get(`http://localhost:5000/categories/movies/${movie.category_id}`);
+                    let categoryMovies = categoryResponse.data.filter(m => m.film_id !== parseInt(id));
+                    combinedMovieList = [...categoryMovies];
+                }
+                if (movie.actors_list && movie.actors_list.length > 0) {
+                    for (const actor of movie.actors_list) {
+                        if (combinedMovieList.length >= 10) break;
 
-                movieList = [...categoryMovies.slice(0, 5)];
-
-                console.log(movieList)
-                setMovies(movieList);
-            } catch (error) {
-                console.error('There was an error fetching category movies!', error);
-            }
-        };
-
-        if (movie.category_id) {
-            fetchMoviesForCategory().then();
-        }
-    }, [id,movie]);
-
-    useEffect(() => {
-        const fetchMoviesForActors = async () => {
-            let movieList = [...movies];
-            if (movie.actors_list && movie.actors_list.length > 0) {
-                for (const actor of movie.actors_list) {
-                    if (movieList.length >= 10) break;
-                    try {
-                        const response = await axios.get(`http://localhost:5000/actors/movies/${actor.actor_id}`);
-                        let actorMovies = response.data;
-
-                        actorMovies = actorMovies.filter(m => m.film_id !== id);
-
-                        if (actorMovies.length + movieList.length <= 10) {
-                            movieList = [...movieList, ...actorMovies];
-                        } else {
-                            const remaining = 10 - movieList.length;
-                            movieList = [...movieList, ...actorMovies.slice(0, remaining)];
+                        try {
+                            const actorResponse = await axios.get(`http://localhost:5000/actors/movies/${actor.actor_id}`);
+                            let actorMovies = actorResponse.data.filter(m => m.film_id !== parseInt(id));
+                            combinedMovieList = [...combinedMovieList, ...actorMovies];
+                        } catch (error) {
+                            console.error('There was an error fetching movies for actors!', error);
                         }
-                        console.log(movieList)
-                    } catch (error) {
-                        console.error('There was an error fetching movies for actors!', error);
                     }
                 }
-                console.log(movieList)
-                setMovies(movieList);
+                combinedMovieList = removeDuplicates(combinedMovieList);
+                setMovies(combinedMovieList.slice(0, 10));
+            } catch (error) {
+                console.error('There was an error fetching category or actor movies!', error);
             }
         };
 
-        if (movie.actors_list && movie.actors_list.length > 0) {
-            fetchMoviesForActors().then(r => null);
+        if (movie.category_id || (movie.actors_list && movie.actors_list.length > 0)) {
+            fetchMoviesForCategoryAndActors().then(r => null);
         }
-    }, [movie.actors_list,id,movie]);
+    }, [movie.category_id, movie.actors_list, id, movie]);
 
     return (
         <div>

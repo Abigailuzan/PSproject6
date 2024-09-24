@@ -6,7 +6,6 @@ export async function getTotalMovieInfo(id){
     // מביא סרט לפי ID
     await axios.get(`http://localhost:5000/movies/${id}`)
         .then(response => {
-            console.log("response data: ", response.data);
             movie= {...movie, ...response.data}
         })
         .catch(error => {
@@ -15,7 +14,6 @@ export async function getTotalMovieInfo(id){
     //מביא קטגוריה של הסרט המסוים לפי ID
     await axios.get(`http://localhost:5000/movies/categories/${id}`)
         .then(response => {
-            console.log(response.data);
             movie = {...movie,
                 category_id: response.data[0].category_id,
                 category_name: response.data[0].name
@@ -41,7 +39,6 @@ export async function getAllCategoryList(setCategoryList){
     await axios.get('http://localhost:5000/categories')
         .then(response => {
             const categories = response.data;
-            console.log(categories);
             setCategoryList(categories);
         })
         .catch(error => {
@@ -52,7 +49,6 @@ export async function getAllActorsList(setActors){
     await axios.get('http://localhost:5000/actors')
         .then(response => {
             const actors = response.data;
-            console.log(actors);
             setActors(actors);
         })
         .catch(error => {
