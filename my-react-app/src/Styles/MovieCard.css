@@ -2,11 +2,10 @@
     background-color: #222;
     border-radius: 0.625rem;
     overflow: hidden;
-    width: 100%; /* Use 100% to allow flexibility */
-    max-width: 9.375rem; /* Maintain a maximum width */
-    margin: 1.25rem auto; /* Center the card with auto margin */
+    width: 9.375rem;
+    margin: 1.25rem;
     cursor: pointer;
-    height: auto; /* Allow height to adjust */
+    height: 9.375rem;
     transition: transform 0.2s;
     position: relative;
 }
@@ -17,7 +16,7 @@
 
 .movie-image {
     width: 100%;
-    height: auto; /* Adjust height based on aspect ratio */
+    height: 100%;
     object-fit: cover;
     opacity: 0.7;
 }
@@ -70,57 +69,62 @@
     color: black;
 }
 
-/* Media Queries */
-@media (min-width: 1200px) {
-    .movie-card {
-        width: calc(20% - 2.5rem); /* Responsive width for large displays */
-    }
-}
 
-@media (min-width: 992px) {
+@media (max-width: 1024px) {
     .movie-card {
-        width: calc(25% - 2.5rem); /* Responsive width for medium displays */
+        width: 50%;
+        height: auto;
+    }
+
+    .card-title {
+        font-size: 0.95rem;
+    }
+
+    .card-info {
+        font-size: 0.7rem;
     }
 }
 
 @media (max-width: 768px) {
     .movie-card {
-        width: calc(33.33% - 1.5rem); /* 3 cards in a row */
+        width: 75%;
+        height: auto;
     }
 
     .card-title {
-        font-size: 0.9rem; /* Adjust font size for title */
+        font-size: 0.9rem;
     }
 
     .card-info {
-        font-size: 0.65rem; /* Adjust font size for info */
+        font-size: 0.65rem;
     }
 }
 
 @media (max-width: 600px) {
     .movie-card {
-        width: calc(50% - 1rem); /* 2 cards in a row */
+        width: 90%;
+        height: auto;
     }
 
     .card-title {
-        font-size: 0.85rem; /* Further reduce title size */
+        font-size: 0.85rem;
     }
 
     .card-info {
-        font-size: 0.6rem; /* Further reduce info size */
+        font-size: 0.6rem;
     }
 }
 
 @media (max-width: 480px) {
     .movie-card {
-        width: 100%; /* Full width on small devices */
-        margin: 0.625rem 0; /* Reduce margin */
+        margin: 0.625rem;
     }
+
     .card-title {
-        font-size: 0.8rem; /* Further reduce title size */
+        font-size: 0.8rem;
     }
 
     .card-info {
-        font-size: 0.55rem; /* Further reduce info size */
+        font-size: 0.55rem;
     }
 }
