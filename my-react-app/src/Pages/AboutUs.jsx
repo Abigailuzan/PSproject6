@@ -1,4 +1,4 @@
-import React,  from 'react';
+import React  from 'react';
 import '../Styles/AboutUs.css'
 import Article from '../Conponents/Article';
 import Table from '../Conponents/Table';

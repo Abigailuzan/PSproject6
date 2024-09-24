@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React from 'react';
 import Home from './Pages/Home';
 import SignIn from './Pages/SignIn';
 import CreateAccount from './Pages/CreateAccount';
